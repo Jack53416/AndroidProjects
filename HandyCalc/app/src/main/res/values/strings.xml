@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">HandyCalc</string>
+    <string name="parse_error">Provided number is invalid</string>
+    <string name="button_simple_label">Simple</string>
+    <string name="button_enhanced_label">Enhanced</string>
+    <string name="button_about_label">About</string>
+    <string name="button_exit_label">Exit</string>
+    <string name="num0">0</string>
+    <string name="num1">1</string>
+    <string name="num2">2</string>
+    <string name="num3">3</string>
+    <string name="num4">4</string>
+    <string name="num5">5</string>
+    <string name="num6">6</string>
+    <string name="num7">7</string>
+    <string name="num8">8</string>
+    <string name="num9">9</string>
+    <string name="add">+</string>
+    <string name="subtract">-</string>
+    <string name="multiply">*</string>
+    <string name="divide">/</string>
+    <string name="dot">.</string>
+    <string name="singChange">±</string>
+    <string name="backSpace">←</string>
+    <string name="clear">C</string>
+    <string name="equals">=</string>
+    <string name="sinus">sin</string>
+    <string name="cosinus">cos</string>
+    <string name="tangent">tan</string>
+    <string name="logN">ln</string>
+    <string name="log10">log</string>
+    <string name="sqrt">√</string>
+    <string name="square">x^2</string>
+    <string name="power">x^y</string>
+    <string name="about">This application was created by me</string>
+</resources>
