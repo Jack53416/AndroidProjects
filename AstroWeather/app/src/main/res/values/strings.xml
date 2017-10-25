@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">AstroWeather</string>
+    <string name="action_settings">Settings</string>
+    <string name="sunRise">Sunrise</string>
+    <string name="sunSet">Sunset</string>
+    <string name="twilightM">Twilight morning</string>
+    <string name="twilightE">Twilight evening</string>
+    <string name="sunFragmentTitle">Sun Information</string>
+    <string name="moonFragmentTitle">Moon Information</string>
+    <string name="moonriseTitle">Moonrise</string>
+    <string name="moonsetTitle">Moonset</string>
+    <string name="moonPhaseTitle">Illumination</string>
+    <string name="moonAgeTitle">Moon age</string>
+    <string name="editSettings">Settings</string>
+    <string name="preferenceRefreshRate">Update</string>
+    <string name="preferenceLongitude">Longitude</string>
+    <string name="preferenceLatitude">Latitude</string>
+    <string-array name="latitudeDirections">
+        <item>N</item>
+        <item>S</item>
+    </string-array>
+    <string-array name="longitudeDirections">
+        <item>E</item>
+        <item>W</item>
+    </string-array>
+    <string name="refreshToast">Refreshing data…</string>
+</resources>

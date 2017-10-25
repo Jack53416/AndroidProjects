@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="astrocalculator">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/astrocalculator.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
