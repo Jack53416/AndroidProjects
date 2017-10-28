@@ -116,11 +116,11 @@ public class SettingsDialog extends DialogFragment {
         mLatitudeValue.setText(String.valueOf(Math.abs(latitude)));
 
         if(latitude < 0){
-            mLatitudeDirection.setSelection(1);
+            mLatitudeDirection.setSelection(1);//S
         }
         if(longitude < 0)
         {
-            mLongitudeDirection.setSelection(1);
+            mLongitudeDirection.setSelection(1);//W
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),

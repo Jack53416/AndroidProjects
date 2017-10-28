@@ -11,7 +11,11 @@
     <string name="moonsetTitle">Moonset</string>
     <string name="moonPhaseTitle">Illumination</string>
     <string name="moonAgeTitle">Moon age</string>
+    <string name="fullmoonTitle">Full moon</string>
+    <string name="newMoonTitle">New moon</string>
+    <string name="azimuthTitle">Azimuth</string>
     <string name="editSettings">Settings</string>
+    <string name="menuRefresh">Refresh</string>
     <string name="preferenceRefreshRate">Update</string>
     <string name="preferenceLongitude">Longitude</string>
     <string name="preferenceLatitude">Latitude</string>

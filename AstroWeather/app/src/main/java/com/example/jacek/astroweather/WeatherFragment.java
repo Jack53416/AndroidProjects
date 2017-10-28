@@ -23,21 +23,31 @@ public class WeatherFragment extends Fragment {
         SUN
     }
 
+    enum astroDateConversionType{
+        HOUR,
+        DATE
+    }
+
     public static final String ARG_TYPE = "fragment_type";
     public static final String BUNDLE_TYPE = "com.example.jacek.astroweather.bundle_Type";
 
     private FragmentType mCurrentType;
     private DecimalFormat mDecimalPercentageFormat = new DecimalFormat("###.##%");
     private DecimalFormat mDecimalDaysFormat = new DecimalFormat("## days");
+    private DecimalFormat mDecimalAngleFormat = new DecimalFormat("###.##°");
     private TextView mTwilightMorningValue;
     private TextView mTwilightEveningValue;
     private TextView mSunsetValue;
     private TextView mSunriseValue;
+    private TextView mSunriseAzimuthValue;
+    private TextView mSunsetAzimutValue;
 
     private TextView mMoonRiseValue;
     private TextView mMoonsetValue;
     private TextView mMoonIlluminationValue;
     private TextView mMoonAgeValue;
+    private TextView mFullMoonValue;
+    private TextView mNewMoonValue;
 
     private void wireControls(View view){
 
@@ -46,44 +56,64 @@ public class WeatherFragment extends Fragment {
             mTwilightEveningValue = (TextView) view.findViewById(R.id.twilightE_value);
             mSunsetValue = (TextView) view.findViewById(R.id.sunset_value);
             mSunriseValue = (TextView) view.findViewById(R.id.sunrise_value);
+            mSunriseAzimuthValue = (TextView) view.findViewById(R.id.azimuthSunrise_value);
+            mSunsetAzimutValue = (TextView) view.findViewById(R.id.azimuthSunset_value);
         }
         else if(mCurrentType == MOON){
             mMoonRiseValue = (TextView) view.findViewById(R.id.moonrise_value);
             mMoonsetValue = (TextView) view.findViewById(R.id.moonset_value);
             mMoonIlluminationValue = (TextView) view.findViewById(R.id.moonPhase_value);
             mMoonAgeValue = (TextView) view.findViewById(R.id.moonAge_value);
+            mFullMoonValue = (TextView) view.findViewById(R.id.fullmoon_value);
+            mNewMoonValue = (TextView) view.findViewById(R.id.newmoon_value);
         }
     }
 
-    private String astroDateToHourString(AstroDateTime astroDateTime){
+
+    private String astroDateToString(AstroDateTime astroDateTime, astroDateConversionType conversionType){
         String result;
+        if(astroDateTime == null)
+            return "Undefined";
+        switch (conversionType){
+            case DATE:
+                result = String.format(Locale.US, "%02d.%02d.%04d",astroDateTime.getDay(),
+                        astroDateTime.getMonth(),
+                        astroDateTime.getYear());
+                break;
+            case HOUR:
+                result = String.format(Locale.US, "%02d:%02d:%02d", astroDateTime.getHour(),
+                        astroDateTime.getMinute(),
+                        astroDateTime.getSecond());
+                break;
+            default:
+                result = "Undefined";
 
-        if(astroDateTime != null)
-            result = String.format(Locale.US, "%02d:%02d:%02d", astroDateTime.getHour(),
-                                                            astroDateTime.getMinute(),
-                                                            astroDateTime.getSecond());
-        else
-            result = "Undefined";
+        }
         return result;
-
     }
+
     public void updateAstronomicInformation(AstroCalculator astroCalculator){
 
         AstroCalculator.SunInfo sunInfo = astroCalculator.getSunInfo();
         AstroCalculator.MoonInfo moonInfo = astroCalculator.getMoonInfo();
 
         if(mCurrentType == SUN) {
-            mTwilightMorningValue.setText(astroDateToHourString(sunInfo.getTwilightMorning()));
-            mTwilightEveningValue.setText(astroDateToHourString(sunInfo.getTwilightEvening()));
-            mSunriseValue.setText(astroDateToHourString(sunInfo.getSunrise()));
-            mSunsetValue.setText(astroDateToHourString(sunInfo.getSunset()));
+            mTwilightMorningValue.setText(astroDateToString(sunInfo.getTwilightMorning(), astroDateConversionType.HOUR));
+            mTwilightEveningValue.setText(astroDateToString(sunInfo.getTwilightEvening(), astroDateConversionType.HOUR));
+            mSunriseValue.setText(astroDateToString(sunInfo.getSunrise(), astroDateConversionType.HOUR));
+            mSunsetValue.setText(astroDateToString(sunInfo.getSunset(), astroDateConversionType.HOUR));
+            mSunriseAzimuthValue.setText(mDecimalAngleFormat.format(sunInfo.getAzimuthRise()));
+            mSunsetAzimutValue.setText(mDecimalAngleFormat.format(sunInfo.getAzimuthSet()));
+
         }
         else if(mCurrentType == MOON)
         {
-            mMoonRiseValue.setText(astroDateToHourString(moonInfo.getMoonrise()));
-            mMoonsetValue.setText(astroDateToHourString(moonInfo.getMoonset()));
+            mMoonRiseValue.setText(astroDateToString(moonInfo.getMoonrise(), astroDateConversionType.HOUR));
+            mMoonsetValue.setText(astroDateToString(moonInfo.getMoonset(), astroDateConversionType.HOUR));
             mMoonIlluminationValue.setText(mDecimalPercentageFormat.format(moonInfo.getIllumination()));
             mMoonAgeValue.setText(mDecimalDaysFormat.format(moonInfo.getAge()));
+            mFullMoonValue.setText(astroDateToString(moonInfo.getNextFullMoon(), astroDateConversionType.DATE));
+            mNewMoonValue.setText(astroDateToString(moonInfo.getNextNewMoon(), astroDateConversionType.DATE));
         }
     }
 

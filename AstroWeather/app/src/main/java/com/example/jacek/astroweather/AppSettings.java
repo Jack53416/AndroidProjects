@@ -18,7 +18,6 @@ class AppSettings {
     Map<String, Integer> mRefreshDelayOptions_s = new LinkedHashMap<>();
     final int mInitialDelay_ms = 100;
     AstroCalculator mAstroCalculator;
-
     private DecimalFormat coordinatesFormat = new DecimalFormat("##.####°");
 
     static AppSettings get(){
