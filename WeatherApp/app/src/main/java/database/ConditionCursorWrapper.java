@@ -14,9 +14,8 @@ public class ConditionCursorWrapper extends CursorWrapper {
     }
 
     public Condition getCondition(){
-        Condition condition = new Condition();
+        Condition condition = new Condition(getInt(getColumnIndex(ConditionTable.Cols.WOEID)));
 
-        condition.woeid = getInt(getColumnIndex(ConditionTable.Cols.WOEID));
         condition.cityName = getString(getColumnIndex(ConditionTable.Cols.NAME));
         condition.code = getInt(getColumnIndex(ConditionTable.Cols.CONDITION_CODE));
         condition.date = new Date(getLong(getColumnIndex(ConditionTable.Cols.CONDITION_DATE)));

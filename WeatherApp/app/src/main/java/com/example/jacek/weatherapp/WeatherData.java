@@ -3,7 +3,10 @@ package com.example.jacek.weatherapp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Debug;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,10 +73,13 @@ public class WeatherData {
 
     public void addCondition(Condition condition){
         ContentValues values = getContentValues(condition);
-        mDatabase.insert(ConditionTable.NAME, null, values);
-
-        for(Forecast forecast : condition.forecasts){
-            addForecast(forecast, condition.woeid);
+        try{
+            mDatabase.insertOrThrow(ConditionTable.NAME, null, values);
+            for(Forecast forecast : condition.forecasts){
+                addForecast(forecast, condition.woeid);
+            }
+        }catch (SQLException ex){
+            Log.e("SQL_EXCEPTION", "Could not add Condition: " + ex.getMessage());
         }
     }
 
@@ -113,7 +119,7 @@ public class WeatherData {
     private ForecastCursorWrapper queryForecasts(String whereClause, String[] args){
 
         Cursor cursor = mDatabase.query(
-                ForecastTable.NAME,
+                ForecastView.NAME,
                 null,
                 whereClause,
                 args,
@@ -146,17 +152,17 @@ public class WeatherData {
 
     public List<Condition> getConditions(){
         List<Condition> conditions = new ArrayList<>();
+        Condition currentCondition;
 
-        ConditionCursorWrapper conditionCursor = queryConditions(null, null);
-        try{
-            conditionCursor.moveToFirst();
-            while(!conditionCursor.isAfterLast()){
-                conditions.add(conditionCursor.getCondition());
-                conditionCursor.moveToNext();
+        try (ConditionCursorWrapper cursor = queryConditions(null, null)) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                currentCondition = cursor.getCondition();
+                currentCondition.forecasts = getForecasts(currentCondition.woeid);
+                conditions.add(currentCondition);
+                cursor.moveToNext();
             }
 
-        }finally {
-            conditionCursor.close();
         }
 
         return conditions;

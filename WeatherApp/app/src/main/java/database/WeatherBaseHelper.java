@@ -18,7 +18,7 @@ public class WeatherBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sqlQuery = "CREATE TABLE " + ConditionTable.NAME + "(" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                ConditionTable.Cols.WOEID + ", " +
+                ConditionTable.Cols.WOEID + " INTEGER NOT NULL, " +
                 ConditionTable.Cols.NAME + ", " +
                 ConditionTable.Cols.CONDITION_CODE + ", " +
                 ConditionTable.Cols.CONDITION_DATE + ", " +
@@ -28,19 +28,23 @@ public class WeatherBaseHelper extends SQLiteOpenHelper {
                 ConditionTable.Cols.LONGITUDE + ", " +
                 ConditionTable.Cols.WIND_CHILL + ", " +
                 ConditionTable.Cols.WIND_DIRECTION + ", " +
-                ConditionTable.Cols.WIND_SPEED +
+                ConditionTable.Cols.WIND_SPEED + ", " +
+                "CONSTRAINT " + ConditionTable.Cols.WOEID + "_UNIQUE UNIQUE(" +
+                ConditionTable.Cols.WOEID + ") " +
                 ")";
         db.execSQL(sqlQuery);
 
         sqlQuery = "CREATE TABLE " + ForecastTable.NAME + "(" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                ForecastTable.Cols.WOEID + ", " +
+                ForecastTable.Cols.WOEID + " INTEGER NOT NULL, " +
                 ForecastTable.Cols.DATE + ", " +
                 ForecastTable.Cols.CODE + ", " +
                 ForecastTable.Cols.DAY + ", " +
                 ForecastTable.Cols.HIGH + ", " +
                 ForecastTable.Cols.LOW + ", " +
-                ForecastTable.Cols.TEXT +
+                ForecastTable.Cols.TEXT + ", " +
+                "FOREIGN KEY (WOEID) REFERENCES " + ConditionTable.NAME +
+                " (" + ConditionTable.Cols.WOEID + " ) ON DELETE CASCADE " +
                 ")";
 
         db.execSQL(sqlQuery);
@@ -55,12 +59,16 @@ public class WeatherBaseHelper extends SQLiteOpenHelper {
         db.execSQL(sqlQuery);
 
         sqlQuery = "CREATE VIEW " + ForecastView.NAME + " AS " +
-                "SELECT * FROM " + ForecastTable.NAME + " " +
-                "INNER JOIN " + ConditionTable.NAME + " ON " +
-                ConditionTable.NAME + "." + ConditionTable.Cols.WOEID + " = " +
-                ForecastTable.NAME + "." + ForecastTable.Cols.WOEID;
-
-        db.execSQL(sqlQuery);
+                "SELECT F." + ForecastTable.Cols.WOEID + ", " +
+                "F." + ForecastTable.Cols.DATE + ", " +
+                "F." + ForecastTable.Cols.CODE + ", " +
+                "F." + ForecastTable.Cols.DAY + ", " +
+                "F." + ForecastTable.Cols.HIGH + ", " +
+                "F." + ForecastTable.Cols.LOW + ", " +
+                "F." + ForecastTable.Cols.TEXT + " FROM " + ForecastTable.NAME +
+                " AS F INNER JOIN " + ConditionTable.NAME + " AS C ON " +
+                "F." + ForecastTable.Cols.WOEID + " = " + "C." + ConditionTable.Cols.WOEID;
+                    db.execSQL(sqlQuery);
     }
 
     @Override

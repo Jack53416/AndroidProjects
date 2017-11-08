@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Condition {
-    public int woeid;
+    public final int woeid;
     public String cityName;
     public double longitude;
     public double latitude;
@@ -19,4 +19,7 @@ public class Condition {
 
     public List<Forecast> forecasts = new ArrayList<>();
 
+    public Condition(int conditionWoeid){
+        woeid = conditionWoeid;
+    }
 }
