@@ -22,6 +22,7 @@ import static database.WeatherDbSchema.*;
 public class WeatherData {
 
     private static WeatherData mWeatherData;
+    public static final int CONDITION_LIMIT = 30;
     public List<Condition> mConditionList;
     private SQLiteDatabase mDatabase;
     private Context mContext;

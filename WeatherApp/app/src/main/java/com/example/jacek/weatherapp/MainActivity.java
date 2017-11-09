@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import database.Condition;
 import database.Forecast;
@@ -22,9 +24,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mWeatherData = WeatherData.getInstance(getBaseContext());
-        Condition a = new Condition(546);
+        Condition a = new Condition(505434);
         Forecast b = new Forecast();
-        a.cityName = "Ldz";
+        a.cityName = "whatecer";
         a.text = "Dupa test";
         b.text = "bad weather ahead";
         b.high = 15.2;
@@ -32,18 +34,25 @@ public class MainActivity extends AppCompatActivity {
         b.day = "tue";
         b.code = 23;
         a.forecasts.add(b);
-        mWeatherData.updateCondition(a);
+        mWeatherData.addCondition(a);
         mWeatherData.mConditionList = mWeatherData.getConditions();
         new FetchWeatherTask().execute();
     }
 
 
-    private class FetchWeatherTask extends AsyncTask<Void, Void, Void>{
+    private class FetchWeatherTask extends AsyncTask<Void, Void, List<Condition>>{
 
         @Override
-        protected Void doInBackground(Void... voids) {
-            new WeatherFetcher().fetchWeather();
-            return null;
+        protected List<Condition> doInBackground(Void... voids) {
+            if(android.os.Debug.isDebuggerConnected())
+                android.os.Debug.waitForDebugger();
+
+            return new WeatherFetcher().fetchWeather(mWeatherData.mConditionList);
+        }
+
+        @Override
+        protected void onPostExecute(List<Condition> items){
+            mWeatherData.mConditionList = items;
         }
     }
 }
