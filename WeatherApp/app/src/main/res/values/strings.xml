@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="menuRefresh">Refresh</string>
+    <string name="menuSettings">Settings</string>
+    <string name="menuAdd">Add</string>
+    <string name="menuDelete">Delete</string>
 </resources>
