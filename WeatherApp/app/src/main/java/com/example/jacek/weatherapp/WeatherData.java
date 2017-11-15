@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Debug;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -44,20 +43,21 @@ public class WeatherData {
     private static ContentValues getContentValues(Condition condition){
         ContentValues values = new ContentValues();
 
-        values.put(ConditionTable.Cols.WOEID, condition.woeid);
-        values.put(ConditionTable.Cols.NAME, condition.cityName);
-        values.put(ConditionTable.Cols.LATITUDE, condition.latitude);
-        values.put(ConditionTable.Cols.LONGITUDE, condition.longitude);
-        values.put(ConditionTable.Cols.CONDITION_CODE, condition.code);
-        values.put(ConditionTable.Cols.CONDITION_DATE, condition.date.getTime());
-        values.put(ConditionTable.Cols.CONDITION_TEMP, condition.temperature);
-        values.put(ConditionTable.Cols.CONDITION_TEXT, condition.text);
-        values.put(ConditionTable.Cols.WIND_CHILL, condition.windChill);
-        values.put(ConditionTable.Cols.WIND_DIRECTION, condition.windDirection);
-        values.put(ConditionTable.Cols.WIND_SPEED, condition.windSpeed);
-        values.put(ConditionTable.Cols.ATM_HUMIDITY, condition.humidity);
-        values.put(ConditionTable.Cols.ATM_PRESSURE, condition.pressure);
-        values.put(ConditionTable.Cols.ATM_VISIBILITY, condition.visibility);
+        values.put(ConditionTable.Cols.CITY_WOEID, condition.getCity().getWoeid());
+        values.put(ConditionTable.Cols.CITY_NAME, condition.getCity().getName());
+        values.put(ConditionTable.Cols.CITY_LATITUDE, condition.getCity().getLatitude());
+        values.put(ConditionTable.Cols.CITY_LONGITUDE, condition.getCity().getLongitude());
+        values.put(ConditionTable.Cols.CITY_COUNTRY, condition.getCity().getCountry());
+        values.put(ConditionTable.Cols.CONDITION_CODE, condition.getCode());
+        values.put(ConditionTable.Cols.CONDITION_DATE, condition.getDate().getTime());
+        values.put(ConditionTable.Cols.CONDITION_TEMP, condition.getTemperature());
+        values.put(ConditionTable.Cols.CONDITION_TEXT, condition.getText());
+        values.put(ConditionTable.Cols.WIND_CHILL, condition.getWindChill());
+        values.put(ConditionTable.Cols.WIND_DIRECTION, condition.getWindDirection());
+        values.put(ConditionTable.Cols.WIND_SPEED, condition.getWindSpeed());
+        values.put(ConditionTable.Cols.ATM_HUMIDITY, condition.getHumidity());
+        values.put(ConditionTable.Cols.ATM_PRESSURE, condition.getPressure());
+        values.put(ConditionTable.Cols.ATM_VISIBILITY, condition.getVisibility());
         return values;
     }
 
@@ -79,8 +79,8 @@ public class WeatherData {
         ContentValues values = getContentValues(condition);
         try{
             mDatabase.insertOrThrow(ConditionTable.NAME, null, values);
-            for(Forecast forecast : condition.forecasts){
-                addForecast(forecast, condition.woeid);
+            for(Forecast forecast : condition.getForecasts()){
+                addForecast(forecast, condition.getCity().getWoeid());
             }
         }catch (SQLException ex){
             Log.e("SQL_EXCEPTION", "Could not add Condition: " + ex.getMessage());
@@ -95,13 +95,13 @@ public class WeatherData {
     public void updateCondition(Condition condition){
         ContentValues values = getContentValues(condition);
         mDatabase.update(ConditionTable.NAME, values,
-                         ConditionTable.Cols.WOEID + " = ?", new String[]{String.valueOf(condition.woeid)});
+                         ConditionTable.Cols.CITY_WOEID + " = ?", new String[]{String.valueOf(condition.getCity().getWoeid())});
 
         mDatabase.delete(ForecastTable.NAME,
-                         ForecastTable.Cols.WOEID + "= ?", new String[]{String.valueOf(condition.woeid)});
+                         ForecastTable.Cols.WOEID + "= ?", new String[]{String.valueOf(condition.getCity().getWoeid())});
 
-        for(Forecast forecast : condition.forecasts){
-            addForecast(forecast, condition.woeid);
+        for(Forecast forecast : condition.getForecasts()){
+            addForecast(forecast, condition.getCity().getWoeid());
         }
     }
 
@@ -162,7 +162,7 @@ public class WeatherData {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 currentCondition = cursor.getCondition();
-                currentCondition.forecasts = getForecasts(currentCondition.woeid);
+                currentCondition.setForecasts(getForecasts(currentCondition.getCity().getWoeid()));
                 conditions.add(currentCondition);
                 cursor.moveToNext();
             }

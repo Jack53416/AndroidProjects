@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Locale;
 
+import database.City;
 import database.Condition;
 
 public class CityListFragment extends Fragment {
@@ -68,7 +69,7 @@ public class CityListFragment extends Fragment {
         WeatherData weatherData = WeatherData.getInstance(getContext());
 
         if(mCityAdapter == null) {
-            mCityAdapter = new CityAdapter(weatherData.mConditionList);
+            mCityAdapter = new CityAdapter(Condition.getCityList(weatherData.mConditionList));
             mCityRecyclerView.setAdapter(mCityAdapter);
         }
         else{
@@ -79,7 +80,7 @@ public class CityListFragment extends Fragment {
 
     private class CityHolder extends RecyclerView.ViewHolder{
 
-        private Condition mCity;
+        private City mCity;
 
         public TextView mCityNameTextView;
         public CheckBox mCityCheckBox;
@@ -93,18 +94,19 @@ public class CityListFragment extends Fragment {
             mCityCheckBox = itemView.findViewById(R.id.list_item_city_mark);
         }
 
-        public void bindCity(Condition city){
+        public void bindCity(City city){
             mCity = city;
-            mCityNameTextView.setText(mCity.cityName);
-            mCityDescription.setText(String.format(Locale.US,"%f %f", mCity.longitude, mCity.latitude));
+            mCityNameTextView.setText(mCity.getName());
+            mCityDescription.setText(String.format(Locale.US,"%s (%.3f %.3f)", mCity.getCountry(),
+                    mCity.getLongitude(), mCity.getLatitude()));
         }
     }
 
     private class CityAdapter extends RecyclerView.Adapter<CityHolder>{
 
-        private List<Condition> mCities;
+        private List<City> mCities;
 
-        public CityAdapter(List<Condition> cities){
+        public CityAdapter(List<City> cities){
             mCities = cities;
         }
 
@@ -118,8 +120,8 @@ public class CityListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(CityHolder holder, int position) {
-            Condition condition = mCities.get(position);
-            holder.bindCity(condition);
+            City city = mCities.get(position);
+            holder.bindCity(city);
         }
 
         @Override

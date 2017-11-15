@@ -3,7 +3,6 @@ package com.example.jacek.weatherapp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -15,10 +14,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 
+import database.City;
 import database.Condition;
 import database.Forecast;
 
@@ -28,7 +28,7 @@ class WeatherFetcher {
     private static final String WEATHER_QUERY_TEMPLATE = "select wind, atmosphere, item.lat, item.long, item.condition, item.forecast from " +
                                     "weather.forecast(" + String.valueOf(WeatherData.CONDITION_LIMIT) +
                                     ") where u=@unit";
-    private static final String CITY_QUERY_TEMPLATE = "select woeid,name,country from geo.places(1) where text=@cityName";
+    private static final String CITY_QUERY_TEMPLATE = "select woeid,name,country,centroid from geo.places(1) where text=@cityName";
 
 
     private byte[] getUrlBytes(String urlSpec) throws IOException{
@@ -61,21 +61,22 @@ class WeatherFetcher {
         return new String(getUrlBytes(urlSpec));
     }
 
-    List<Condition> fetchWeather(List<Condition> conditions){
+    List<Condition> fetchWeather(List<City> cities){
 
+        List<Condition> conditions = null;
         try {
             String url = Uri.parse(API_URL)
                     .buildUpon()
                     .appendQueryParameter("format", "json")
                     .appendQueryParameter("unit", "\"c\"")
                     .appendQueryParameter("crossProduct","optimized")
-                    .appendQueryParameter("q", WEATHER_QUERY_TEMPLATE + " and woeid in " + getWoeidList(conditions, ','))
+                    .appendQueryParameter("q", WEATHER_QUERY_TEMPLATE + " and woeid in " + City.getWoeidList(cities, ','))
                     .build()
                     .toString();
             String jsonString = getUrlString(url);
             Log.i("FETCHER", jsonString);
             JSONObject jsonBody = new JSONObject(jsonString);
-            updateConditions(conditions, jsonBody);
+            conditions = updateConditions(cities, jsonBody);
         }
         catch (IOException ioEx){
             Log.e("FETCHER", "Could not retrieve: ", ioEx);
@@ -86,7 +87,7 @@ class WeatherFetcher {
         return conditions;
     }
 
-    Condition fetchWoeid(String cityName){
+    Condition fetchCity(String cityName){
         Condition conditionItem = null;
 
         try{
@@ -105,9 +106,14 @@ class WeatherFetcher {
             if(jsonQuery.getInt("count") == 0)
                 return null;
             JSONObject jsonResults = jsonQuery.getJSONObject("results");
-            conditionItem = new Condition(jsonResults.getJSONObject("place").getInt("woeid"));
-            conditionItem.cityName = jsonResults.getJSONObject("place").getString("name");
-
+            JSONObject jsonPlace = jsonResults.getJSONObject("place");
+            City city = new City();
+            city.setWoeid(jsonPlace.getInt("woeid"));
+            city.setName(jsonPlace.getString("name"));
+            city.setCountry(jsonPlace.getJSONObject("country").getString("content"));
+            city.setLatitude(jsonPlace.getJSONObject("centroid").getDouble("latitude"));
+            city.setLongitude(jsonPlace.getJSONObject("centroid").getDouble("longitude"));
+            conditionItem = new Condition(city);
         }catch (IOException ioEx){
             Log.e("FETCHER", "Could not retrieve: ", ioEx);
         }
@@ -118,51 +124,37 @@ class WeatherFetcher {
         return conditionItem;
     }
 
-    @NonNull
-    private String getWoeidList(List<Condition> conditions, char delimiter){
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append('(');
-        for(int i = 0, size = conditions.size() - 1; i < size; i++){
-            stringBuilder.append(conditions.get(i).woeid);
-            stringBuilder.append(delimiter);
-        }
-        stringBuilder.append(conditions.get(conditions.size() - 1).woeid);
-        stringBuilder.append(')');
-        return stringBuilder.toString();
-    }
-
-    private void updateConditions(List<Condition> conditions, JSONObject jsonBody) throws
+    private List<Condition> updateConditions(List<City> cities, JSONObject jsonBody) throws
         IOException, JSONException
     {
+        List<Condition> conditionList = new ArrayList<>();
+        Condition conditionItem;
+
         Object jsonChannelObject = jsonBody.getJSONObject("query").getJSONObject("results").get("channel");
         JSONArray jsonConditions;
-        ListIterator<Condition> iterator = conditions.listIterator();
-        iterator.next();
+
 
         if(jsonChannelObject instanceof JSONArray) {
             jsonConditions = (JSONArray) jsonChannelObject;
-            if (conditions.size() != jsonConditions.length()) {
+            if (cities.size() != jsonConditions.length()) {
                 Log.e(TAG, "Could not update, received less conditions data than requested");
-                return;
+                return null;
             }
             for(int i = 0, size = jsonConditions.length(); i < size; i++){
-                Condition conditionItem = parseCondition(jsonConditions.getJSONObject(i),
-                                                         conditions.get(i).woeid,
-                                                         conditions.get(i).cityName);
-                iterator.set(conditionItem);
-                if(iterator.hasNext())
-                    iterator.next();
+                conditionItem = parseCondition(jsonConditions.getJSONObject(i),
+                                                         cities.get(i));
+                conditionList.add(conditionItem);
             }
         }
         else{
-            Condition parsedCondition = parseCondition((JSONObject) jsonChannelObject,
-                                                        conditions.get(0).woeid,
-                                                        conditions.get(0).cityName);
-            iterator.set(parsedCondition);
+            conditionItem = parseCondition((JSONObject) jsonChannelObject,
+                                                        cities.get(0));
+            conditionList.add(conditionItem);
         }
+        return conditionList;
     }
 
-    private Condition parseCondition(JSONObject jsonChannel, int woeid, String cityName)
+    private Condition parseCondition(JSONObject jsonChannel, City city)
     throws JSONException
     {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.US);
@@ -172,33 +164,31 @@ class WeatherFetcher {
         JSONObject jsonAtmosphere = jsonChannel.getJSONObject("atmosphere");
         JSONArray jsonForecasts = jsonItem.getJSONArray("forecast");
 
-        Condition conditionItem = new Condition(woeid);
-        conditionItem.cityName = cityName;
+        Condition conditionItem = new Condition(city);
 
-        conditionItem.latitude = jsonItem.getDouble("lat");
-        conditionItem.longitude = jsonItem.getDouble("long");
-        conditionItem.code = jsonCondition.getInt("code");
+        conditionItem.setCode(jsonCondition.getInt("code"));
         try {
-            conditionItem.date = dateFormat.parse(jsonCondition.getString("date"));
+            conditionItem.setDate(dateFormat.parse(jsonCondition.getString("date")));
         } catch (ParseException ex) {
             Log.e(TAG, "Could not parse forecast date: " + ex.getMessage());
         }
-        conditionItem.temperature = jsonCondition.getDouble("temp");
-        conditionItem.text = jsonCondition.getString("text");
-        conditionItem.windChill = jsonWind.getInt("chill");
-        conditionItem.windDirection = jsonWind.getInt("direction");
-        conditionItem.windSpeed = jsonWind.getDouble("speed");
-        conditionItem.pressure = jsonAtmosphere.getDouble("pressure");
-        conditionItem.humidity = jsonAtmosphere.getInt("humidity");
-        conditionItem.visibility = jsonAtmosphere.getDouble("visibility");
+        conditionItem.setTemperature(jsonCondition.getDouble("temp"));
+        conditionItem.setText(jsonCondition.getString("text"));
+        conditionItem.setWindChill(jsonWind.getInt("chill"));
+        conditionItem.setWindDirection(jsonWind.getInt("direction"));
+        conditionItem.setWindSpeed(jsonWind.getDouble("speed"));
+        conditionItem.setPressure(jsonAtmosphere.getDouble("pressure"));
+        conditionItem.setHumidity(jsonAtmosphere.getInt("humidity"));
+        conditionItem.setVisibility(jsonAtmosphere.getDouble("visibility"));
 
-        parseForecasts(conditionItem.forecasts, jsonForecasts);
+        conditionItem.setForecasts(parseForecasts(jsonForecasts));
         return conditionItem;
     }
 
-    private void parseForecasts(List<Forecast> forecasts, JSONArray jsonForecasts) throws
+    private List<Forecast> parseForecasts(JSONArray jsonForecasts) throws
             JSONException
     {
+        List<Forecast> forecasts = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.US);
         JSONObject jsonForecast;
 
@@ -220,5 +210,6 @@ class WeatherFetcher {
 
             forecasts.add(forecastItem);
         }
+        return forecasts;
     }
 }

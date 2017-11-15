@@ -7,10 +7,11 @@ public class WeatherDbSchema {
         public static final String NAME = "CONDITIONS";
 
         public static final class Cols{
-            public static final String WOEID = "WOEID";
-            public static final String NAME = "NAME";
-            public static final String LATITUDE = "LATITUDE";
-            public static final String LONGITUDE = "LONGITUDE";
+            public static final String CITY_WOEID = "CITY_WOEID";
+            public static final String CITY_NAME = "CITY_NAME";
+            public static final String CITY_LATITUDE = "CITY_LATITUDE";
+            public static final String CITY_LONGITUDE = "CITY_LONGITUDE";
+            public static final String CITY_COUNTRY = "CITY_COUNTRY";
             public static final String CONDITION_CODE = "CONDITION_CODE";
             public static final String CONDITION_DATE = "CONDITION_DATE";
             public static final String CONDITION_TEMP = "CONDITION_TEMP";
@@ -28,7 +29,7 @@ public class WeatherDbSchema {
     public static final class ForecastTable{
         public static final String NAME = "FORECASTS";
         public static final class Cols{
-            public static final String WOEID = "WOEID";
+            public static final String WOEID = "CITY_WOEID";
             public static final String DATE = "DATE";
             public static final String CODE = "CODE";
             public static final String DAY = "DAY";

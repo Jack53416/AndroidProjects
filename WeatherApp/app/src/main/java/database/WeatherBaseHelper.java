@@ -18,22 +18,23 @@ public class WeatherBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sqlQuery = "CREATE TABLE " + ConditionTable.NAME + "(" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                ConditionTable.Cols.WOEID + " INTEGER NOT NULL, " +
-                ConditionTable.Cols.NAME + ", " +
+                ConditionTable.Cols.CITY_WOEID + " INTEGER NOT NULL, " +
+                ConditionTable.Cols.CITY_NAME + ", " +
                 ConditionTable.Cols.CONDITION_CODE + ", " +
                 ConditionTable.Cols.CONDITION_DATE + ", " +
                 ConditionTable.Cols.CONDITION_TEMP + ", " +
                 ConditionTable.Cols.CONDITION_TEXT + ", " +
-                ConditionTable.Cols.LATITUDE + ", " +
-                ConditionTable.Cols.LONGITUDE + ", " +
+                ConditionTable.Cols.CITY_LATITUDE + ", " +
+                ConditionTable.Cols.CITY_LONGITUDE + ", " +
+                ConditionTable.Cols.CITY_COUNTRY + ", " +
                 ConditionTable.Cols.WIND_CHILL + ", " +
                 ConditionTable.Cols.WIND_DIRECTION + ", " +
                 ConditionTable.Cols.WIND_SPEED + ", " +
                 ConditionTable.Cols.ATM_HUMIDITY + ", " +
                 ConditionTable.Cols.ATM_PRESSURE + ", " +
                 ConditionTable.Cols.ATM_VISIBILITY + ", " +
-                "CONSTRAINT " + ConditionTable.Cols.WOEID + "_UNIQUE UNIQUE(" +
-                ConditionTable.Cols.WOEID + ") " +
+                "CONSTRAINT " + ConditionTable.Cols.CITY_WOEID + "_UNIQUE UNIQUE(" +
+                ConditionTable.Cols.CITY_WOEID + ") " +
                 ")";
         db.execSQL(sqlQuery);
 
@@ -46,8 +47,8 @@ public class WeatherBaseHelper extends SQLiteOpenHelper {
                 ForecastTable.Cols.HIGH + ", " +
                 ForecastTable.Cols.LOW + ", " +
                 ForecastTable.Cols.TEXT + ", " +
-                "FOREIGN KEY (WOEID) REFERENCES " + ConditionTable.NAME +
-                " (" + ConditionTable.Cols.WOEID + " ) ON DELETE CASCADE " +
+                "FOREIGN KEY (CITY_WOEID) REFERENCES " + ConditionTable.NAME +
+                " (" + ConditionTable.Cols.CITY_WOEID + " ) ON DELETE CASCADE " +
                 ")";
 
         db.execSQL(sqlQuery);
@@ -70,7 +71,7 @@ public class WeatherBaseHelper extends SQLiteOpenHelper {
                 "F." + ForecastTable.Cols.LOW + ", " +
                 "F." + ForecastTable.Cols.TEXT + " FROM " + ForecastTable.NAME +
                 " AS F INNER JOIN " + ConditionTable.NAME + " AS C ON " +
-                "F." + ForecastTable.Cols.WOEID + " = " + "C." + ConditionTable.Cols.WOEID;
+                "F." + ForecastTable.Cols.WOEID + " = " + "C." + ConditionTable.Cols.CITY_WOEID;
                     db.execSQL(sqlQuery);
     }
 

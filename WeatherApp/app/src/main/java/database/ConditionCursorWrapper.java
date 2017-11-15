@@ -14,21 +14,24 @@ public class ConditionCursorWrapper extends CursorWrapper {
     }
 
     public Condition getCondition(){
-        Condition condition = new Condition(getInt(getColumnIndex(ConditionTable.Cols.WOEID)));
+        City city = new City();
+        city.setName(getString(getColumnIndex(ConditionTable.Cols.CITY_NAME)));
+        city.setWoeid(getInt(getColumnIndex(ConditionTable.Cols.CITY_WOEID)));
+        city.setLatitude(getDouble(getColumnIndex(ConditionTable.Cols.CITY_LATITUDE)));
+        city.setLongitude(getDouble(getColumnIndex(ConditionTable.Cols.CITY_LONGITUDE)));
+        city.setCountry(getString(getColumnIndex(ConditionTable.Cols.CITY_COUNTRY)));
 
-        condition.cityName = getString(getColumnIndex(ConditionTable.Cols.NAME));
-        condition.code = getInt(getColumnIndex(ConditionTable.Cols.CONDITION_CODE));
-        condition.date = new Date(getLong(getColumnIndex(ConditionTable.Cols.CONDITION_DATE)));
-        condition.latitude = getDouble(getColumnIndex(ConditionTable.Cols.LATITUDE));
-        condition.longitude = getDouble(getColumnIndex(ConditionTable.Cols.LONGITUDE));
-        condition.temperature = getDouble(getColumnIndex(ConditionTable.Cols.CONDITION_TEMP));
-        condition.text = getString(getColumnIndex(ConditionTable.Cols.CONDITION_TEXT));
-        condition.windChill = getInt(getColumnIndex(ConditionTable.Cols.WIND_CHILL));
-        condition.windDirection = getInt(getColumnIndex(ConditionTable.Cols.WIND_DIRECTION));
-        condition.windSpeed = getDouble(getColumnIndex(ConditionTable.Cols.WIND_SPEED));
-        condition.pressure = getDouble(getColumnIndex(ConditionTable.Cols.ATM_PRESSURE));
-        condition.humidity = getInt(getColumnIndex(ConditionTable.Cols.ATM_HUMIDITY));
-        condition.visibility = getDouble(getColumnIndex(ConditionTable.Cols.ATM_VISIBILITY));
+        Condition condition = new Condition(city);
+        condition.setCode(getInt(getColumnIndex(ConditionTable.Cols.CONDITION_CODE)));
+        condition.setDate(new Date(getLong(getColumnIndex(ConditionTable.Cols.CONDITION_DATE))));
+        condition.setTemperature(getDouble(getColumnIndex(ConditionTable.Cols.CONDITION_TEMP)));
+        condition.setText(getString(getColumnIndex(ConditionTable.Cols.CONDITION_TEXT)));
+        condition.setWindChill(getInt(getColumnIndex(ConditionTable.Cols.WIND_CHILL)));
+        condition.setWindDirection(getInt(getColumnIndex(ConditionTable.Cols.WIND_DIRECTION)));
+        condition.setWindSpeed( getDouble(getColumnIndex(ConditionTable.Cols.WIND_SPEED)));
+        condition.setPressure(getDouble(getColumnIndex(ConditionTable.Cols.ATM_PRESSURE)));
+        condition.setHumidity(getInt(getColumnIndex(ConditionTable.Cols.ATM_HUMIDITY)));
+        condition.setVisibility(getDouble(getColumnIndex(ConditionTable.Cols.ATM_VISIBILITY)));
 
         return condition;
     }

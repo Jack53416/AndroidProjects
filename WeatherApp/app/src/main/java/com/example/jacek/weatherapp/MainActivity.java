@@ -1,24 +1,16 @@
 package com.example.jacek.weatherapp;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import database.Condition;
-import database.Forecast;
-import database.WeatherBaseHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mWeatherData = WeatherData.getInstance(getBaseContext());
         mWeatherData.mConditionList = mWeatherData.getConditions();
+
         Condition newCity = null;
         try {
           newCity = new FetchWoeidTask().execute("Gdansk").get();
@@ -52,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (newCity != null)
             mWeatherData.addCondition(newCity);
+        mWeatherData.mConditionList = mWeatherData.getConditions();
         new FetchWeatherTask().execute();
     }
 
@@ -88,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected List<Condition> doInBackground(Void... voids) {
             waitForDebugger();
-            return new WeatherFetcher().fetchWeather(mWeatherData.mConditionList);
+            return new WeatherFetcher().fetchWeather(Condition.getCityList(mWeatherData.mConditionList));
         }
 
         @Override
@@ -103,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         protected Condition doInBackground(String... strings) {
             waitForDebugger();
             String cityName = strings[0];
-            return new WeatherFetcher().fetchWoeid(cityName);
+            return new WeatherFetcher().fetchCity(cityName);
         }
 
         @Override
