@@ -103,8 +103,8 @@ public class AstroWeatherActivity extends AppCompatActivity implements SettingsD
 
     }
     @Override
-    public void onPause(){
-        super.onPause();
+    public void onDestroy(){
+        super.onDestroy();
         mTimerHandler.removeCallbacks(mTimerRunnable);
 
     }

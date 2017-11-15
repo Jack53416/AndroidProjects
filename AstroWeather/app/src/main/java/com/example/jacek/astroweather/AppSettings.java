@@ -22,7 +22,7 @@ class AppSettings {
 
     static AppSettings get(){
         if(sAppSettings == null)
-            sAppSettings = new AppSettings();
+            sAppSettings = new AppSettings( );
         return sAppSettings;
     }
 
@@ -60,7 +60,7 @@ class AppSettings {
     AstroDateTime getCurrentAstroDateTime(){
         Calendar currentTime = Calendar.getInstance();
         TimeZone timeZone = currentTime.getTimeZone();
-        int timeZoneOffset =  (int) TimeUnit.HOURS.convert(timeZone.getRawOffset() + timeZone.getDSTSavings(), TimeUnit.MILLISECONDS);
+        int timeZoneOffset =  (int) TimeUnit.HOURS.convert(timeZone.getRawOffset() /*+ timeZone.getDSTSavings()*/, TimeUnit.MILLISECONDS);
         return new AstroDateTime(currentTime.get(Calendar.YEAR),
                 currentTime.get(Calendar.MONTH) + 1,
                 currentTime.get(Calendar.DAY_OF_MONTH),

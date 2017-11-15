@@ -23,7 +23,7 @@ public class WeatherFragment extends Fragment {
         SUN
     }
 
-    enum astroDateConversionType{
+    private enum astroDateConversionType{
         HOUR,
         DATE
     }
