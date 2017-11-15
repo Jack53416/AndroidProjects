@@ -26,6 +26,9 @@ public class ConditionCursorWrapper extends CursorWrapper {
         condition.windChill = getInt(getColumnIndex(ConditionTable.Cols.WIND_CHILL));
         condition.windDirection = getInt(getColumnIndex(ConditionTable.Cols.WIND_DIRECTION));
         condition.windSpeed = getDouble(getColumnIndex(ConditionTable.Cols.WIND_SPEED));
+        condition.pressure = getDouble(getColumnIndex(ConditionTable.Cols.ATM_PRESSURE));
+        condition.humidity = getInt(getColumnIndex(ConditionTable.Cols.ATM_HUMIDITY));
+        condition.visibility = getDouble(getColumnIndex(ConditionTable.Cols.ATM_VISIBILITY));
 
         return condition;
     }

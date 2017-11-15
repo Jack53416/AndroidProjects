@@ -16,6 +16,9 @@ public class Condition {
     public int windChill;
     public int windDirection;
     public double windSpeed;
+    public int humidity;
+    public double pressure;
+    public double visibility;
 
     public List<Forecast> forecasts = new ArrayList<>();
 

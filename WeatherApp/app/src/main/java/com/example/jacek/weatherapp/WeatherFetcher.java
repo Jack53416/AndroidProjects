@@ -22,16 +22,16 @@ import java.util.Locale;
 import database.Condition;
 import database.Forecast;
 
-public class WeatherFetcher {
+class WeatherFetcher {
     private static final String TAG = "WEATHER_FETCHER";
     private static final String API_URL = "http://query.yahooapis.com/v1/public/yql";
-    private static final String WEATHER_QUERY_TEMPLATE = "select wind, item.lat, item.long, item.condition, item.forecast from " +
+    private static final String WEATHER_QUERY_TEMPLATE = "select wind, atmosphere, item.lat, item.long, item.condition, item.forecast from " +
                                     "weather.forecast(" + String.valueOf(WeatherData.CONDITION_LIMIT) +
                                     ") where u=@unit";
     private static final String CITY_QUERY_TEMPLATE = "select woeid,name,country from geo.places(1) where text=@cityName";
 
 
-    public byte[] getUrlBytes(String urlSpec) throws IOException{
+    private byte[] getUrlBytes(String urlSpec) throws IOException{
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
@@ -45,7 +45,7 @@ public class WeatherFetcher {
                         urlSpec);
             }
 
-            int bytesRead = 0;
+            int bytesRead;
             byte[] buffer = new byte[1024];
             while((bytesRead = in.read(buffer))>0){
                 out.write(buffer, 0, bytesRead);
@@ -57,11 +57,11 @@ public class WeatherFetcher {
         }
     }
 
-    public String getUrlString(String urlSpec) throws IOException{
+    private String getUrlString(String urlSpec) throws IOException{
         return new String(getUrlBytes(urlSpec));
     }
 
-    public List<Condition> fetchWeather(List<Condition> conditions){
+    List<Condition> fetchWeather(List<Condition> conditions){
 
         try {
             String url = Uri.parse(API_URL)
@@ -86,7 +86,7 @@ public class WeatherFetcher {
         return conditions;
     }
 
-    public Condition fetchWoeid(String cityName){
+    Condition fetchWoeid(String cityName){
         Condition conditionItem = null;
 
         try{
@@ -163,12 +163,13 @@ public class WeatherFetcher {
     }
 
     private Condition parseCondition(JSONObject jsonChannel, int woeid, String cityName)
-    throws JSONException, IOException
+    throws JSONException
     {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.US);
         JSONObject jsonWind = jsonChannel.getJSONObject("wind");
         JSONObject jsonItem = jsonChannel.getJSONObject("item");
         JSONObject jsonCondition = jsonItem.getJSONObject("condition");
+        JSONObject jsonAtmosphere = jsonChannel.getJSONObject("atmosphere");
         JSONArray jsonForecasts = jsonItem.getJSONArray("forecast");
 
         Condition conditionItem = new Condition(woeid);
@@ -187,13 +188,16 @@ public class WeatherFetcher {
         conditionItem.windChill = jsonWind.getInt("chill");
         conditionItem.windDirection = jsonWind.getInt("direction");
         conditionItem.windSpeed = jsonWind.getDouble("speed");
+        conditionItem.pressure = jsonAtmosphere.getDouble("pressure");
+        conditionItem.humidity = jsonAtmosphere.getInt("humidity");
+        conditionItem.visibility = jsonAtmosphere.getDouble("visibility");
 
         parseForecasts(conditionItem.forecasts, jsonForecasts);
         return conditionItem;
     }
 
     private void parseForecasts(List<Forecast> forecasts, JSONArray jsonForecasts) throws
-        IOException, JSONException
+            JSONException
     {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.US);
         JSONObject jsonForecast;

@@ -55,6 +55,9 @@ public class WeatherData {
         values.put(ConditionTable.Cols.WIND_CHILL, condition.windChill);
         values.put(ConditionTable.Cols.WIND_DIRECTION, condition.windDirection);
         values.put(ConditionTable.Cols.WIND_SPEED, condition.windSpeed);
+        values.put(ConditionTable.Cols.ATM_HUMIDITY, condition.humidity);
+        values.put(ConditionTable.Cols.ATM_PRESSURE, condition.pressure);
+        values.put(ConditionTable.Cols.ATM_VISIBILITY, condition.visibility);
         return values;
     }
 

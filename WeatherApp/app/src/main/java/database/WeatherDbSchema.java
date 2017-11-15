@@ -18,6 +18,9 @@ public class WeatherDbSchema {
             public static final String WIND_CHILL = "WIND_CHILL";
             public static final String WIND_DIRECTION = "WIND_DIRECTION";
             public static final String WIND_SPEED = "WIND_SPEED";
+            public static final String ATM_PRESSURE = "ATM_PRESSURE";
+            public static final String ATM_HUMIDITY = "ATM_HUMIDITY";
+            public static final String ATM_VISIBILITY = "ATM_VISIBILITY";
         }
 
     }

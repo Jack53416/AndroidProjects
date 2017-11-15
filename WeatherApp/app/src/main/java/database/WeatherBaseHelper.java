@@ -29,6 +29,9 @@ public class WeatherBaseHelper extends SQLiteOpenHelper {
                 ConditionTable.Cols.WIND_CHILL + ", " +
                 ConditionTable.Cols.WIND_DIRECTION + ", " +
                 ConditionTable.Cols.WIND_SPEED + ", " +
+                ConditionTable.Cols.ATM_HUMIDITY + ", " +
+                ConditionTable.Cols.ATM_PRESSURE + ", " +
+                ConditionTable.Cols.ATM_VISIBILITY + ", " +
                 "CONSTRAINT " + ConditionTable.Cols.WOEID + "_UNIQUE UNIQUE(" +
                 ConditionTable.Cols.WOEID + ") " +
                 ")";
