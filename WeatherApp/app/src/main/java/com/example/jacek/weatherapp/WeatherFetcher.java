@@ -62,7 +62,6 @@ public class WeatherFetcher {
 
     public List<Condition> fetchWeather(List<Condition> conditions){
 
-        conditions = new ArrayList<>(conditions);
         try {
             String url = Uri.parse(API_URL)
                     .buildUpon()
@@ -102,54 +101,62 @@ public class WeatherFetcher {
     private void parseConditions(List<Condition> conditions, JSONObject jsonBody) throws
         IOException, JSONException
     {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.US);
-
-        JSONArray jsonConditions = jsonBody.getJSONObject("query").getJSONObject("results").getJSONArray("channel");
-        JSONObject jsonChannel;
-        JSONObject jsonWind;
-        JSONObject jsonItem;
-        JSONObject jsonCondition;
-        JSONArray jsonForecasts;
-        if(conditions.size() != jsonConditions.length())
-        {
-            Log.e(TAG, "Could not update, received less conditions data than requested");
-            return;
-        }
-
-
+        Object jsonChannelObject = jsonBody.getJSONObject("query").getJSONObject("results").get("channel");
+        JSONArray jsonConditions;
         ListIterator<Condition> iterator = conditions.listIterator();
         iterator.next();
 
-        for(int i = 0, size = jsonConditions.length(); i < size; i++){
-            jsonChannel = jsonConditions.getJSONObject(i);
-            jsonWind = jsonChannel.getJSONObject("wind");
-            jsonItem = jsonChannel.getJSONObject("item");
-            jsonCondition = jsonItem.getJSONObject("condition");
-            jsonForecasts = jsonItem.getJSONArray("forecast");
-
-            Condition conditionItem = new Condition(conditions.get(i).woeid);
-            conditionItem.cityName = conditions.get(i).cityName;
-
-            conditionItem.latitude = jsonItem.getDouble("lat");
-            conditionItem.longitude = jsonItem.getDouble("long");
-            conditionItem.code = jsonCondition.getInt("code");
-            try {
-                conditionItem.date = dateFormat.parse(jsonCondition.getString("date"));
-            } catch (ParseException ex) {
-                Log.e(TAG, "Could not parse forecast date: " + ex.getMessage());
+        if(jsonChannelObject instanceof JSONArray) {
+            jsonConditions = (JSONArray) jsonChannelObject;
+            if (conditions.size() != jsonConditions.length()) {
+                Log.e(TAG, "Could not update, received less conditions data than requested");
+                return;
             }
-            conditionItem.temperature = jsonCondition.getDouble("temp");
-            conditionItem.text = jsonCondition.getString("text");
-            conditionItem.windChill = jsonWind.getInt("chill");
-            conditionItem.windDirection = jsonWind.getInt("direction");
-            conditionItem.windSpeed = jsonWind.getDouble("speed");
-
-            parseForecasts(conditionItem.forecasts, jsonForecasts);
-            iterator.set(conditionItem);
-            if(iterator.hasNext())
-                iterator.next();
+            for(int i = 0, size = jsonConditions.length(); i < size; i++){
+                Condition conditionItem = parseCondition(jsonConditions.getJSONObject(i),
+                                                         conditions.get(i).woeid,
+                                                         conditions.get(i).cityName);
+                iterator.set(conditionItem);
+                if(iterator.hasNext())
+                    iterator.next();
+            }
         }
+        else{
+            Condition parsedCondition = parseCondition((JSONObject) jsonChannelObject,
+                                                        conditions.get(0).woeid,
+                                                        conditions.get(0).cityName);
+            iterator.set(parsedCondition);
+        }
+    }
 
+    private Condition parseCondition(JSONObject jsonChannel, int woeid, String cityName)
+    throws JSONException, IOException
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.US);
+        JSONObject jsonWind = jsonChannel.getJSONObject("wind");
+        JSONObject jsonItem = jsonChannel.getJSONObject("item");
+        JSONObject jsonCondition = jsonItem.getJSONObject("condition");
+        JSONArray jsonForecasts = jsonItem.getJSONArray("forecast");
+
+        Condition conditionItem = new Condition(woeid);
+        conditionItem.cityName = cityName;
+
+        conditionItem.latitude = jsonItem.getDouble("lat");
+        conditionItem.longitude = jsonItem.getDouble("long");
+        conditionItem.code = jsonCondition.getInt("code");
+        try {
+            conditionItem.date = dateFormat.parse(jsonCondition.getString("date"));
+        } catch (ParseException ex) {
+            Log.e(TAG, "Could not parse forecast date: " + ex.getMessage());
+        }
+        conditionItem.temperature = jsonCondition.getDouble("temp");
+        conditionItem.text = jsonCondition.getString("text");
+        conditionItem.windChill = jsonWind.getInt("chill");
+        conditionItem.windDirection = jsonWind.getInt("direction");
+        conditionItem.windSpeed = jsonWind.getDouble("speed");
+
+        parseForecasts(conditionItem.forecasts, jsonForecasts);
+        return conditionItem;
     }
 
     private void parseForecasts(List<Forecast> forecasts, JSONArray jsonForecasts) throws

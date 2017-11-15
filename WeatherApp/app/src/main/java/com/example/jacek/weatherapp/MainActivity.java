@@ -24,17 +24,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mWeatherData = WeatherData.getInstance(getBaseContext());
-        Condition a = new Condition(505434);
-        Forecast b = new Forecast();
-        a.cityName = "whatecer";
-        a.text = "Dupa test";
-        b.text = "bad weather ahead";
-        b.high = 15.2;
-        b.low = 13.3;
-        b.day = "tue";
-        b.code = 23;
-        a.forecasts.add(b);
-        mWeatherData.addCondition(a);
         mWeatherData.mConditionList = mWeatherData.getConditions();
         new FetchWeatherTask().execute();
     }
