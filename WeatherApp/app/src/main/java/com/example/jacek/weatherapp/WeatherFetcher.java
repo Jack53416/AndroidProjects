@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -26,9 +25,11 @@ import database.Forecast;
 public class WeatherFetcher {
     private static final String TAG = "WEATHER_FETCHER";
     private static final String API_URL = "http://query.yahooapis.com/v1/public/yql";
-    private static final String QUERY_TEMPLATE = "select wind, item.lat, item.long, item.condition, item.forecast from " +
+    private static final String WEATHER_QUERY_TEMPLATE = "select wind, item.lat, item.long, item.condition, item.forecast from " +
                                     "weather.forecast(" + String.valueOf(WeatherData.CONDITION_LIMIT) +
                                     ") where u=@unit";
+    private static final String CITY_QUERY_TEMPLATE = "select woeid,name,country from geo.places(1) where text=@cityName";
+
 
     public byte[] getUrlBytes(String urlSpec) throws IOException{
         URL url = new URL(urlSpec);
@@ -68,13 +69,13 @@ public class WeatherFetcher {
                     .appendQueryParameter("format", "json")
                     .appendQueryParameter("unit", "\"c\"")
                     .appendQueryParameter("crossProduct","optimized")
-                    .appendQueryParameter("q",QUERY_TEMPLATE + " and woeid in " + getWoeidList(conditions, ','))
+                    .appendQueryParameter("q", WEATHER_QUERY_TEMPLATE + " and woeid in " + getWoeidList(conditions, ','))
                     .build()
                     .toString();
             String jsonString = getUrlString(url);
             Log.i("FETCHER", jsonString);
             JSONObject jsonBody = new JSONObject(jsonString);
-            parseConditions(conditions, jsonBody);
+            updateConditions(conditions, jsonBody);
         }
         catch (IOException ioEx){
             Log.e("FETCHER", "Could not retrieve: ", ioEx);
@@ -85,20 +86,52 @@ public class WeatherFetcher {
         return conditions;
     }
 
+    public Condition fetchWoeid(String cityName){
+        Condition conditionItem = null;
+
+        try{
+            String url = Uri.parse(API_URL)
+                    .buildUpon()
+                    .appendQueryParameter("format", "json")
+                    .appendQueryParameter("cityName", cityName)
+                    .appendQueryParameter("q", CITY_QUERY_TEMPLATE)
+                    .build()
+                    .toString();
+
+            String jsonString = getUrlString(url);
+            Log.i("FETCHER", jsonString);
+            JSONObject jsonBody = new JSONObject(jsonString);
+            JSONObject jsonQuery = jsonBody.getJSONObject("query");
+            if(jsonQuery.getInt("count") == 0)
+                return null;
+            JSONObject jsonResults = jsonQuery.getJSONObject("results");
+            conditionItem = new Condition(jsonResults.getJSONObject("place").getInt("woeid"));
+            conditionItem.cityName = jsonResults.getJSONObject("place").getString("name");
+
+        }catch (IOException ioEx){
+            Log.e("FETCHER", "Could not retrieve: ", ioEx);
+        }
+        catch (JSONException ex){
+            ex.printStackTrace();
+        }
+
+        return conditionItem;
+    }
+
     @NonNull
-    private String getWoeidList(List<Condition> conditions, char delimeter){
+    private String getWoeidList(List<Condition> conditions, char delimiter){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append('(');
         for(int i = 0, size = conditions.size() - 1; i < size; i++){
             stringBuilder.append(conditions.get(i).woeid);
-            stringBuilder.append(delimeter);
+            stringBuilder.append(delimiter);
         }
         stringBuilder.append(conditions.get(conditions.size() - 1).woeid);
         stringBuilder.append(')');
         return stringBuilder.toString();
     }
 
-    private void parseConditions(List<Condition> conditions, JSONObject jsonBody) throws
+    private void updateConditions(List<Condition> conditions, JSONObject jsonBody) throws
         IOException, JSONException
     {
         Object jsonChannelObject = jsonBody.getJSONObject("query").getJSONObject("results").get("channel");
