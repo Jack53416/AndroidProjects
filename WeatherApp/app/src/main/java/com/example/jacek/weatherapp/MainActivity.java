@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mWeatherData = WeatherData.getInstance(getBaseContext());
-        mWeatherData.mConditionList = mWeatherData.getConditions();
+        mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
 
         Condition newCity = null;
         try {
@@ -30,22 +30,22 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         if (newCity != null)
-            mWeatherData.addCondition(newCity);
+            mWeatherData.insertCondition(newCity);
         try {
             newCity = new FetchWoeidTask().execute("Lodz").get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         if (newCity != null)
-            mWeatherData.addCondition(newCity);
+            mWeatherData.insertCondition(newCity);
         try {
             newCity = new FetchWoeidTask().execute("Poznan").get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         if (newCity != null)
-            mWeatherData.addCondition(newCity);
-        mWeatherData.mConditionList = mWeatherData.getConditions();
+            mWeatherData.insertCondition(newCity);
+        mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
         new FetchWeatherTask().execute();
     }
 
@@ -87,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Condition> items){
-            mWeatherData.mConditionList = items;
+            if(items != null)
+                mWeatherData.mConditionList = items;
         }
     }
 

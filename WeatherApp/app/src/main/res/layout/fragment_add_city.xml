@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/dialog_add_city_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/addCityDialogTitle"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:textSize="24sp"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorPrimaryDark"/>
+
+    <View style="@style/Divider"/>
+
+    <EditText
+        android:id="@+id/dialog_add_city_edit_city_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:maxLines="1"
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
+        android:selectAllOnFocus="true"
+        android:text="Enter City Name.."/>
+</LinearLayout>

@@ -2,13 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <CheckBox
         android:id="@+id/list_item_city_mark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        app:buttonTint="@color/secondaryAccent"/>
 
     <TextView
         android:id="@+id/list_item_city_name"
@@ -18,6 +20,7 @@
         android:layout_toStartOf="@id/list_item_city_mark"
         android:padding="4dp"
         android:textSize="24sp"
+        android:textColor="@color/colorBlack"
         android:textStyle="bold"
         tools:text="Lodz"/>
 
@@ -32,4 +35,8 @@
         android:paddingStart="6dp"
         android:textStyle="italic"
         tools:text="19.455 E 59.2342 N"/>
+
+    <View style="@style/Divider"
+          android:layout_below="@id/list_item_city_description"
+          android:padding="10dp"/>
 </RelativeLayout>

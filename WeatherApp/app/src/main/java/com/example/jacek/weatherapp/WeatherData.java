@@ -75,19 +75,23 @@ public class WeatherData {
         return values;
     }
 
-    public void addCondition(Condition condition){
+    public void insertCondition(Condition condition){
+        if(mConditionList.size() >= CONDITION_LIMIT)
+            return;
+
         ContentValues values = getContentValues(condition);
         try{
             mDatabase.insertOrThrow(ConditionTable.NAME, null, values);
             for(Forecast forecast : condition.getForecasts()){
-                addForecast(forecast, condition.getCity().getWoeid());
+                insertForecast(forecast, condition.getCity().getWoeid());
             }
+            mConditionList.add(condition);
         }catch (SQLException ex){
             Log.e("SQL_EXCEPTION", "Could not add Condition: " + ex.getMessage());
         }
     }
 
-    public void addForecast(Forecast forecast, int woeeid){
+    public void insertForecast(Forecast forecast, int woeeid){
         ContentValues values = getContentValues(forecast, woeeid);
         mDatabase.insert(ForecastTable.NAME, null, values);
     }
@@ -101,8 +105,26 @@ public class WeatherData {
                          ForecastTable.Cols.WOEID + "= ?", new String[]{String.valueOf(condition.getCity().getWoeid())});
 
         for(Forecast forecast : condition.getForecasts()){
-            addForecast(forecast, condition.getCity().getWoeid());
+            insertForecast(forecast, condition.getCity().getWoeid());
         }
+    }
+
+    public void deleteCondition(final int cityWoeid){
+        mDatabase.delete(ForecastTable.NAME,
+                ForecastTable.Cols.WOEID + "= ?", new String[]{String.valueOf(cityWoeid)});
+        mDatabase.delete(ConditionTable.NAME,
+                ConditionTable.Cols.CITY_WOEID + "= ?", new String[]{String.valueOf(cityWoeid)});
+        Condition condtionToRemove = findContitionbyWoeid(cityWoeid);
+        if(condtionToRemove != null)
+            mConditionList.remove(condtionToRemove);
+    }
+
+    public Condition findContitionbyWoeid(final int cityWoeid){
+        for(Condition condition : mConditionList){
+            if(condition.getCity().getWoeid() == cityWoeid)
+                return condition;
+        }
+        return null;
     }
 
     private ConditionCursorWrapper queryConditions(String whereClause, String[] args){
@@ -136,25 +158,20 @@ public class WeatherData {
     }
 
 
-    public List<Forecast> getForecasts(int woeid){
+    public List<Forecast> loadForecastsFromDatabase(int woeid){
         List<Forecast> forecasts = new ArrayList<>();
 
-        ForecastCursorWrapper cursor = queryForecasts(ForecastTable.Cols.WOEID + " = ?", new String[]{String.valueOf(woeid)});
-
-        try{
+        try(ForecastCursorWrapper cursor = queryForecasts(ForecastTable.Cols.WOEID + " = ?", new String[]{String.valueOf(woeid)})) {
             cursor.moveToFirst();
             while(!cursor.isAfterLast()){
                 forecasts.add(cursor.getForecast());
                 cursor.moveToNext();
             }
-        }finally {
-            cursor.close();
         }
-
         return forecasts;
     }
 
-    public List<Condition> getConditions(){
+    public List<Condition> loadConditionsFromDatabase(){
         List<Condition> conditions = new ArrayList<>();
         Condition currentCondition;
 
@@ -162,13 +179,12 @@ public class WeatherData {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 currentCondition = cursor.getCondition();
-                currentCondition.setForecasts(getForecasts(currentCondition.getCity().getWoeid()));
+                currentCondition.setForecasts(loadForecastsFromDatabase(currentCondition.getCity().getWoeid()));
                 conditions.add(currentCondition);
                 cursor.moveToNext();
             }
 
         }
-
         return conditions;
     }
 }

@@ -4,4 +4,6 @@
     <string name="menuSettings">Settings</string>
     <string name="menuAdd">Add</string>
     <string name="menuDelete">Delete</string>
+    <string name="settingsActivityTitle">Settings</string>
+    <string name="addCityDialogTitle">Add City</string>
 </resources>
