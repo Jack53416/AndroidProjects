@@ -1,4 +1,4 @@
-package com.example.jacek.weatherapp;
+package settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.jacek.weatherapp.R;
+import com.example.jacek.weatherapp.WeatherData;
 
 
 public class AddCityDialog extends android.support.v4.app.DialogFragment {

@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 
 import database.City;
 import database.Condition;
+import settings.AddCityDialog;
 
 
 public class CityListFragment extends Fragment {

@@ -14,6 +14,7 @@ import database.Condition;
 import database.ConditionCursorWrapper;
 import database.Forecast;
 import database.ForecastCursorWrapper;
+import database.Settings;
 import database.WeatherBaseHelper;
 
 import static database.WeatherDbSchema.*;
@@ -23,8 +24,8 @@ public class WeatherData {
     private static WeatherData mWeatherData;
     public static final int CONDITION_LIMIT = 30;
     public List<Condition> mConditionList;
+    private Settings mAppSettings;
     private SQLiteDatabase mDatabase;
-    private Context mContext;
 
 
     public static WeatherData getInstance(Context context)
@@ -36,8 +37,8 @@ public class WeatherData {
 
     private WeatherData(Context context) {
         mConditionList = new ArrayList<>();
-        mContext = context.getApplicationContext();
-        mDatabase = new WeatherBaseHelper(mContext).getWritableDatabase();
+        Context appContext = context.getApplicationContext();
+        mDatabase = new WeatherBaseHelper(appContext).getWritableDatabase();
     }
 
     private static ContentValues getContentValues(Condition condition){

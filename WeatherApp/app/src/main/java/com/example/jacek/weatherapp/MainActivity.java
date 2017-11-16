@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import database.Condition;
+import settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
