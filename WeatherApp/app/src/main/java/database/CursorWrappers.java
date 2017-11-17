@@ -66,7 +66,7 @@ public class CursorWrappers {
     /*
     * Settings Cursor Wrapper class
     * */
-    
+
     public static class SettingsCursorWrapper extends CursorWrapper {
         public SettingsCursorWrapper(Cursor cursor) {
             super(cursor);

@@ -9,7 +9,7 @@ import java.util.List;
 import static database.WeatherDbSchema.*;
 
 public class Condition {
-    public final City mCity;
+    private final City mCity;
     private int mCode;
     private Date mDate = new Date();
     private double mTemperature;

@@ -1,9 +1,6 @@
 package database;
 
 import android.content.ContentValues;
-
-import java.util.Set;
-
 import static database.WeatherDbSchema.*;
 
 public class Settings {

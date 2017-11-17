@@ -16,7 +16,6 @@ import database.Forecast;
 import database.Settings;
 import database.WeatherBaseHelper;
 
-import static database.CursorWrappers.*;
 import static database.WeatherDbSchema.*;
 
 public class WeatherData {
@@ -62,7 +61,7 @@ public class WeatherData {
         }
     }
 
-    public void insertForecast(Forecast forecast, int woeeid){
+    private void insertForecast(Forecast forecast, int woeeid){
         ContentValues values = forecast.getContentValues(woeeid);
         mDatabase.insert(ForecastTable.NAME, null, values);
     }

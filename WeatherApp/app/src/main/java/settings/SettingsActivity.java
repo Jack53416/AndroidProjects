@@ -80,9 +80,9 @@ public class SettingsActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Cities";
+                    return getApplicationContext().getString(R.string.citySettingsTabTitle);
                 case 1:
-                    return "Settings";
+                    return getApplicationContext().getString(R.string.generalSettingsTabTitle);
             }
             return null;
         }

@@ -140,11 +140,11 @@ public class CityListFragment extends Fragment {
 
         private City mCity;
 
-        public TextView mCityNameTextView;
-        public CheckBox mCityCheckBox;
-        public TextView mCityDescription;
+        TextView mCityNameTextView;
+        CheckBox mCityCheckBox;
+        TextView mCityDescription;
 
-        public CityHolder(View itemView) {
+        CityHolder(View itemView) {
             super(itemView);
 
             mCityNameTextView = itemView.findViewById(R.id.list_item_city_name);
@@ -159,7 +159,7 @@ public class CityListFragment extends Fragment {
             });
         }
 
-        public void bindCity(City city){
+        void bindCity(City city){
             mCity = city;
             mCityNameTextView.setText(mCity.getName());
             mCityDescription.setText(String.format(Locale.US,"%s (%.3f %.3f)", mCity.getCountry(),
@@ -172,7 +172,7 @@ public class CityListFragment extends Fragment {
 
         private List<City> mCities;
 
-        public CityAdapter(List<City> cities){
+        CityAdapter(List<City> cities){
             mCities = cities;
         }
 
@@ -195,11 +195,11 @@ public class CityListFragment extends Fragment {
             return mCities.size();
         }
 
-        public void setCities(List<City> cities) {
+        void setCities(List<City> cities) {
             mCities = cities;
         }
 
-        public List<City> getCities() {
+        List<City> getCities() {
             return mCities;
         }
     }

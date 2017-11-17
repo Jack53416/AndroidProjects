@@ -11,4 +11,6 @@
     <string name="unit_settings_label">Unit</string>
     <string name="refresh_delay_settings_label">Refresh Delay</string>
     <string name="addCityHintText">Enter City Name…</string>
+    <string name="citySettingsTabTitle">Cities</string>
+    <string name="generalSettingsTabTitle">General</string>
 </resources>
