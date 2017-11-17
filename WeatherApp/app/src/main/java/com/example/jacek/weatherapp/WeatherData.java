@@ -37,8 +37,13 @@ public class WeatherData {
 
     private WeatherData(Context context) {
         mConditionList = new ArrayList<>();
+        mAppSettings = new Settings();
         Context appContext = context.getApplicationContext();
         mDatabase = new WeatherBaseHelper(appContext).getWritableDatabase();
+    }
+
+    public Settings getAppSettings() {
+        return mAppSettings;
     }
 
     private static ContentValues getContentValues(Condition condition){
@@ -157,7 +162,6 @@ public class WeatherData {
 
         return new ForecastCursorWrapper(cursor);
     }
-
 
     public List<Forecast> loadForecastsFromDatabase(int woeid){
         List<Forecast> forecasts = new ArrayList<>();

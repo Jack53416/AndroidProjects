@@ -1,4 +1,4 @@
-package com.example.jacek.weatherapp;
+package settings;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -18,6 +18,10 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jacek.weatherapp.R;
+import com.example.jacek.weatherapp.WeatherData;
+import com.example.jacek.weatherapp.WeatherFetcher;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -25,7 +29,6 @@ import java.util.concurrent.ExecutionException;
 
 import database.City;
 import database.Condition;
-import settings.AddCityDialog;
 
 
 public class CityListFragment extends Fragment {

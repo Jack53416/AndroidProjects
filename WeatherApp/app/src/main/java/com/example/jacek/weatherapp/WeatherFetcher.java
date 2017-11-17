@@ -22,7 +22,7 @@ import database.City;
 import database.Condition;
 import database.Forecast;
 
-class WeatherFetcher {
+public class WeatherFetcher {
     private static final String TAG = "WEATHER_FETCHER";
     private static final String API_URL = "http://query.yahooapis.com/v1/public/yql";
     private static final String WEATHER_QUERY_TEMPLATE = "select wind, atmosphere, item.lat, item.long, item.condition, item.forecast from " +
@@ -61,7 +61,7 @@ class WeatherFetcher {
         return new String(getUrlBytes(urlSpec));
     }
 
-    List<Condition> fetchWeather(List<City> cities){
+    public List<Condition> fetchWeather(List<City> cities){
 
         List<Condition> conditions = null;
         try {
@@ -87,7 +87,7 @@ class WeatherFetcher {
         return conditions;
     }
 
-    Condition fetchCity(String cityName){
+    public Condition fetchCity(String cityName){
         Condition conditionItem = null;
 
         try{

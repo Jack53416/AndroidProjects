@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 
-import com.example.jacek.weatherapp.CityListFragment;
 import com.example.jacek.weatherapp.R;
 
 public class SettingsActivity extends AppCompatActivity {
