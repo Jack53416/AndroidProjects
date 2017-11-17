@@ -1,4 +1,4 @@
-package com.example.jacek.weatherapp;
+package settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -7,28 +7,31 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.jacek.weatherapp.R;
+import com.example.jacek.weatherapp.WeatherData;
+
 
 public class AddCityDialog extends android.support.v4.app.DialogFragment {
 
     public static final String EXTRA_CITY_NAME = "EXTRA_CITY_NAME";
 
-    private WeatherData mWeatherData;
     private EditText mCityNameField;
 
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         View v = LayoutInflater.from(getActivity())
                 .inflate(R.layout.fragment_add_city, null);
         wireControls(v);
-        mWeatherData = WeatherData.getInstance(getActivity());
 
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setView(v)
@@ -51,11 +54,6 @@ public class AddCityDialog extends android.support.v4.app.DialogFragment {
         });
         return dialog;
 
-    }
-
-    private boolean addNewCity() {
-
-        return false;
     }
 
     private void wireControls(View v) {

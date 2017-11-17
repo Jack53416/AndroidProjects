@@ -1,8 +1,5 @@
 package database;
 
-
-import android.support.annotation.NonNull;
-
 import java.util.List;
 
 public class City {

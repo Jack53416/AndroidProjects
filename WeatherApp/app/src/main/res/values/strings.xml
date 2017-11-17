@@ -6,4 +6,11 @@
     <string name="menuDelete">Delete</string>
     <string name="settingsActivityTitle">Settings</string>
     <string name="addCityDialogTitle">Add City</string>
+    <string name="title_activity_setting">Settings</string>
+    <string name="action_settings">Settings</string>
+    <string name="unit_settings_label">Unit</string>
+    <string name="refresh_delay_settings_label">Refresh Delay</string>
+    <string name="addCityHintText">Enter City Name…</string>
+    <string name="citySettingsTabTitle">Cities</string>
+    <string name="generalSettingsTabTitle">General</string>
 </resources>

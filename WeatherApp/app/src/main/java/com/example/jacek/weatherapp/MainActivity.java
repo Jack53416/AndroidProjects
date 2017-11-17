@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import database.Condition;
+import settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (newCity != null)
             mWeatherData.insertCondition(newCity);
-        mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
+
+        mWeatherData.loadSettingsFromDatabase();
         new FetchWeatherTask().execute();
     }
 
