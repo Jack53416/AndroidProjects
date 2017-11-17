@@ -54,7 +54,7 @@ public class WeatherBaseHelper extends SQLiteOpenHelper {
         db.execSQL(sqlQuery);
 
         sqlQuery = "CREATE TABLE " + SettingsTable.NAME + "(" +
-                "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                SettingsTable.Cols.ID + " INTEGER PRIMARY KEY, " +
                 SettingsTable.Cols.MES_UNIT + ", " +
                 SettingsTable.Cols.REFRESH_DELAY + ", " +
                 SettingsTable.Cols.HOME_CITY +

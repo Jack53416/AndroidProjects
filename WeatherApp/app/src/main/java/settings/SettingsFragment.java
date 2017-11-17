@@ -57,6 +57,7 @@ public class SettingsFragment extends Fragment {
                 break;
         }
         refreshUI();
+        WeatherData.getInstance(getContext()).updateSettings();
     }
 
     private void refreshUI(){

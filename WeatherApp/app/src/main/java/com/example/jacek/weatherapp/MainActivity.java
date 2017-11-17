@@ -46,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (newCity != null)
             mWeatherData.insertCondition(newCity);
-        mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
+
+        mWeatherData.loadSettingsFromDatabase();
         new FetchWeatherTask().execute();
     }
 

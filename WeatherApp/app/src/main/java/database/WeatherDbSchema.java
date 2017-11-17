@@ -42,6 +42,7 @@ public class WeatherDbSchema {
     public static final class SettingsTable{
         public static final String NAME = "SETTINGS";
         public static final class Cols{
+            public static final String ID = "ID";
             public static final String MES_UNIT = "MES_UNIT";
             public static final String REFRESH_DELAY = "REFRESH_DELAY";
             public static final String HOME_CITY = "HOME_CITY";

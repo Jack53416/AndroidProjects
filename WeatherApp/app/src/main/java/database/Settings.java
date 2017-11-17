@@ -1,6 +1,10 @@
 package database;
 
+import android.content.ContentValues;
+
 import java.util.Set;
+
+import static database.WeatherDbSchema.*;
 
 public class Settings {
 
@@ -87,6 +91,7 @@ public class Settings {
 
     private static final Units DEFAULT_UNIT = Units.UNIT_C;
     private static final RefreshDelayOptions DEFAULT_REFRESH_DELAY = RefreshDelayOptions.REFRESH_1_HOUR;
+    public static final int ID = 1;
 
     private Units mMeasurementUnit;
     private RefreshDelayOptions mRefreshDelay;
@@ -96,6 +101,15 @@ public class Settings {
         mRefreshDelay = DEFAULT_REFRESH_DELAY;
     }
 
+    public ContentValues getContentValues(){
+        ContentValues values = new ContentValues();
+
+        values.put(SettingsTable.Cols.ID, ID);
+        values.put(SettingsTable.Cols.MES_UNIT, mMeasurementUnit.getUnitName());
+        values.put(SettingsTable.Cols.REFRESH_DELAY, mRefreshDelay.getOptionName());
+
+        return values;
+    }
     public Units getMeasurementUnit() {
         return mMeasurementUnit;
     }

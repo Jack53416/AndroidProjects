@@ -1,8 +1,12 @@
 package database;
 
+import android.content.ContentValues;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static database.WeatherDbSchema.*;
 
 public class Condition {
     public final City mCity;
@@ -30,6 +34,27 @@ public class Condition {
             cities.add(condition.getCity());
         }
         return cities;
+    }
+
+    public ContentValues getContentValues(){
+        ContentValues values = new ContentValues();
+
+        values.put(ConditionTable.Cols.CITY_WOEID, mCity.getWoeid());
+        values.put(ConditionTable.Cols.CITY_NAME, mCity.getName());
+        values.put(ConditionTable.Cols.CITY_LATITUDE, mCity.getLatitude());
+        values.put(ConditionTable.Cols.CITY_LONGITUDE, mCity.getLongitude());
+        values.put(ConditionTable.Cols.CITY_COUNTRY, mCity.getCountry());
+        values.put(ConditionTable.Cols.CONDITION_CODE, mCode);
+        values.put(ConditionTable.Cols.CONDITION_DATE, mDate.getTime());
+        values.put(ConditionTable.Cols.CONDITION_TEMP, mTemperature);
+        values.put(ConditionTable.Cols.CONDITION_TEXT, mText);
+        values.put(ConditionTable.Cols.WIND_CHILL, mWindChill);
+        values.put(ConditionTable.Cols.WIND_DIRECTION, mWindDirection);
+        values.put(ConditionTable.Cols.WIND_SPEED, mWindSpeed);
+        values.put(ConditionTable.Cols.ATM_HUMIDITY, mHumidity);
+        values.put(ConditionTable.Cols.ATM_PRESSURE, mPressure);
+        values.put(ConditionTable.Cols.ATM_VISIBILITY, mVisibility);
+        return values;
     }
 
     public City getCity() {

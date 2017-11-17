@@ -15,12 +15,12 @@ public class ForecastCursorWrapper extends CursorWrapper {
     public Forecast getForecast(){
         Forecast forecast = new Forecast();
 
-        forecast.code = getInt(getColumnIndex(ForecastTable.Cols.CODE));
-        forecast.date = new Date(getLong(getColumnIndex(ForecastTable.Cols.DATE)));
-        forecast.day = getString(getColumnIndex(ForecastTable.Cols.DAY));
-        forecast.high = getDouble(getColumnIndex(ForecastTable.Cols.HIGH));
-        forecast.low = getDouble(getColumnIndex(ForecastTable.Cols.LOW));
-        forecast.text = getString(getColumnIndex(ForecastTable.Cols.TEXT));
+        forecast.setCode(getInt(getColumnIndex(ForecastTable.Cols.CODE)));
+        forecast.setDate(new Date(getLong(getColumnIndex(ForecastTable.Cols.DATE))));
+        forecast.setDay(getString(getColumnIndex(ForecastTable.Cols.DAY)));
+        forecast.setHigh(getDouble(getColumnIndex(ForecastTable.Cols.HIGH)));
+        forecast.setLow(getDouble(getColumnIndex(ForecastTable.Cols.LOW)));
+        forecast.setText(getString(getColumnIndex(ForecastTable.Cols.TEXT)));
 
         return forecast;
     }
