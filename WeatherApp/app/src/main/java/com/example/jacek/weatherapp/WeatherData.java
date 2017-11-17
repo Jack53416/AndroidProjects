@@ -11,13 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.Condition;
-import database.ConditionCursorWrapper;
+import database.CursorWrappers.*;
 import database.Forecast;
-import database.ForecastCursorWrapper;
 import database.Settings;
-import database.SettingsCursorWrapper;
 import database.WeatherBaseHelper;
 
+import static database.CursorWrappers.*;
 import static database.WeatherDbSchema.*;
 
 public class WeatherData {

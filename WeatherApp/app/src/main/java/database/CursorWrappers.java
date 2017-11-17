@@ -7,7 +7,11 @@ import android.database.CursorWrapper;
 import java.util.Date;
 
 public class CursorWrappers {
-    public class ConditionCursorWrapper extends CursorWrapper {
+    /*
+    * Condition Cursor Wrapper class
+    * */
+
+    public static class ConditionCursorWrapper extends CursorWrapper {
         public ConditionCursorWrapper(Cursor cursor) {
             super(cursor);
         }
@@ -36,7 +40,11 @@ public class CursorWrappers {
         }
     }
 
-    public class ForecastCursorWrapper extends CursorWrapper {
+    /**
+     *  Forecast Cursor Wrapper class
+     */
+
+    public static class ForecastCursorWrapper extends CursorWrapper {
         public ForecastCursorWrapper(Cursor cursor) {
             super(cursor);
         }
@@ -55,7 +63,11 @@ public class CursorWrappers {
         }
     }
 
-    public class SettingsCursorWrapper extends CursorWrapper {
+    /*
+    * Settings Cursor Wrapper class
+    * */
+    
+    public static class SettingsCursorWrapper extends CursorWrapper {
         public SettingsCursorWrapper(Cursor cursor) {
             super(cursor);
         }
