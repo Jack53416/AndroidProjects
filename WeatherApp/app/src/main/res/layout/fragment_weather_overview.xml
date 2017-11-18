@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_height="match_parent"
+              android:layout_width="match_parent"
+              android:background="@drawable/background_rain">
+
+<RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:padding="10dp"
+                android:background="@color/weatherPanelBackground">
+
+    <ImageView
+        android:id="@+id/weather_fragment_overview_weather_picture"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/weatherPictureDescription"/>
+
+    <TextView
+        android:id="@+id/weather_fragment_overview_city_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/weather_fragment_overview_weather_picture"
+        android:textSize="24sp"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        tools:text="Lodz"/>
+
+    <TextView
+        android:id="@+id/weather_fragment_overview_city_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_fragment_overview_city_name"
+        android:textStyle="italic"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:textColor="@color/colorWhite"
+        tools:text="Poland (59.34°N , 19.345°E)"/>
+
+    <TextView
+        android:id="@+id/weather_fragment_overview_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/weather_fragment_overview_weather_picture"
+        android:layout_marginEnd="25dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"
+        tools:text="15°C"/>
+
+    <TextView
+        android:id="@+id/weather_fragment_overview_weather_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_fragment_overview_city_description"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:textColor="@color/colorWhite"
+        tools:text="Sunny"/>
+
+</RelativeLayout>
+
+</LinearLayout>

@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 
+import com.example.jacek.weatherapp.MainActivity;
 import com.example.jacek.weatherapp.R;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -48,6 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
     }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

@@ -1,6 +1,7 @@
 package database;
 
 import java.util.List;
+import java.util.Locale;
 
 public class City {
     private int woeid;
@@ -20,6 +21,14 @@ public class City {
         stringBuilder.append(cities.get(cities.size() - 1).woeid);
         stringBuilder.append(')');
         return stringBuilder.toString();
+    }
+
+    public String getLocationDescription(){
+        char latitudeDirection = mLatitude > 0 ? 'N' : 'S';
+        char longitudeDirection = mLongitude > 0 ? 'E' : 'W';
+
+        return String.format(Locale.US, "%s (%.3f°%c %.3f°%c",
+                mCountry, mLatitude, latitudeDirection, mLongitude, longitudeDirection);
     }
 
     public int getWoeid() {

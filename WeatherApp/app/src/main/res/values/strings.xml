@@ -13,4 +13,5 @@
     <string name="addCityHintText">Enter City Name…</string>
     <string name="citySettingsTabTitle">Cities</string>
     <string name="generalSettingsTabTitle">General</string>
+    <string name="weatherPictureDescription">weatherSymbol</string>
 </resources>

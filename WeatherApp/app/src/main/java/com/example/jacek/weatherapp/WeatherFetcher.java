@@ -28,7 +28,7 @@ public class WeatherFetcher {
     private static final String WEATHER_QUERY_TEMPLATE = "select wind, atmosphere, item.lat, item.long, item.condition, item.forecast from " +
                                     "weather.forecast(" + String.valueOf(WeatherData.CONDITION_LIMIT) +
                                     ") where u=@unit";
-    private static final String CITY_QUERY_TEMPLATE = "select woeid,name,country,centroid from geo.places(1) where mText=@cityName";
+    private static final String CITY_QUERY_TEMPLATE = "select woeid,name,country,centroid from geo.places(1) where text=@cityName";
 
 
     private byte[] getUrlBytes(String urlSpec) throws IOException{
@@ -166,14 +166,14 @@ public class WeatherFetcher {
 
         Condition conditionItem = new Condition(city);
 
-        conditionItem.setCode(jsonCondition.getInt("mCode"));
+        conditionItem.setCode(jsonCondition.getInt("code"));
         try {
-            conditionItem.setDate(dateFormat.parse(jsonCondition.getString("mDate")));
+            conditionItem.setDate(dateFormat.parse(jsonCondition.getString("date")));
         } catch (ParseException ex) {
             Log.e(TAG, "Could not parse forecast mDate: " + ex.getMessage());
         }
         conditionItem.setTemperature(jsonCondition.getDouble("temp"));
-        conditionItem.setText(jsonCondition.getString("mText"));
+        conditionItem.setText(jsonCondition.getString("text"));
         conditionItem.setWindChill(jsonWind.getInt("chill"));
         conditionItem.setWindDirection(jsonWind.getInt("direction"));
         conditionItem.setWindSpeed(jsonWind.getDouble("speed"));
@@ -196,17 +196,17 @@ public class WeatherFetcher {
             jsonForecast = jsonForecasts.getJSONObject(i);
             Forecast forecastItem = new Forecast();
 
-            forecastItem.setCode(jsonForecast.getInt("mCode"));
+            forecastItem.setCode(jsonForecast.getInt("code"));
             try {
-                forecastItem.setDate(dateFormat.parse(jsonForecast.getString("mDate")));
+                forecastItem.setDate(dateFormat.parse(jsonForecast.getString("date")));
             }catch (ParseException ex){
-                Log.e(TAG, "Could not parse forecast mDate: " + ex.getMessage());
+                Log.e(TAG, "Could not parse forecast date: " + ex.getMessage());
             }
 
-            forecastItem.setDay(jsonForecast.getString("mDay"));
-            forecastItem.setHigh(jsonForecast.getDouble("mHigh"));
-            forecastItem.setLow(jsonForecast.getDouble("mLow"));
-            forecastItem.setText(jsonForecast.getString("mText"));
+            forecastItem.setDay(jsonForecast.getString("day"));
+            forecastItem.setHigh(jsonForecast.getDouble("high"));
+            forecastItem.setLow(jsonForecast.getDouble("low"));
+            forecastItem.setText(jsonForecast.getString("text"));
 
             forecasts.add(forecastItem);
         }
