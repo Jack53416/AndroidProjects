@@ -2,6 +2,8 @@ package database;
 
 import android.content.ContentValues;
 
+import com.example.jacek.weatherapp.R;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +27,8 @@ public class Condition {
 
     public Condition(City city){
         mCity = city;
+        mCode = -1;
+        mText = "Unknown";
     }
 
 
@@ -55,6 +59,89 @@ public class Condition {
         values.put(ConditionTable.Cols.ATM_PRESSURE, mPressure);
         values.put(ConditionTable.Cols.ATM_VISIBILITY, mVisibility);
         return values;
+    }
+
+    public int getWeatherResource(){
+        switch (mCode){
+            case 0:
+            case 2:
+            case 23:
+            case 24:
+                return R.drawable.wind;
+            case 1:
+            case 3:
+            case 4:
+            case 37:
+            case 47:
+                return R.drawable.thunder;
+            case 5:
+                return R.drawable.rain_and_snow;
+            case 6:
+            case 35:
+                return R.drawable.rain_and_sleet;
+            case 7:
+                return R.drawable.snow_and_sleet;
+            case 8:
+            case 9:
+                return R.drawable.freezing_drizzle;
+            case 10:
+                return R.drawable.freezing_rain;
+            case 11:
+            case 12:
+                return R.drawable.few_showers;
+            case 13:
+                return R.drawable.snow_flurries;
+            case 14:
+            case 16:
+            case 41:
+            case 43:
+                return R.drawable.snow;
+            case 15:
+                return R.drawable.blowing_snow;
+            case 17:
+            case 18:
+                return R.drawable.sleet;
+            case 19:
+                return R.drawable.dust;
+            case 20:
+            case 21:
+                return R.drawable.fog;
+            case 22:
+                return R.drawable.dust;
+            case 25:
+                return R.drawable.cold;
+            case 26:
+                return R.drawable.cloudy;
+            case 27:
+                return R.drawable.mostly_cloudy_night;
+            case 28:
+            case 44:
+                return R.drawable.mostly_cloudy_day;
+            case 29:
+                return R.drawable.partly_cloudy_night;
+            case 30:
+                return R.drawable.partly_cloudy_day;
+            case 31:
+            case 33:
+                return R.drawable.clear_night;
+            case 32:
+            case 34:
+                return R.drawable.sunny;
+            case 36:
+                return R.drawable.hot;
+            case 38:
+            case 39:
+                return R.drawable.scattered_thunder;
+            case 40:
+                return R.drawable.scattered_showers;
+            case 42:
+            case 46:
+                return R.drawable.snow_showers;
+            case 45:
+                return R.drawable.thundershower;
+            default:
+                return R.drawable.unknown;
+        }
     }
 
     public City getCity() {

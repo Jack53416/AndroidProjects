@@ -85,10 +85,13 @@ public class WeatherFragment extends Fragment {
         mCondition = WeatherData.getInstance(getActivity()).
                         findConditionByWoeid(mCondition.getCity().getWoeid());
 
+        if(mCondition == null)
+            return;
         mCityName.setText(mCondition.getCity().getName());
         mCityDescription.setText(mCondition.getCity().getLocationDescription());
         mTemperature.setText(String.valueOf(mCondition.getTemperature() + "°C"));
         mWeatherDescription.setText(mCondition.getText());
+        mWeatherPicture.setImageResource(mCondition.getWeatherResource());
 
         mWindDirection.setText(String.valueOf(mCondition.getWindDirection()));
         mWindSpeed.setText(String.valueOf(mCondition.getWindSpeed()));
