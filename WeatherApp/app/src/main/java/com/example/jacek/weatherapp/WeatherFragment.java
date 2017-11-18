@@ -22,6 +22,11 @@ public class WeatherFragment extends Fragment {
     private TextView mWeatherDescription;
     private ImageView mWeatherPicture;
 
+    private TextView mWindDirection;
+    private ImageView mWindDirectionArrow;
+    private TextView mWindSpeed;
+    private TextView mWindChill;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -66,6 +71,11 @@ public class WeatherFragment extends Fragment {
         mWeatherDescription = v.findViewById(R.id.weather_fragment_overview_weather_description);
         mWeatherPicture = v.findViewById(R.id.weather_fragment_overview_weather_picture);
 
+        mWindDirection = v.findViewById(R.id.weather_fragment_wind_direction_value);
+        mWindDirectionArrow = v.findViewById(R.id.weather_fragment_wind_direction_arrow_image);
+        mWindChill = v.findViewById(R.id.weather_fagment_wind_chill_value);
+        mWindSpeed = v.findViewById(R.id.weather_fagment_wind_speed_value);
+
         refreshUI();
 
 
@@ -79,5 +89,10 @@ public class WeatherFragment extends Fragment {
         mCityDescription.setText(mCondition.getCity().getLocationDescription());
         mTemperature.setText(String.valueOf(mCondition.getTemperature() + "°C"));
         mWeatherDescription.setText(mCondition.getText());
+
+        mWindDirection.setText(String.valueOf(mCondition.getWindDirection()));
+        mWindSpeed.setText(String.valueOf(mCondition.getWindSpeed()));
+        mWindChill.setText(String.valueOf(mCondition.getWindChill()));
+        mWindDirectionArrow.setRotation(mCondition.getWindDirection());
     }
 }

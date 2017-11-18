@@ -27,8 +27,12 @@ public class City {
         char latitudeDirection = mLatitude > 0 ? 'N' : 'S';
         char longitudeDirection = mLongitude > 0 ? 'E' : 'W';
 
-        return String.format(Locale.US, "%s (%.3f°%c %.3f°%c",
-                mCountry, mLatitude, latitudeDirection, mLongitude, longitudeDirection);
+        return String.format(Locale.US, "%s (%.3f°%c %.3f°%c)",
+                mCountry,
+                Math.abs(mLatitude),
+                latitudeDirection,
+                Math.abs(mLongitude),
+                longitudeDirection);
     }
 
     public int getWoeid() {

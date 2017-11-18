@@ -7,5 +7,5 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="secondaryAccent">#458B00</color>
-    <color name="weatherPanelBackground">#33555555</color>
+    <color name="weatherPanelBackground">#FF555555</color>
 </resources>
