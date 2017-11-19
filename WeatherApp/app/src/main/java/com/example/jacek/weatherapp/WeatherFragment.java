@@ -27,6 +27,10 @@ public class WeatherFragment extends Fragment {
     private TextView mWindSpeed;
     private TextView mWindChill;
 
+    private TextView mPressure;
+    private TextView mHumidity;
+    private TextView mVisibility;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -76,6 +80,10 @@ public class WeatherFragment extends Fragment {
         mWindChill = v.findViewById(R.id.weather_fagment_wind_chill_value);
         mWindSpeed = v.findViewById(R.id.weather_fagment_wind_speed_value);
 
+        mPressure = v.findViewById(R.id.weather_fagment_pressure_value);
+        mHumidity = v.findViewById(R.id.weather_fagment_humidity_value);
+        mVisibility = v.findViewById(R.id.weather_fagment_visibility_value);
+
         refreshUI();
 
 
@@ -97,5 +105,9 @@ public class WeatherFragment extends Fragment {
         mWindSpeed.setText(String.valueOf(mCondition.getWindSpeed()));
         mWindChill.setText(String.valueOf(mCondition.getWindChill()));
         mWindDirectionArrow.setRotation(mCondition.getWindDirection());
+
+        mPressure.setText(String.valueOf(mCondition.getPressure()));
+        mHumidity.setText(String.valueOf(mCondition.getHumidity()));
+        mVisibility.setText(String.valueOf(mCondition.getVisibility()));
     }
 }

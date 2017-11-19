@@ -23,4 +23,8 @@
     <string name="windPanelChill">Chill:</string>
     <string name="windPanelDirection">Direction:</string>
     <string name="windPanelImageDescription">Wind direction arrow</string>
+    <string name="detailsPanelTitle">Details</string>
+    <string name="detailsPanelPressure">Pressure:</string>
+    <string name="detailsPanelHumidity">Humidity:</string>
+    <string name="detailsPanelVisibility">Visibility:</string>
 </resources>

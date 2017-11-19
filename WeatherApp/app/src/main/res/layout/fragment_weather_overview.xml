@@ -1,234 +1,328 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_height="match_parent"
-              android:layout_width="match_parent">
-
-    <RelativeLayout
-        android:id="@+id/weather_fragment_overview_section"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:background="@color/weatherPanelBackground"
-        android:padding="10dp">
-
-        <ImageView
-            android:id="@+id/weather_fragment_overview_weather_picture"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="20dp"
-            android:contentDescription="@string/weatherPictureDescription"
-            app:srcCompat="@mipmap/ic_launcher"/>
-
-        <TextView
-            android:id="@+id/weather_fragment_overview_city_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@id/weather_fragment_overview_weather_picture"
-            android:textColor="@color/colorWhite"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            tools:text="Lodz"/>
-
-        <TextView
-            android:id="@+id/weather_fragment_overview_city_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/weather_fragment_overview_city_name"
-            android:paddingEnd="6dp"
-            android:paddingStart="6dp"
-            android:textColor="@color/colorWhite"
-            android:textSize="12sp"
-            android:textStyle="italic"
-            tools:text="Poland (59.34°N , 19.345°E)"/>
-
-        <TextView
-            android:id="@+id/weather_fragment_overview_temperature"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@id/weather_fragment_overview_weather_picture"
-            android:layout_marginEnd="25dp"
-            android:textColor="@color/colorWhite"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            tools:text="15°C"/>
-
-        <TextView
-            android:id="@+id/weather_fragment_overview_weather_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/weather_fragment_overview_city_description"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp"
-            tools:text="Sunny"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/weather_fragment_wind_detail_section"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:padding="10dp"
-        android:background="@color/weatherPanelBackground">
-
-        <TextView
-            android:id="@+id/weather_fragment_wind_panel_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/windPanelTitle"
-            android:textColor="@color/colorWhite"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:text="Wind"
-            />
-
-        <View style="@style/Divider"
-            android:layout_below="@id/weather_fragment_wind_panel_title"
-            android:background="@color/colorAccent"/>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    <LinearLayout
+                  android:orientation="vertical"
+                  android:layout_height="wrap_content"
+                  android:layout_width="match_parent">
 
         <RelativeLayout
-            android:id="@+id/weather_fragment_wind_direction_arrow"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="15dp"
-            android:layout_below="@id/weather_fragment_wind_panel_title"
-            android:layout_marginTop="7dp">
+            android:id="@+id/weather_fragment_overview_section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="@color/weatherPanelBackground"
+            android:padding="10dp">
 
             <ImageView
-                android:id="@+id/weather_fragment_wind_direction_arrow_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerInParent="true"
-                app:srcCompat="@drawable/arrow_down"
-                android:contentDescription="@string/windPanelImageDescription"/>
+                android:id="@+id/weather_fragment_overview_weather_picture"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="20dp"
+                android:contentDescription="@string/weatherPictureDescription"
+                app:srcCompat="@mipmap/ic_launcher"/>
 
             <TextView
-                android:id="@+id/wind_direction_north"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/weather_fragment_wind_direction_arrow_image"
-                android:layout_alignParentTop="true"
-                android:layout_centerInParent="true"
-                android:text="@string/arrowDirectionNorth"
-                android:textColor="@color/colorWhite"
-                android:textStyle="bold"
-                tools:text="N"/>
-
-            <TextView
-                android:id="@+id/wind_direction_west"
+                android:id="@+id/weather_fragment_overview_city_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_centerInParent="true"
-                android:layout_toStartOf="@id/weather_fragment_wind_direction_arrow_image"
-                android:text="@string/arrowDirectionWest"
+                android:layout_toStartOf="@id/weather_fragment_overview_weather_picture"
                 android:textColor="@color/colorWhite"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                tools:text="W"/>
+                tools:text="Lodz"/>
 
             <TextView
-                android:id="@+id/wind_direction_east"
+                android:id="@+id/weather_fragment_overview_city_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_fragment_overview_city_name"
+                android:paddingEnd="6dp"
+                android:paddingStart="6dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                tools:text="Poland (59.34°N , 19.345°E)"/>
+
+            <TextView
+                android:id="@+id/weather_fragment_overview_temperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:layout_toEndOf="@id/weather_fragment_wind_direction_arrow_image"
-                android:text="@string/arrowDirectionEast"
-                android:textAlignment="textEnd"
+                android:layout_below="@id/weather_fragment_overview_weather_picture"
+                android:layout_marginEnd="25dp"
                 android:textColor="@color/colorWhite"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                tools:text="E"/>
+                tools:text="15°C"/>
 
             <TextView
-                android:id="@+id/wind_direction_south"
+                android:id="@+id/weather_fragment_overview_weather_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@id/weather_fragment_wind_direction_arrow_image"
-                android:layout_centerInParent="true"
-                android:text="@string/arrowDirectionSouth"
+                android:layout_below="@id/weather_fragment_overview_city_description"
+                android:layout_marginTop="20dp"
                 android:textColor="@color/colorWhite"
-                android:textStyle="bold"
-                tools:text="S"/>
+                android:textSize="20sp"
+                tools:text="Sunny"/>
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/weather_fagment_wind_direction_label"
+        <RelativeLayout
+            android:id="@+id/weather_fragment_wind_detail_section"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/weather_fragment_wind_panel_title"
-            android:text="@string/windPanelDirection"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/colorWhite"
-            tools:text="Direction: "/>
+            android:layout_margin="15dp"
+            android:padding="10dp"
+            android:background="@color/weatherPanelBackground">
 
-        <TextView
-            android:id="@+id/weather_fragment_wind_direction_value"
+            <TextView
+                android:id="@+id/weather_fragment_wind_panel_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="@string/windPanelTitle"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="Wind"
+                />
+
+            <View style="@style/Divider"
+                android:layout_below="@id/weather_fragment_wind_panel_title"
+                android:background="@color/colorAccent"/>
+
+            <RelativeLayout
+                android:id="@+id/weather_fragment_wind_direction_arrow"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="15dp"
+                android:layout_below="@id/weather_fragment_wind_panel_title"
+                android:layout_marginTop="7dp">
+
+                <ImageView
+                    android:id="@+id/weather_fragment_wind_direction_arrow_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    app:srcCompat="@drawable/arrow_down"
+                    android:contentDescription="@string/windPanelImageDescription"/>
+
+                <TextView
+                    android:id="@+id/wind_direction_north"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/weather_fragment_wind_direction_arrow_image"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
+                    android:text="@string/arrowDirectionNorth"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    tools:text="N"/>
+
+                <TextView
+                    android:id="@+id/wind_direction_west"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_toStartOf="@id/weather_fragment_wind_direction_arrow_image"
+                    android:text="@string/arrowDirectionWest"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    tools:text="W"/>
+
+                <TextView
+                    android:id="@+id/wind_direction_east"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:layout_toEndOf="@id/weather_fragment_wind_direction_arrow_image"
+                    android:text="@string/arrowDirectionEast"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    tools:text="E"/>
+
+                <TextView
+                    android:id="@+id/wind_direction_south"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@id/weather_fragment_wind_direction_arrow_image"
+                    android:layout_centerInParent="true"
+                    android:text="@string/arrowDirectionSouth"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    tools:text="S"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/weather_fagment_wind_direction_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_fragment_wind_panel_title"
+                android:text="@string/windPanelDirection"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorWhite"
+                tools:text="Direction: "/>
+
+            <TextView
+                android:id="@+id/weather_fragment_wind_direction_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_fragment_wind_panel_title"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/weather_fagment_wind_direction_label"
+                android:textColor="@color/colorWhite"
+                tools:text="North"/>
+
+            <TextView
+                android:id="@+id/weather_fagment_wind_speed_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_below="@id/weather_fagment_wind_direction_label"
+                android:text="@string/windPanelSpeed"
+                android:textColor="@color/colorWhite"
+                tools:text="Speed: "/>
+
+            <TextView
+                android:id="@+id/weather_fagment_wind_speed_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/weather_fagment_wind_speed_label"
+                android:layout_below="@id/weather_fagment_wind_direction_label"
+                android:textColor="@color/colorWhite"
+                tools:text="167 km/h"/>
+
+            <TextView
+                android:id="@+id/weather_fagment_wind_chill_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_toStartOf="@id/weather_fagment_wind_chill_label"
+                android:layout_below="@id/weather_fagment_wind_speed_label"
+                android:text="@string/windPanelChill"
+                android:textColor="@color/colorWhite"
+                tools:text="Chill:"/>
+
+            <TextView
+                android:id="@+id/weather_fagment_wind_chill_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/weather_fagment_wind_chill_label"
+                android:layout_below="@id/weather_fagment_wind_speed_label"
+                android:textColor="@color/colorWhite"
+                tools:text="50"/>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/weather_fragment_details_section"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/weather_fragment_wind_panel_title"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/weather_fagment_wind_direction_label"
-            android:textColor="@color/colorWhite"
-            tools:text="North"/>
-
-        <TextView
-            android:id="@+id/weather_fagment_wind_speed_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:layout_below="@id/weather_fagment_wind_direction_label"
-            android:text="@string/windPanelSpeed"
-            android:textColor="@color/colorWhite"
-            tools:text="Speed: "/>
-
-        <TextView
-            android:id="@+id/weather_fagment_wind_speed_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/weather_fagment_wind_speed_label"
-            android:layout_below="@id/weather_fagment_wind_direction_label"
-            android:textColor="@color/colorWhite"
-            tools:text="167 km/h"/>
-
-        <TextView
-            android:id="@+id/weather_fagment_wind_chill_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:layout_toStartOf="@id/weather_fagment_wind_chill_label"
-            android:layout_below="@id/weather_fagment_wind_speed_label"
-            android:text="@string/windPanelChill"
-            android:textColor="@color/colorWhite"
-            tools:text="Chill:"/>
-
-        <TextView
-            android:id="@+id/weather_fagment_wind_chill_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/weather_fagment_wind_chill_label"
-            android:layout_below="@id/weather_fagment_wind_speed_label"
-            android:textColor="@color/colorWhite"
-            tools:text="50"/>
+            android:layout_margin="15dp"
+            android:background="@color/weatherPanelBackground"
+            android:padding="10dp">
 
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/weather_fagment_detail_panel_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="@string/detailsPanelTitle"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="Details"/>
 
-</LinearLayout>
+            <View
+                style="@style/Divider"
+                android:layout_below="@id/weather_fagment_detail_panel_title"
+                android:background="@color/colorAccent"/>
+
+            <TextView
+                android:id="@+id/weather_fagment_pressure_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_fagment_detail_panel_title"
+                android:layout_marginTop="10dp"
+                android:text="@string/detailsPanelPressure"
+                android:textColor="@color/colorWhite"/>
+
+            <TextView
+                android:id="@+id/weather_fagment_pressure_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_fagment_detail_panel_title"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/weather_fagment_pressure_label"
+                android:textColor="@color/colorWhite"
+                tools:text="1013hpa"/>
+
+            <TextView
+                android:id="@+id/weather_fagment_humidity_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_fagment_pressure_label"
+                android:layout_marginTop="7dp"
+                android:text="@string/detailsPanelHumidity"
+                android:textColor="@color/colorWhite"
+                tools:text="Humidity:"/>
+
+            <TextView
+                android:id="@+id/weather_fagment_humidity_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_fagment_pressure_label"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="7dp"
+                android:layout_toEndOf="@id/weather_fagment_humidity_label"
+                android:textColor="@color/colorWhite"
+                tools:text="53%"/>
+
+            <TextView
+                android:id="@+id/weather_fagment_visibility_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/weather_fagment_detail_panel_title"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorWhite"
+                tools:text="2km"/>
+
+            <TextView
+                android:id="@+id/weather_fagment_visibility_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_fagment_detail_panel_title"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_toStartOf="@id/weather_fagment_visibility_value"
+                android:text="@string/detailsPanelVisibility"
+                android:textColor="@color/colorWhite"
+                tools:text="Visibility:"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>
