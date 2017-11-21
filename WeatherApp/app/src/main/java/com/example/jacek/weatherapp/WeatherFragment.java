@@ -3,6 +3,7 @@ package com.example.jacek.weatherapp;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ public class WeatherFragment extends Fragment {
 
     public static final String ARG_CONDITION_WOEID = "Arg_woeid";
     private Condition mCondition;
+    private ForecastListFragment mForecastListFragment;
 
     private TextView mCityName;
     private TextView mCityDescription;
@@ -49,6 +51,21 @@ public class WeatherFragment extends Fragment {
         wireControls(rootView);
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        FragmentManager fm = getChildFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.weather_fragment_forecast_container);
+
+        if(fragment == null){
+            fragment =  ForecastListFragment.newInstance(mCondition.getCity().getWoeid());
+            fm.beginTransaction()
+                    .replace(R.id.weather_fragment_forecast_container, fragment)
+                    .commit();
+        }
+
+        mForecastListFragment = (ForecastListFragment) fragment;
     }
 
     @Override
@@ -99,7 +116,7 @@ public class WeatherFragment extends Fragment {
         mCityDescription.setText(mCondition.getCity().getLocationDescription());
         mTemperature.setText(String.valueOf(mCondition.getTemperature() + "°C"));
         mWeatherDescription.setText(mCondition.getText());
-        mWeatherPicture.setImageResource(mCondition.getWeatherResource());
+        mWeatherPicture.setImageResource(Condition.getWeatherResource(mCondition.getCode()));
 
         mWindDirection.setText(String.valueOf(mCondition.getWindDirection()));
         mWindSpeed.setText(String.valueOf(mCondition.getWindSpeed()));
@@ -109,5 +126,8 @@ public class WeatherFragment extends Fragment {
         mPressure.setText(String.valueOf(mCondition.getPressure()));
         mHumidity.setText(String.valueOf(mCondition.getHumidity()));
         mVisibility.setText(String.valueOf(mCondition.getVisibility()));
+
+        if(mForecastListFragment != null)
+            mForecastListFragment.updateUI();
     }
 }

@@ -68,7 +68,7 @@ public class WeatherFetcher {
             String url = Uri.parse(API_URL)
                     .buildUpon()
                     .appendQueryParameter("format", "json")
-                    .appendQueryParameter("unit", "\"c\"")
+                    .appendQueryParameter("unit", "f")
                     .appendQueryParameter("crossProduct","optimized")
                     .appendQueryParameter("q", WEATHER_QUERY_TEMPLATE + " and woeid in " + City.getWoeidList(cities, ','))
                     .build()

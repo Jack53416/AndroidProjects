@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="7dp"
+                android:layout_marginStart="7dp">
+
+    <TextView
+        android:id="@+id/list_item_forecast_day_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Fri"/>
+
+    <TextView
+        android:id="@+id/list_item_forecast_date_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_forecast_day_value"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp"
+        tools:text="28.11.2017"/>
+
+    <ImageView
+        android:id="@+id/list_item_forecast_weather_picture"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/list_item_forecast_date_value"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/weatherPictureDescription"
+        app:srcCompat="@drawable/unknown"/>
+
+    <TextView
+        android:id="@+id/list_item_forecast_temperature_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_forecast_weather_picture"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="7 / 0 °C"/>
+</RelativeLayout>

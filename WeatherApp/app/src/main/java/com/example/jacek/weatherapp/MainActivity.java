@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import database.City;
 import database.Condition;
 import settings.SettingsActivity;
 
@@ -38,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
         mWeatherData = WeatherData.getInstance(getBaseContext());
         mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
         mWeatherData.loadSettingsFromDatabase();
+        try{
+            Condition condition =  new FetchCityTask().execute("Lodz").get();
+            mWeatherData.insertCondition(condition);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
         new FetchWeatherTask().execute();
         wireControls();
     }
@@ -96,6 +103,20 @@ public class MainActivity extends AppCompatActivity {
                 mPagerAdapter.updateFragmentsUI();
 
             }
+        }
+    }
+
+    private class FetchCityTask extends AsyncTask<String, Void, Condition> {
+
+        @Override
+        protected Condition doInBackground(String... strings) {
+            String cityName = strings[0];
+            return new WeatherFetcher().fetchCity(cityName);
+        }
+
+        @Override
+        protected  void onPostExecute(Condition conditionItem){
+
         }
     }
 

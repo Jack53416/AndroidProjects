@@ -61,8 +61,8 @@ public class Condition {
         return values;
     }
 
-    public int getWeatherResource(){
-        switch (mCode){
+    public static int getWeatherResource(final int weatherCode){
+        switch (weatherCode){
             case 0:
             case 2:
             case 23:
