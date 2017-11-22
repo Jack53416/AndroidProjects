@@ -7,7 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
@@ -23,6 +25,8 @@ public class WeatherFragment extends Fragment {
     private static final DecimalFormat temperatureFormat = new DecimalFormat("##.#");
     private Condition mCondition;
     private ForecastListFragment mForecastListFragment;
+    private ImageButton mMoreButton;
+    private ScrollView mDetailsScrollView;
 
     private TextView mCityName;
     private TextView mCityDescription;
@@ -106,6 +110,23 @@ public class WeatherFragment extends Fragment {
         mPressure = v.findViewById(R.id.weather_fagment_pressure_value);
         mHumidity = v.findViewById(R.id.weather_fagment_humidity_value);
         mVisibility = v.findViewById(R.id.weather_fagment_visibility_value);
+
+        mDetailsScrollView = v.findViewById(R.id.weather_fragment_details_scroll_view);
+        mMoreButton = v.findViewById(R.id.weather_fragment_more_button);
+        mMoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mDetailsScrollView.getVisibility() == View.INVISIBLE){
+                    mDetailsScrollView.setVisibility(View.VISIBLE);
+                    mMoreButton.setImageResource(R.drawable.ic_button_drop_up);
+                }
+
+                else {
+                    mDetailsScrollView.setVisibility(View.INVISIBLE);
+                    mMoreButton.setImageResource(R.drawable.ic_button_drop_down);
+                }
+            }
+        });
     }
 
     public void refreshUI(){
