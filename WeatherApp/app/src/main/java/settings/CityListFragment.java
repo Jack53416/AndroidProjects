@@ -1,5 +1,6 @@
 package settings;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,15 +34,32 @@ import database.Condition;
 
 public class CityListFragment extends Fragment {
 
+    interface OnChangeCityList{
+        void onChangeCityList(int itemsDeleted);
+    }
+
     private static final String DIALOG_ADD_CITY = "Dialog_add_city";
     private static final Integer REQUEST_CITY = 0;
     private RecyclerView mCityRecyclerView;
     private CityAdapter mCityAdapter = null;
+    OnChangeCityList mListener;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (OnChangeCityList) context;
+        }catch (ClassCastException e){
+            throw new ClassCastException(context.toString() + " must implement OnChangeCityListener");
+        }
     }
 
     @Override
@@ -76,12 +94,12 @@ public class CityListFragment extends Fragment {
                 else{
                     WeatherData.getInstance(getActivity()).insertCondition(newCity);
                     updateUI();
+                    mListener.onChangeCityList(0);
                 }
             }
 
         }
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
@@ -104,6 +122,10 @@ public class CityListFragment extends Fragment {
                 List<City> cityList = mCityAdapter.getCities();
                 WeatherData weatherData = WeatherData.getInstance(getActivity());
                 int itemsDeleted = 0;
+                if(cityList.size() == 1){
+                    Toast.makeText(getActivity(), "Can't delete last item !", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
                 for(City city : cityList){
                     if(city.isSelected()){
                         weatherData.deleteCondition(city.getWoeid());
@@ -115,6 +137,7 @@ public class CityListFragment extends Fragment {
                 }
                 else {
                     updateUI();
+                    mListener.onChangeCityList(itemsDeleted);
                 }
                 return true;
             default:
@@ -134,7 +157,6 @@ public class CityListFragment extends Fragment {
             mCityAdapter.notifyDataSetChanged();
         }
     }
-
 
     private class CityHolder extends RecyclerView.ViewHolder{
 

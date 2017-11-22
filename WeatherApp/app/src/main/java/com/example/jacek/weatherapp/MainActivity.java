@@ -2,53 +2,51 @@ package com.example.jacek.weatherapp;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.util.SparseArrayCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import database.City;
 import database.Condition;
 import settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private static final int REQ_DATA_SET_CHANGED = 0;
     private WeatherData mWeatherData;
+
+    private ViewPager mViewPager;
+    private WeatherPagerAdapter mPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mWeatherData = WeatherData.getInstance(getBaseContext());
         mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
-
-        Condition newCity = null;
-        try {
-          newCity = new FetchWoeidTask().execute("Gdansk").get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        if (newCity != null)
-            mWeatherData.insertCondition(newCity);
-        try {
-            newCity = new FetchWoeidTask().execute("Lodz").get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        if (newCity != null)
-            mWeatherData.insertCondition(newCity);
-        try {
-            newCity = new FetchWoeidTask().execute("Poznan").get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        if (newCity != null)
-            mWeatherData.insertCondition(newCity);
-
         mWeatherData.loadSettingsFromDatabase();
+        try{
+            Condition condition =  new FetchCityTask().execute("Lodz").get();
+            mWeatherData.insertCondition(condition);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
         new FetchWeatherTask().execute();
+        wireControls();
     }
 
     public void waitForDebugger(){
@@ -56,6 +54,23 @@ public class MainActivity extends AppCompatActivity {
             android.os.Debug.waitForDebugger();
     }
 
+    private void wireControls(){
+        mViewPager = (ViewPager) findViewById(R.id.weather_pager_view_pager);
+        FragmentManager fm  = getSupportFragmentManager();
+        mPagerAdapter = new WeatherPagerAdapter(fm);
+        mViewPager.setAdapter(mPagerAdapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        boolean itemsChanged = data.getBooleanExtra(SettingsActivity.EXTRA_ITEM_LIST_CHANGED, false);
+        int deletedItemsCount = data.getIntExtra(SettingsActivity.EXTRA_DELETED_ITEMS, 0);
+        if(itemsChanged) {
+            mPagerAdapter.notifyChangeInPosition(deletedItemsCount);
+            mViewPager.getAdapter().notifyDataSetChanged();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -68,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.menu_item_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQ_DATA_SET_CHANGED);
                 return true;
             case R.id.menu_item_refresh:
 
@@ -89,16 +104,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Condition> items){
-            if(items != null)
+            if(items != null) {
                 mWeatherData.mConditionList = items;
+                mPagerAdapter.updateFragmentsUI();
+
+            }
         }
     }
 
-    private class FetchWoeidTask extends AsyncTask<String, Void, Condition>{
+    private class FetchCityTask extends AsyncTask<String, Void, Condition> {
 
         @Override
         protected Condition doInBackground(String... strings) {
-            waitForDebugger();
             String cityName = strings[0];
             return new WeatherFetcher().fetchCity(cityName);
         }
@@ -108,4 +125,70 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    private class WeatherPagerAdapter extends FragmentPagerAdapter{
+        SparseArrayCompat<Fragment> mWeatherFragments = new SparseArrayCompat<>();
+        private long baseId = 0;
+
+        WeatherPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Condition condition = mWeatherData.mConditionList.get(position);
+            return WeatherFragment.newInstance(condition.getCity().getWoeid());
+        }
+        @Override
+        public int getCount() {
+            return mWeatherData.mConditionList.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            mWeatherFragments.put(position, fragment);
+            return fragment;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            if (position < getCount()) {
+                mWeatherFragments.remove(position);
+                FragmentManager manager = ((Fragment) object).getFragmentManager();
+                manager.beginTransaction()
+                        .remove((Fragment) object)
+                        .commitAllowingStateLoss();
+            }
+        }
+
+        @Override
+        public long getItemId(int position) {
+            // give an ID different from position when position has been changed
+            return baseId + position;
+        }
+
+        public void notifyChangeInPosition(int n) {
+            // shift the ID returned by getItemId outside the range of all previous fragments
+            baseId += getCount() + n;
+        }
+
+        public void updateFragmentsUI(){
+            for(int i = 0, size = mWeatherFragments.size(); i < size; i++){
+                int key = mWeatherFragments.keyAt(i);
+
+                WeatherFragment fragment = (WeatherFragment) mWeatherFragments.get(key);
+                if(fragment != null)
+                    fragment.refreshUI();
+            }
+        }
+
+    }
+
+
 }

@@ -13,4 +13,18 @@
     <string name="addCityHintText">Enter City Name…</string>
     <string name="citySettingsTabTitle">Cities</string>
     <string name="generalSettingsTabTitle">General</string>
+    <string name="weatherPictureDescription">weatherSymbol</string>
+    <string name="arrowDirectionNorth">N</string>
+    <string name="arrowDirectionSouth">S</string>
+    <string name="arrowDirectionEast">E</string>
+    <string name="arrowDirectionWest">W</string>
+    <string name="windPanelTitle">Wind</string>
+    <string name="windPanelSpeed">Speed:</string>
+    <string name="windPanelChill">Chill:</string>
+    <string name="windPanelDirection">Direction:</string>
+    <string name="windPanelImageDescription">Wind direction arrow</string>
+    <string name="detailsPanelTitle">Details</string>
+    <string name="detailsPanelPressure">Pressure:</string>
+    <string name="detailsPanelHumidity">Humidity:</string>
+    <string name="detailsPanelVisibility">Visibility:</string>
 </resources>

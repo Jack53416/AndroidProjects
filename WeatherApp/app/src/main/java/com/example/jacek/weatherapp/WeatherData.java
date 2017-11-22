@@ -26,7 +26,6 @@ public class WeatherData {
     private Settings mAppSettings;
     private SQLiteDatabase mDatabase;
 
-
     public static WeatherData getInstance(Context context)
     {
         if(mWeatherData == null)

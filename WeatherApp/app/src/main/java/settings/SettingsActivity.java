@@ -1,5 +1,6 @@
 package settings;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,9 +11,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 
+import com.example.jacek.weatherapp.MainActivity;
 import com.example.jacek.weatherapp.R;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements CityListFragment.OnChangeCityList {
+
+    public final static String EXTRA_DELETED_ITEMS = "extra_deleted_items";
+    public final static String EXTRA_ITEM_LIST_CHANGED = "extra_item_list_changed";
+    private int mDeletedItemsCount = 0;
+    private boolean mCityListChanged = false;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -47,6 +54,22 @@ public class SettingsActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+    }
+
+    @Override
+    public void onChangeCityList(int itemsDeleted) {
+        if(itemsDeleted > mDeletedItemsCount)
+            mDeletedItemsCount = itemsDeleted;
+        mCityListChanged = true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_DELETED_ITEMS, mDeletedItemsCount);
+        intent.putExtra(EXTRA_ITEM_LIST_CHANGED, mCityListChanged);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     /**
