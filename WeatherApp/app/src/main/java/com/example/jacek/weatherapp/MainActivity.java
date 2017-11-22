@@ -39,13 +39,16 @@ public class MainActivity extends AppCompatActivity {
         mWeatherData = WeatherData.getInstance(getBaseContext());
         mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
         mWeatherData.loadSettingsFromDatabase();
-        try{
-            Condition condition =  new FetchCityTask().execute("Lodz").get();
-            mWeatherData.insertCondition(condition);
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+        if(mWeatherData.mConditionList.size() == 0){
+            try{
+                Condition condition =  new FetchCityTask().execute("Lodz").get();
+                mWeatherData.insertCondition(condition);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+            new FetchWeatherTask().execute();
         }
-        new FetchWeatherTask().execute();
+
         wireControls();
     }
 
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQ_DATA_SET_CHANGED);
                 return true;
             case R.id.menu_item_refresh:
+                new FetchWeatherTask().execute();
 
                 return true;
             default:
@@ -93,6 +97,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        for(Fragment fragment:getSupportFragmentManager().getFragments()){
+            if(fragment instanceof WeatherFragment)
+                getSupportFragmentManager().beginTransaction().remove(fragment).commitAllowingStateLoss();
+        }
+    }
 
     private class FetchWeatherTask extends AsyncTask<Void, Void, List<Condition>>{
 
@@ -158,13 +170,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            if (position < getCount()) {
                 mWeatherFragments.remove(position);
-                FragmentManager manager = ((Fragment) object).getFragmentManager();
-                manager.beginTransaction()
-                        .remove((Fragment) object)
-                        .commitAllowingStateLoss();
-            }
+                //getSupportFragmentManager().beginTransaction().remove((Fragment) object).commitAllowingStateLoss();
+                super.destroyItem(container, position, object);
         }
 
         @Override

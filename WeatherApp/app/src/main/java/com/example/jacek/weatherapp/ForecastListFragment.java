@@ -65,6 +65,8 @@ public class ForecastListFragment extends Fragment {
     {
         Condition condition = WeatherData.getInstance(getActivity()).findConditionByWoeid(mConditionWoeid);
 
+        if(condition == null)
+            return;
         if(mForecastAdapter == null){
             mForecastAdapter = new ForecastAdapter(condition.getForecasts());
             mForecastRecyclerView.setAdapter(mForecastAdapter);
