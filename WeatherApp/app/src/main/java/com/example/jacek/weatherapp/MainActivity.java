@@ -63,7 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mViewPager.getAdapter().notifyDataSetChanged();
+
+        boolean itemsChanged = data.getBooleanExtra(SettingsActivity.EXTRA_ITEM_LIST_CHANGED, false);
+        int deletedItemsCount = data.getIntExtra(SettingsActivity.EXTRA_DELETED_ITEMS, 0);
+        if(itemsChanged) {
+            mPagerAdapter.notifyChangeInPosition(deletedItemsCount);
+            mViewPager.getAdapter().notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -120,10 +126,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class WeatherPagerAdapter extends FragmentStatePagerAdapter{
+    private class WeatherPagerAdapter extends FragmentPagerAdapter{
         SparseArrayCompat<Fragment> mWeatherFragments = new SparseArrayCompat<>();
+        private long baseId = 0;
 
-        public WeatherPagerAdapter(FragmentManager fm) {
+        WeatherPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -145,9 +152,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            mWeatherFragments.remove(position);
-            super.destroyItem(container, position, object);
+            if (position < getCount()) {
+                mWeatherFragments.remove(position);
+                FragmentManager manager = ((Fragment) object).getFragmentManager();
+                manager.beginTransaction()
+                        .remove((Fragment) object)
+                        .commitAllowingStateLoss();
+            }
+        }
+
+        @Override
+        public long getItemId(int position) {
+            // give an ID different from position when position has been changed
+            return baseId + position;
+        }
+
+        public void notifyChangeInPosition(int n) {
+            // shift the ID returned by getItemId outside the range of all previous fragments
+            baseId += getCount() + n;
         }
 
         public void updateFragmentsUI(){
@@ -159,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment.refreshUI();
             }
         }
+
     }
 
 

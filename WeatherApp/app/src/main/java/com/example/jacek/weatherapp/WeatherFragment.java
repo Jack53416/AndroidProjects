@@ -106,15 +106,13 @@ public class WeatherFragment extends Fragment {
         mPressure = v.findViewById(R.id.weather_fagment_pressure_value);
         mHumidity = v.findViewById(R.id.weather_fagment_humidity_value);
         mVisibility = v.findViewById(R.id.weather_fagment_visibility_value);
-
-        refreshUI();
-
-
     }
 
     public void refreshUI(){
         WeatherData weatherData = WeatherData.getInstance(getActivity());
         Settings.Units unit = weatherData.getAppSettings().getMeasurementUnit();
+        if(mCondition == null)
+            return;
         mCondition = weatherData.findConditionByWoeid(mCondition.getCity().getWoeid());
 
         if(mCondition == null)
