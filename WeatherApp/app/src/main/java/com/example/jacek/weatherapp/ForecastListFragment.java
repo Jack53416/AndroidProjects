@@ -17,6 +17,7 @@ import java.util.Locale;
 
 import database.Condition;
 import database.Forecast;
+import database.Settings;
 
 public class ForecastListFragment extends Fragment {
 
@@ -94,11 +95,13 @@ public class ForecastListFragment extends Fragment {
         }
 
         void bindForecast(Forecast forecast){
+            Settings.Units unit = WeatherData.getInstance(getActivity()).getAppSettings().getMeasurementUnit();
+
             mForecast = forecast;
             mDayValue.setText(mForecast.getDay());
             mDateValue.setText(mDateFormat.format(mForecast.getDate()));
-            mTemperatureValue.setText(String.format(Locale.US
-                                                ,"%.0f/%.0f stC", mForecast.getHigh(), mForecast.getLow()));
+            mTemperatureValue.setText(String.format(Locale.US,
+                    "%.0f/%.0f%s", mForecast.getHigh(unit), mForecast.getLow(unit), unit.getUnitName()));
             mWeatherPicture.setImageResource(Condition.getWeatherResource(mForecast.getCode()));
         }
     }

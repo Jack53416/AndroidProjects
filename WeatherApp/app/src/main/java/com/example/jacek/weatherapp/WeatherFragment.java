@@ -10,11 +10,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.util.Locale;
+
 import database.Condition;
+import database.Settings;
 
 public class WeatherFragment extends Fragment {
 
     public static final String ARG_CONDITION_WOEID = "Arg_woeid";
+    private static final DecimalFormat measurementFormat = new DecimalFormat("####.##");
+    private static final DecimalFormat temperatureFormat = new DecimalFormat("##.#");
     private Condition mCondition;
     private ForecastListFragment mForecastListFragment;
 
@@ -107,25 +113,34 @@ public class WeatherFragment extends Fragment {
     }
 
     public void refreshUI(){
-        mCondition = WeatherData.getInstance(getActivity()).
-                        findConditionByWoeid(mCondition.getCity().getWoeid());
+        WeatherData weatherData = WeatherData.getInstance(getActivity());
+        Settings.Units unit = weatherData.getAppSettings().getMeasurementUnit();
+        mCondition = weatherData.findConditionByWoeid(mCondition.getCity().getWoeid());
 
         if(mCondition == null)
             return;
         mCityName.setText(mCondition.getCity().getName());
         mCityDescription.setText(mCondition.getCity().getLocationDescription());
-        mTemperature.setText(String.valueOf(mCondition.getTemperature() + "°C"));
+        mTemperature.setText(String.format(Locale.US,
+                "%s %s", temperatureFormat.format(mCondition.getTemperature(unit)), unit.getUnitName()));
         mWeatherDescription.setText(mCondition.getText());
         mWeatherPicture.setImageResource(Condition.getWeatherResource(mCondition.getCode()));
 
-        mWindDirection.setText(String.valueOf(mCondition.getWindDirection()));
-        mWindSpeed.setText(String.valueOf(mCondition.getWindSpeed()));
-        mWindChill.setText(String.valueOf(mCondition.getWindChill()));
+        mWindDirection.setText(mCondition.getWindDirectionDescription());
+        mWindSpeed.setText(String.format(Locale.US,
+                "%s %s", measurementFormat.format(mCondition.getWindSpeed(unit)) , unit.getSpeedUnit()));
+
+        mWindChill.setText(String.format(Locale.US,
+                "%s %s", temperatureFormat.format(mCondition.getWindChill(unit)), unit.getUnitName()));
         mWindDirectionArrow.setRotation(mCondition.getWindDirection());
 
-        mPressure.setText(String.valueOf(mCondition.getPressure()));
-        mHumidity.setText(String.valueOf(mCondition.getHumidity()));
-        mVisibility.setText(String.valueOf(mCondition.getVisibility()));
+        mPressure.setText(String.format(Locale.US,
+                "%s %s", measurementFormat.format(mCondition.getPressure(unit)), unit.getPressureUnit()));
+
+        mHumidity.setText(String.format(Locale.US,
+                "%d %%", mCondition.getHumidity()));
+        mVisibility.setText(String.format(Locale.US,
+                "%s %s", measurementFormat.format(mCondition.getVisibility(unit)), unit.getDistanceUnit()));
 
         if(mForecastListFragment != null)
             mForecastListFragment.updateUI();

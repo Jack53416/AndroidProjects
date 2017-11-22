@@ -6,16 +6,51 @@ import static database.WeatherDbSchema.*;
 public class Settings {
 
     public enum Units{
-        UNIT_C("°C"),
-        UNIT_F("°F");
+        UNIT_C("°C", "km", "hPa", "km/h"),
+        UNIT_F("°F" , "mi", "in", "mph");
+
+        private static final double PRESSURE_CONST = 0.0295301;
+        private static final double DISTANCE_CONST = 1.609344;
+        private static final double TEMPERATURE_CONST = 5.0/9.0;
 
         private String mUnitName;
-        Units(String unitName){
+        private String mDistanceUnit;
+        private String mPressureUnit;
+        private String mSpeedUnit;
+
+        Units(String unitName, String distanceUnit, String pressureUnit, String speedUnit){
             this.mUnitName = unitName;
+            this.mDistanceUnit = distanceUnit;
+            this.mSpeedUnit = speedUnit;
+            this.mPressureUnit = pressureUnit;
+        }
+
+        public static double fahrenheitsToCelsius(double fahrenheits){
+            return (fahrenheits - 32) * TEMPERATURE_CONST;
+        }
+
+        public static double milesToKilometers(double miles){
+            return miles * DISTANCE_CONST;
+        }
+
+        public static double hPaToInchens(double hpa){
+            return hpa * PRESSURE_CONST;
         }
 
         public String getUnitName() {
             return mUnitName;
+        }
+
+        public String getDistanceUnit() {
+            return mDistanceUnit;
+        }
+
+        public String getPressureUnit() {
+            return mPressureUnit;
+        }
+
+        public String getSpeedUnit() {
+            return mSpeedUnit;
         }
 
         @Override

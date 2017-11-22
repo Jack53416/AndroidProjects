@@ -3,10 +3,13 @@ package database;
 import android.content.ContentValues;
 
 import com.example.jacek.weatherapp.R;
+import com.example.jacek.weatherapp.WeatherData;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import database.Settings.Units;
 
 import static database.WeatherDbSchema.*;
 
@@ -168,6 +171,12 @@ public class Condition {
         return mTemperature;
     }
 
+    public double getTemperature(Units unit) {
+        if(unit == Units.UNIT_F)
+            return mTemperature;
+        return Units.fahrenheitsToCelsius(mTemperature);
+    }
+
     public void setTemperature(double temperature) {
         mTemperature = temperature;
     }
@@ -184,6 +193,12 @@ public class Condition {
         return mWindChill;
     }
 
+    public double getWindChill(Units unit){
+        if(unit == Units.UNIT_F)
+            return mWindChill;
+        return Units.fahrenheitsToCelsius(mWindChill);
+    }
+
     public void setWindChill(int windChill) {
         mWindChill = windChill;
     }
@@ -192,12 +207,36 @@ public class Condition {
         return mWindDirection;
     }
 
+    public String getWindDirectionDescription(){
+        if(mWindDirection > 70 && mWindDirection < 110)
+            return "East";
+        if(mWindDirection > 110 && mWindDirection < 160)
+            return "South-East";
+        if(mWindDirection > 160 && mWindDirection < 200)
+            return "South";
+        if(mWindDirection > 200 && mWindDirection < 250)
+            return "South-West";
+        if(mWindDirection > 250 && mWindDirection < 290 )
+            return "West";
+        if(mWindDirection > 290 && mWindDirection < 340)
+            return "North-West";
+        if(mWindDirection > 340 || mWindDirection < 20)
+            return "North";
+        if(mWindDirection > 20 && mWindDirection < 70)
+            return "North-East";
+        return "No Wind";
+    }
+
     public void setWindDirection(int windDirection) {
         mWindDirection = windDirection;
     }
 
-    public double getWindSpeed() {
-        return mWindSpeed;
+    public double getWindSpeed() { return mWindSpeed; }
+
+    public double getWindSpeed(Units unit) {
+        if(unit == Units.UNIT_F)
+            return mWindSpeed;
+        return Units.milesToKilometers(mWindSpeed);
     }
 
     public void setWindSpeed(double windSpeed) {
@@ -216,12 +255,26 @@ public class Condition {
         return mPressure;
     }
 
+    public double getPressure(Units unit)
+    {
+        if(unit == Units.UNIT_F)
+            return Units.hPaToInchens(mPressure);
+        return mPressure;
+    }
+
     public void setPressure(double pressure) {
         mPressure = pressure;
     }
 
     public double getVisibility() {
         return mVisibility;
+    }
+
+    public double getVisibility(Units unit)
+    {
+        if(unit == Units.UNIT_F)
+            return mVisibility;
+        return Units.milesToKilometers(mVisibility);
     }
 
     public void setVisibility(double visibility) {

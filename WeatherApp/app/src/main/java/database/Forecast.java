@@ -4,6 +4,8 @@ import android.content.ContentValues;
 
 import java.util.Date;
 
+import database.Settings.Units;
+
 public class Forecast {
     private Date mDate = new Date();
     private int mCode;
@@ -55,12 +57,24 @@ public class Forecast {
         return mHigh;
     }
 
+    public double getHigh(Units unit){
+        if(unit == Units.UNIT_F)
+            return mHigh;
+        return Units.fahrenheitsToCelsius(mHigh);
+    }
+
     public void setHigh(double high) {
         mHigh = high;
     }
 
     public double getLow() {
         return mLow;
+    }
+
+    public double getLow(Units unit){
+        if(unit == Units.UNIT_F)
+            return mLow;
+        return Units.fahrenheitsToCelsius(mLow);
     }
 
     public void setLow(double low) {
