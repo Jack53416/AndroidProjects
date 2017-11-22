@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -24,6 +25,7 @@ public class WeatherFragment extends Fragment {
     private static final DecimalFormat measurementFormat = new DecimalFormat("####.##");
     private static final DecimalFormat temperatureFormat = new DecimalFormat("##.#");
     private Condition mCondition;
+    private FrameLayout mForecastListFragmentContainer;
     private ForecastListFragment mForecastListFragment;
     private ImageButton mMoreButton;
     private ScrollView mDetailsScrollView;
@@ -113,16 +115,20 @@ public class WeatherFragment extends Fragment {
 
         mDetailsScrollView = v.findViewById(R.id.weather_fragment_details_scroll_view);
         mMoreButton = v.findViewById(R.id.weather_fragment_more_button);
+        mForecastListFragmentContainer = v.findViewById(R.id.weather_fragment_forecast_container);
+
         mMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mDetailsScrollView.getVisibility() == View.INVISIBLE){
                     mDetailsScrollView.setVisibility(View.VISIBLE);
+                    mForecastListFragmentContainer.setVisibility(View.VISIBLE);
                     mMoreButton.setImageResource(R.drawable.ic_button_drop_up);
                 }
 
                 else {
                     mDetailsScrollView.setVisibility(View.INVISIBLE);
+                    mForecastListFragmentContainer.setVisibility(View.INVISIBLE);
                     mMoreButton.setImageResource(R.drawable.ic_button_drop_down);
                 }
             }
