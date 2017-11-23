@@ -29,7 +29,7 @@
         layout="@layout/panel_weather_overview"
         android:id="@+id/weather_fragment_overview_section"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="0dp"
         app:layout_constraintHorizontal_bias="0.0"

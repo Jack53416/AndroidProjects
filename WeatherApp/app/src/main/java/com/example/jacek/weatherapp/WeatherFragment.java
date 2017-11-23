@@ -22,8 +22,12 @@ import database.Settings;
 public class WeatherFragment extends Fragment {
 
     public static final String ARG_CONDITION_WOEID = "Arg_woeid";
+    private static final String EXTRA_DETAILS_VISIBLE = "extra_details_visible";
     private static final DecimalFormat measurementFormat = new DecimalFormat("####.##");
     private static final DecimalFormat temperatureFormat = new DecimalFormat("##.#");
+
+    private int mDetailsVisibility = View.INVISIBLE;
+
     private Condition mCondition;
     private FrameLayout mForecastListFragmentContainer;
     private ForecastListFragment mForecastListFragment;
@@ -51,9 +55,20 @@ public class WeatherFragment extends Fragment {
         int conditionWoeid = getArguments().getInt(ARG_CONDITION_WOEID);
         WeatherData weatherData = WeatherData.getInstance(getActivity());
 
+        if(savedInstanceState != null)
+            mDetailsVisibility = savedInstanceState.getInt(EXTRA_DETAILS_VISIBLE, View.INVISIBLE);
+
         mCondition = weatherData.findConditionByWoeid(conditionWoeid);
 
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(mDetailsScrollView != null)
+            outState.putInt(EXTRA_DETAILS_VISIBLE, mDetailsScrollView.getVisibility());
     }
 
     @Override
@@ -67,17 +82,7 @@ public class WeatherFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        FragmentManager fm = getChildFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.weather_fragment_forecast_container);
-
-        if(fragment == null){
-            fragment =  ForecastListFragment.newInstance(mCondition.getCity().getWoeid());
-            fm.beginTransaction()
-                    .replace(R.id.weather_fragment_forecast_container, fragment)
-                    .commit();
-        }
-
-        mForecastListFragment = (ForecastListFragment) fragment;
+        createForecastListFragment();
     }
 
     @Override
@@ -86,6 +91,19 @@ public class WeatherFragment extends Fragment {
         refreshUI();
     }
 
+    private void createForecastListFragment(){
+        FragmentManager fm = getChildFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.weather_fragment_forecast_container);
+
+        if(fragment == null){
+            fragment =  ForecastListFragment.newInstance(mCondition.getCity().getWoeid());
+            fm.beginTransaction()
+                    .add(R.id.weather_fragment_forecast_container, fragment)
+                    .commit();
+        }
+
+        mForecastListFragment = (ForecastListFragment) fragment;
+    }
     public static WeatherFragment newInstance(final int conditionWoeid){
 
         WeatherFragment weatherFragment = new WeatherFragment();
@@ -133,6 +151,9 @@ public class WeatherFragment extends Fragment {
                 }
             }
         });
+
+        if(mDetailsVisibility == View.VISIBLE)
+            mMoreButton.callOnClick();
     }
 
     public void refreshUI(){
@@ -168,6 +189,6 @@ public class WeatherFragment extends Fragment {
                 "%s %s", measurementFormat.format(mCondition.getVisibility(unit)), unit.getDistanceUnit()));
 
         if(mForecastListFragment != null)
-            mForecastListFragment.updateUI();
+            mForecastListFragment.updateUI(mCondition.getCity().getWoeid());
     }
 }

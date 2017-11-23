@@ -44,7 +44,7 @@ public class ForecastListFragment extends Fragment {
         mForecastRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 false));
-        updateUI();
+        updateUI(mConditionWoeid);
 
         return rootView;
     }
@@ -61,9 +61,9 @@ public class ForecastListFragment extends Fragment {
     }
 
 
-    public void updateUI()
+    public void updateUI(int conditionWoeid)
     {
-        Condition condition = WeatherData.getInstance(getActivity()).findConditionByWoeid(mConditionWoeid);
+        Condition condition = WeatherData.getInstance(getActivity()).findConditionByWoeid(conditionWoeid);
 
         if(condition == null)
             return;

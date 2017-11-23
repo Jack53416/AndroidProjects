@@ -24,7 +24,6 @@ import com.example.jacek.weatherapp.WeatherData;
 import com.example.jacek.weatherapp.WeatherFetcher;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -34,7 +33,7 @@ import database.Condition;
 
 public class CityListFragment extends Fragment {
 
-    interface OnChangeCityList{
+    interface CityListFragmentListener {
         void onChangeCityList(int itemsDeleted);
     }
 
@@ -42,7 +41,7 @@ public class CityListFragment extends Fragment {
     private static final Integer REQUEST_CITY = 0;
     private RecyclerView mCityRecyclerView;
     private CityAdapter mCityAdapter = null;
-    OnChangeCityList mListener;
+    CityListFragmentListener mListener;
 
 
 
@@ -56,7 +55,7 @@ public class CityListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mListener = (OnChangeCityList) context;
+            mListener = (CityListFragmentListener) context;
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString() + " must implement OnChangeCityListener");
         }
@@ -122,10 +121,7 @@ public class CityListFragment extends Fragment {
                 List<City> cityList = mCityAdapter.getCities();
                 WeatherData weatherData = WeatherData.getInstance(getActivity());
                 int itemsDeleted = 0;
-                if(cityList.size() == 1){
-                    Toast.makeText(getActivity(), "Can't delete last item !", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
+
                 for(City city : cityList){
                     if(city.isSelected()){
                         weatherData.deleteCondition(city.getWoeid());
@@ -184,8 +180,7 @@ public class CityListFragment extends Fragment {
         void bindCity(City city){
             mCity = city;
             mCityNameTextView.setText(mCity.getName());
-            mCityDescription.setText(String.format(Locale.US,"%s (%.3f %.3f)", mCity.getCountry(),
-                    mCity.getLongitude(), mCity.getLatitude()));
+            mCityDescription.setText(city.getLocationDescription());
             mCityCheckBox.setChecked(mCity.isSelected());
         }
     }

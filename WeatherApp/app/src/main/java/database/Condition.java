@@ -208,21 +208,21 @@ public class Condition {
     }
 
     public String getWindDirectionDescription(){
-        if(mWindDirection > 70 && mWindDirection < 110)
+        if(mWindDirection > 70 && mWindDirection <= 110)
             return "East";
-        if(mWindDirection > 110 && mWindDirection < 160)
+        if(mWindDirection > 110 && mWindDirection <= 160)
             return "South-East";
-        if(mWindDirection > 160 && mWindDirection < 200)
+        if(mWindDirection > 160 && mWindDirection <= 200)
             return "South";
-        if(mWindDirection > 200 && mWindDirection < 250)
+        if(mWindDirection > 200 && mWindDirection <= 250)
             return "South-West";
-        if(mWindDirection > 250 && mWindDirection < 290 )
+        if(mWindDirection > 250 && mWindDirection <= 290 )
             return "West";
-        if(mWindDirection > 290 && mWindDirection < 340)
+        if(mWindDirection > 290 && mWindDirection <= 340)
             return "North-West";
-        if(mWindDirection > 340 || mWindDirection < 20)
+        if(mWindDirection > 340 || mWindDirection <= 20)
             return "North";
-        if(mWindDirection > 20 && mWindDirection < 70)
+        if(mWindDirection > 20 && mWindDirection <= 70)
             return "North-East";
         return "No Wind";
     }

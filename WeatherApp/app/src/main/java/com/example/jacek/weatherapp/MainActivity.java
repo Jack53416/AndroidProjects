@@ -1,23 +1,25 @@
 package com.example.jacek.weatherapp;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.SparseArrayCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import database.City;
 import database.Condition;
@@ -26,8 +28,11 @@ import settings.SettingsActivity;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private static final String EXTRA_BASE_ID = "extra_base_id";
+
     private static final int REQ_DATA_SET_CHANGED = 0;
     private WeatherData mWeatherData;
+    private DataUpdater<MainActivity> mDataUpdater;
 
     private ViewPager mViewPager;
     private WeatherPagerAdapter mPagerAdapter;
@@ -35,21 +40,58 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        long adapterBaseId = 0;
+
+        if(savedInstanceState != null){
+            adapterBaseId = savedInstanceState.getLong(EXTRA_BASE_ID, 0);
+        }
+
         setContentView(R.layout.activity_main);
         mWeatherData = WeatherData.getInstance(getBaseContext());
         mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
         mWeatherData.loadSettingsFromDatabase();
-        if(mWeatherData.mConditionList.size() == 0){
-            try{
-                Condition condition =  new FetchCityTask().execute("Lodz").get();
-                mWeatherData.insertCondition(condition);
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-            new FetchWeatherTask().execute();
+        if(!isNetworkAvailable()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("Warning")
+                    .setMessage("No internet connection available, presented data may be outdated")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+
+            builder.create().show();
         }
 
-        wireControls();
+        Handler responseHandler = new Handler();
+        mDataUpdater = new DataUpdater<>(responseHandler);
+        mDataUpdater.setDataUpdaterListener(new DataUpdater.DataUpdaterListener<MainActivity>() {
+            @Override
+            public void onDataUpdate(MainActivity target, List<Condition> updatedItems) {
+                for(Condition condition : updatedItems)
+                    mWeatherData.updateCondition(condition);
+                mPagerAdapter.updateFragmentsUI();
+                mDataUpdater.queueDataRefreshDelayed(MainActivity.this,
+                        Condition.getCityList(mWeatherData.mConditionList),
+                        mWeatherData.getAppSettings().getRefreshDelay());
+            }
+
+            @Override
+            public void onDataUpdateManual(MainActivity target, List<Condition> updatedItems) {
+                for(Condition condition : updatedItems)
+                    mWeatherData.updateCondition(condition);
+                mPagerAdapter.updateFragmentsUI();
+            }
+        });
+        mDataUpdater.start();
+        mDataUpdater.getLooper();
+        Log.i(TAG, "Start of the background rhread");
+
+        mViewPager = (ViewPager) findViewById(R.id.weather_pager_view_pager);
+        FragmentManager fm  = getSupportFragmentManager();
+        mPagerAdapter = new WeatherPagerAdapter(fm, adapterBaseId);
+        mViewPager.setAdapter(mPagerAdapter);
     }
 
     public void waitForDebugger(){
@@ -57,11 +99,16 @@ public class MainActivity extends AppCompatActivity {
             android.os.Debug.waitForDebugger();
     }
 
-    private void wireControls(){
-        mViewPager = (ViewPager) findViewById(R.id.weather_pager_view_pager);
-        FragmentManager fm  = getSupportFragmentManager();
-        mPagerAdapter = new WeatherPagerAdapter(fm);
-        mViewPager.setAdapter(mPagerAdapter);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        List<City> cities = Condition.getCityList(mWeatherData.mConditionList);
+        mDataUpdater.queueDataRefreshDelayed(this,
+                cities,
+                mWeatherData.getAppSettings().getRefreshDelay());
+
+        mDataUpdater.queueDataRefresh(this, cities);
+
     }
 
     @Override
@@ -69,10 +116,19 @@ public class MainActivity extends AppCompatActivity {
 
         boolean itemsChanged = data.getBooleanExtra(SettingsActivity.EXTRA_ITEM_LIST_CHANGED, false);
         int deletedItemsCount = data.getIntExtra(SettingsActivity.EXTRA_DELETED_ITEMS, 0);
+        boolean refreshDelayChanged = data.getBooleanExtra(SettingsActivity.EXTRA_REFRESH_DELAY_CHANGED, false);
+
         if(itemsChanged) {
             mPagerAdapter.notifyChangeInPosition(deletedItemsCount);
-            mViewPager.getAdapter().notifyDataSetChanged();
+            mPagerAdapter.notifyDataSetChanged();
         }
+        if(refreshDelayChanged){
+            mDataUpdater.clearQueue();
+            mDataUpdater.queueDataRefreshDelayed(this,
+                    Condition.getCityList(mWeatherData.mConditionList),
+                    mWeatherData.getAppSettings().getRefreshDelay());
+        }
+
     }
 
     @Override
@@ -89,8 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQ_DATA_SET_CHANGED);
                 return true;
             case R.id.menu_item_refresh:
-                new FetchWeatherTask().execute();
-
+                mDataUpdater.queueDataRefresh(this, Condition.getCityList(mWeatherData.mConditionList));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -100,50 +155,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        for(Fragment fragment:getSupportFragmentManager().getFragments()){
-            if(fragment instanceof WeatherFragment)
-                getSupportFragmentManager().beginTransaction().remove(fragment).commitAllowingStateLoss();
-        }
+
+        outState.putLong(EXTRA_BASE_ID, mPagerAdapter.getBaseId());
     }
 
-    private class FetchWeatherTask extends AsyncTask<Void, Void, List<Condition>>{
 
-        @Override
-        protected List<Condition> doInBackground(Void... voids) {
-            waitForDebugger();
-            return new WeatherFetcher().fetchWeather(Condition.getCityList(mWeatherData.mConditionList));
-        }
 
-        @Override
-        protected void onPostExecute(List<Condition> items){
-            if(items != null) {
-                mWeatherData.mConditionList = items;
-                mPagerAdapter.updateFragmentsUI();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
-            }
-        }
+        mDataUpdater.quit();
+        Log.i(TAG, "Background thread destroyed");
     }
 
-    private class FetchCityTask extends AsyncTask<String, Void, Condition> {
 
-        @Override
-        protected Condition doInBackground(String... strings) {
-            String cityName = strings[0];
-            return new WeatherFetcher().fetchCity(cityName);
-        }
-
-        @Override
-        protected  void onPostExecute(Condition conditionItem){
-
-        }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
-    private class WeatherPagerAdapter extends FragmentPagerAdapter{
+
+    private class WeatherPagerAdapter extends FragmentStatePagerAdapter{
         SparseArrayCompat<Fragment> mWeatherFragments = new SparseArrayCompat<>();
-        private long baseId = 0;
+        private long mBaseId = 0;
 
-        WeatherPagerAdapter(FragmentManager fm) {
+        WeatherPagerAdapter(FragmentManager fm, long baseId) {
             super(fm);
+            mBaseId = baseId;
         }
 
         @Override
@@ -175,18 +216,23 @@ public class MainActivity extends AppCompatActivity {
                 super.destroyItem(container, position, object);
         }
 
-        @Override
+
+        /*@Override
         public long getItemId(int position) {
             // give an ID different from position when position has been changed
-            return baseId + position;
+            return mBaseId + position;
+        }*/
+
+        long getBaseId() {
+            return mBaseId;
         }
 
-        public void notifyChangeInPosition(int n) {
+        void notifyChangeInPosition(int n) {
             // shift the ID returned by getItemId outside the range of all previous fragments
-            baseId += getCount() + n;
+            mBaseId += getCount() + n;
         }
 
-        public void updateFragmentsUI(){
+        void updateFragmentsUI(){
             for(int i = 0, size = mWeatherFragments.size(); i < size; i++){
                 int key = mWeatherFragments.keyAt(i);
 

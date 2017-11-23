@@ -27,4 +27,5 @@
     <string name="detailsPanelPressure">Pressure:</string>
     <string name="detailsPanelHumidity">Humidity:</string>
     <string name="detailsPanelVisibility">Visibility:</string>
+    <string name="mainViewEmptyMessage">Add locations to see weather</string>
 </resources>

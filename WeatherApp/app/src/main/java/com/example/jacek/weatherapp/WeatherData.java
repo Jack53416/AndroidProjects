@@ -21,7 +21,7 @@ import static database.WeatherDbSchema.*;
 public class WeatherData {
 
     private static WeatherData mWeatherData;
-    public static final int CONDITION_LIMIT = 30;
+    public static final int CONDITION_LIMIT = 10;
     public List<Condition> mConditionList;
     private Settings mAppSettings;
     private SQLiteDatabase mDatabase;
@@ -67,6 +67,11 @@ public class WeatherData {
 
     public void updateCondition(Condition condition){
         ContentValues values = condition.getContentValues();
+
+        int idx = mConditionList.indexOf(findConditionByWoeid(condition.getCity().getWoeid()));
+
+        mConditionList.set(idx, condition);
+
         mDatabase.update(ConditionTable.NAME, values,
                          ConditionTable.Cols.CITY_WOEID + " = ?", new String[]{String.valueOf(condition.getCity().getWoeid())});
 

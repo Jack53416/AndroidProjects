@@ -78,6 +78,8 @@ public class Settings {
     }
 
     public enum RefreshDelayOptions{
+        REFRESH_10_SECONDS("10 seconds", 10),
+        REFRESH_1_MINUTE("1 minute", 60),
         REFRESH_30_MINUTES("30 minutes", 1800),
         REFRESH_1_HOUR("1 hour", 3600),
         REFRESH_6_HOURS("6 hours", 6* 3600),

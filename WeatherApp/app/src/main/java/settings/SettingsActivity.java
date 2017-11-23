@@ -11,15 +11,18 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 
-import com.example.jacek.weatherapp.MainActivity;
 import com.example.jacek.weatherapp.R;
 
-public class SettingsActivity extends AppCompatActivity implements CityListFragment.OnChangeCityList {
+public class SettingsActivity extends AppCompatActivity
+        implements CityListFragment.CityListFragmentListener,
+        SettingsFragment.SettingsFragmentListener{
 
     public final static String EXTRA_DELETED_ITEMS = "extra_deleted_items";
     public final static String EXTRA_ITEM_LIST_CHANGED = "extra_item_list_changed";
+    public final static String EXTRA_REFRESH_DELAY_CHANGED = "extra_refresh_delay_changed";
     private int mDeletedItemsCount = 0;
     private boolean mCityListChanged = false;
+    private boolean mRefreshDelayChanged = false;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -31,15 +34,18 @@ public class SettingsActivity extends AppCompatActivity implements CityListFragm
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        if(savedInstanceState != null){
+            mDeletedItemsCount = savedInstanceState.getInt(EXTRA_DELETED_ITEMS, 0);
+            mCityListChanged = savedInstanceState.getBoolean(EXTRA_ITEM_LIST_CHANGED, false);
+            mRefreshDelayChanged = savedInstanceState.getBoolean(EXTRA_REFRESH_DELAY_CHANGED, false);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -57,6 +63,14 @@ public class SettingsActivity extends AppCompatActivity implements CityListFragm
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(EXTRA_REFRESH_DELAY_CHANGED, mRefreshDelayChanged);
+        outState.putInt(EXTRA_DELETED_ITEMS, mDeletedItemsCount);
+        outState.putBoolean(EXTRA_ITEM_LIST_CHANGED, mCityListChanged);
+    }
+
+    @Override
     public void onChangeCityList(int itemsDeleted) {
         if(itemsDeleted > mDeletedItemsCount)
             mDeletedItemsCount = itemsDeleted;
@@ -68,8 +82,14 @@ public class SettingsActivity extends AppCompatActivity implements CityListFragm
         Intent intent = new Intent();
         intent.putExtra(EXTRA_DELETED_ITEMS, mDeletedItemsCount);
         intent.putExtra(EXTRA_ITEM_LIST_CHANGED, mCityListChanged);
+        intent.putExtra(EXTRA_REFRESH_DELAY_CHANGED, mRefreshDelayChanged);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void onRefreshDelayChanged() {
+        mRefreshDelayChanged = true;
     }
 
     /**

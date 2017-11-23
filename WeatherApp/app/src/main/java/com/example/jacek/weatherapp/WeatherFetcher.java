@@ -64,6 +64,9 @@ public class WeatherFetcher {
     public List<Condition> fetchWeather(List<City> cities){
 
         List<Condition> conditions = null;
+        if(cities.size() == 0)
+            return null;
+
         try {
             String url = Uri.parse(API_URL)
                     .buildUpon()

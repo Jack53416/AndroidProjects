@@ -14,7 +14,7 @@
         android:textStyle="bold"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:textSize="24sp"
+        android:textSize="@dimen/textSubTitleSize"
         android:textColor="@color/colorWhite"
         android:background="@color/colorPrimaryDark"/>
 
@@ -29,6 +29,7 @@
         android:maxLines="1"
         android:layout_marginTop="10dp"
         android:padding="20dp"
+        android:textSize="@dimen/textStandardSize"
         android:selectAllOnFocus="true"
         android:maxLength="30"
         android:hint="@string/addCityHintText"/>
