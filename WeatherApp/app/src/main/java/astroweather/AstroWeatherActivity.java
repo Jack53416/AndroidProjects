@@ -73,30 +73,18 @@ public class AstroWeatherActivity extends AppCompatActivity {
 
         if(!isScreenXLarge()) {
             PageAdapter pageAdapter = new PageAdapter(fm, mFragmentList);
-            ViewPager pager = (ViewPager) findViewById(R.id.fragmentContainer);
+            ViewPager pager = (ViewPager) findViewById(R.id.astroweather_fragment_container);
             pager.setAdapter(pageAdapter);
         }
         mAppSettings = AppSettings.get();
         mCurrentCoordinates.setText(mAppSettings.getCurrentCoordinates());
         mTimerHandler.postDelayed(mTimerRunnable, mAppSettings.mInitialDelay_ms);
 
-
-       /* F
-       ragment fragment = fm.findFragmentById(R.id.fragmentContainer);
-        if(fragment == null){
-            fragment = WeatherFragment.newInstance(WeatherFragment.FragmentType.MOON);
-            fm.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
-        }*/
-
     }
 
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
-
-       /* for(int i = 0, size = mPageAdapter.getCount(); i < size; i++)
-            getSupportFragmentManager().putFragment(savedInstanceState, Integer.toString(i), mPageAdapter.getItem(i));
-*/
 
     }
     @Override

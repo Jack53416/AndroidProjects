@@ -1,5 +1,6 @@
 package com.example.jacek.weatherapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -16,8 +18,10 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
+import astroweather.AstroWeatherActivity;
 import database.Condition;
 import database.Settings;
+import settings.SettingsActivity;
 
 public class WeatherFragment extends Fragment {
 
@@ -48,6 +52,7 @@ public class WeatherFragment extends Fragment {
     private TextView mPressure;
     private TextView mHumidity;
     private TextView mVisibility;
+    private Button  mAstroweatherButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,6 +140,9 @@ public class WeatherFragment extends Fragment {
         mMoreButton = v.findViewById(R.id.weather_fragment_more_button);
         mForecastListFragmentContainer = v.findViewById(R.id.weather_fragment_forecast_container);
 
+        mAstroweatherButton = v.findViewById(R.id.weather_fragment_button_astroweather);
+
+
         mMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,6 +162,14 @@ public class WeatherFragment extends Fragment {
 
         if(mDetailsVisibility == View.VISIBLE)
             mMoreButton.callOnClick();
+
+        mAstroweatherButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AstroWeatherActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void refreshUI(){

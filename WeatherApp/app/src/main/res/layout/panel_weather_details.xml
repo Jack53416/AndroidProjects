@@ -96,4 +96,13 @@
         android:textSize="@dimen/textStandardSize"
         tools:text="Visibility:"/>
 
+    <Button
+        android:id="@+id/weather_fragment_button_astroweather"
+        style="@android:style/Widget.Holo.Light.Button.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/weather_fagment_visibility_value"
+        android:text="Button"/>
+
 </RelativeLayout>
