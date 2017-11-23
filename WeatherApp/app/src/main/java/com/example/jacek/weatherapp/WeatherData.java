@@ -65,7 +65,7 @@ public class WeatherData {
         mDatabase.insert(ForecastTable.NAME, null, values);
     }
 
-    public void updateCondition(Condition condition){
+    void updateCondition(Condition condition){
         ContentValues values = condition.getContentValues();
 
         int idx = mConditionList.indexOf(findConditionByWoeid(condition.getCity().getWoeid()));
@@ -93,7 +93,7 @@ public class WeatherData {
             mConditionList.remove(condtionToRemove);
     }
 
-    public Condition findConditionByWoeid(final int cityWoeid){
+    Condition findConditionByWoeid(final int cityWoeid){
         for(Condition condition : mConditionList){
             if(condition.getCity().getWoeid() == cityWoeid)
                 return condition;
@@ -131,7 +131,7 @@ public class WeatherData {
         return new ForecastCursorWrapper(cursor);
     }
 
-    public List<Forecast> loadForecastsFromDatabase(int woeid){
+    private List<Forecast> loadForecastsFromDatabase(int woeid){
         List<Forecast> forecasts = new ArrayList<>();
 
         try(ForecastCursorWrapper cursor = queryForecasts(ForecastTable.Cols.WOEID + " = ?", new String[]{String.valueOf(woeid)})) {
@@ -144,7 +144,7 @@ public class WeatherData {
         return forecasts;
     }
 
-    public List<Condition> loadConditionsFromDatabase(){
+    List<Condition> loadConditionsFromDatabase(){
         List<Condition> conditions = new ArrayList<>();
         Condition currentCondition;
 
@@ -161,7 +161,7 @@ public class WeatherData {
         return conditions;
     }
 
-    public void loadSettingsFromDatabase(){
+     void loadSettingsFromDatabase(){
         Cursor cursorTemplate = mDatabase.query(
                 SettingsTable.NAME,
                 null,
@@ -181,7 +181,7 @@ public class WeatherData {
     }
 
     public void updateSettings(){
-        int settingsCount = 0;
+        int settingsCount;
         try(Cursor cursor = mDatabase.rawQuery("SELECT COUNT(*) FROM " + SettingsTable.NAME, null)){
             cursor.moveToFirst();
             settingsCount = cursor.getInt(0);
@@ -190,7 +190,7 @@ public class WeatherData {
             mDatabase.update(SettingsTable.NAME,
                     mAppSettings.getContentValues(),
                     SettingsTable.Cols.ID + "= ?",
-                    new String[]{String.valueOf(mAppSettings.ID)}
+                    new String[]{String.valueOf(Settings.ID)}
                     );
         }
         else{

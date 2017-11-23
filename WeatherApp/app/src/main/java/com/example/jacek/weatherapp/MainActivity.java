@@ -28,23 +28,16 @@ import settings.SettingsActivity;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private static final String EXTRA_BASE_ID = "extra_base_id";
 
     private static final int REQ_DATA_SET_CHANGED = 0;
     private WeatherData mWeatherData;
     private DataUpdater<MainActivity> mDataUpdater;
 
-    private ViewPager mViewPager;
     private WeatherPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        long adapterBaseId = 0;
-
-        if(savedInstanceState != null){
-            adapterBaseId = savedInstanceState.getLong(EXTRA_BASE_ID, 0);
-        }
 
         setContentView(R.layout.activity_main);
         mWeatherData = WeatherData.getInstance(getBaseContext());
@@ -88,15 +81,10 @@ public class MainActivity extends AppCompatActivity {
         mDataUpdater.getLooper();
         Log.i(TAG, "Start of the background rhread");
 
-        mViewPager = (ViewPager) findViewById(R.id.weather_pager_view_pager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.weather_pager_view_pager);
         FragmentManager fm  = getSupportFragmentManager();
-        mPagerAdapter = new WeatherPagerAdapter(fm, adapterBaseId);
-        mViewPager.setAdapter(mPagerAdapter);
-    }
-
-    public void waitForDebugger(){
-        if(android.os.Debug.isDebuggerConnected())
-            android.os.Debug.waitForDebugger();
+        mPagerAdapter = new WeatherPagerAdapter(fm);
+        viewPager.setAdapter(mPagerAdapter);
     }
 
     @Override
@@ -115,11 +103,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         boolean itemsChanged = data.getBooleanExtra(SettingsActivity.EXTRA_ITEM_LIST_CHANGED, false);
-        int deletedItemsCount = data.getIntExtra(SettingsActivity.EXTRA_DELETED_ITEMS, 0);
         boolean refreshDelayChanged = data.getBooleanExtra(SettingsActivity.EXTRA_REFRESH_DELAY_CHANGED, false);
 
         if(itemsChanged) {
-            mPagerAdapter.notifyChangeInPosition(deletedItemsCount);
             mPagerAdapter.notifyDataSetChanged();
         }
         if(refreshDelayChanged){
@@ -156,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putLong(EXTRA_BASE_ID, mPagerAdapter.getBaseId());
     }
 
 
@@ -180,11 +165,9 @@ public class MainActivity extends AppCompatActivity {
 
     private class WeatherPagerAdapter extends FragmentStatePagerAdapter{
         SparseArrayCompat<Fragment> mWeatherFragments = new SparseArrayCompat<>();
-        private long mBaseId = 0;
 
-        WeatherPagerAdapter(FragmentManager fm, long baseId) {
+        WeatherPagerAdapter(FragmentManager fm) {
             super(fm);
-            mBaseId = baseId;
         }
 
         @Override
@@ -216,23 +199,7 @@ public class MainActivity extends AppCompatActivity {
                 super.destroyItem(container, position, object);
         }
 
-
-        /*@Override
-        public long getItemId(int position) {
-            // give an ID different from position when position has been changed
-            return mBaseId + position;
-        }*/
-
-        long getBaseId() {
-            return mBaseId;
-        }
-
-        void notifyChangeInPosition(int n) {
-            // shift the ID returned by getItemId outside the range of all previous fragments
-            mBaseId += getCount() + n;
-        }
-
-        void updateFragmentsUI(){
+    void updateFragmentsUI(){
             for(int i = 0, size = mWeatherFragments.size(); i < size; i++){
                 int key = mWeatherFragments.keyAt(i);
 

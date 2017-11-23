@@ -61,7 +61,7 @@ public class WeatherFetcher {
         return new String(getUrlBytes(urlSpec));
     }
 
-    public List<Condition> fetchWeather(List<City> cities){
+    List<Condition> fetchWeather(List<City> cities){
 
         List<Condition> conditions = null;
         if(cities.size() == 0)

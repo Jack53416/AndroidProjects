@@ -12,7 +12,7 @@ import database.City;
 import database.Condition;
 import database.Settings;
 
-public class DataUpdater<T> extends HandlerThread {
+class DataUpdater<T> extends HandlerThread {
 
     private static final String TAG = "DataUpdater";
 
@@ -23,17 +23,17 @@ public class DataUpdater<T> extends HandlerThread {
     private DataUpdaterListener<T> mDataUpdaterListener;
     private ConcurrentMap<T,List<City>> mRequestMap = new ConcurrentHashMap<>();
 
-    public DataUpdater(Handler responseHandler) {
+    DataUpdater(Handler responseHandler) {
         super(TAG);
         mResponseHandler = responseHandler;
     }
 
-    public interface DataUpdaterListener<T>{
+    interface DataUpdaterListener<T>{
         void onDataUpdate(T target , List<Condition> updatedItems);
         void onDataUpdateManual(T target, List<Condition> updatedItems);
     }
 
-    public void setDataUpdaterListener(DataUpdaterListener<T> dataUpdaterListener) {
+    void setDataUpdaterListener(DataUpdaterListener<T> dataUpdaterListener) {
         mDataUpdaterListener = dataUpdaterListener;
     }
 
@@ -71,7 +71,7 @@ public class DataUpdater<T> extends HandlerThread {
         });
     }
 
-    public void queueDataRefresh(T target, List<City> cityList){
+    void queueDataRefresh(T target, List<City> cityList){
         if(cityList == null){
             mRequestMap.remove(target);
         }
@@ -82,7 +82,7 @@ public class DataUpdater<T> extends HandlerThread {
         }
     }
 
-    public void queueDataRefreshDelayed(T target, List<City> cityList, Settings.RefreshDelayOptions delay){
+    void queueDataRefreshDelayed(T target, List<City> cityList, Settings.RefreshDelayOptions delay){
         if(cityList == null){
             mRequestMap.remove(target);
         }
@@ -93,7 +93,7 @@ public class DataUpdater<T> extends HandlerThread {
         }
     }
 
-    public void clearQueue(){
+    void clearQueue(){
         mRequestHandler.removeMessages(MESSAGE_DOWNLOAD);
     }
 }

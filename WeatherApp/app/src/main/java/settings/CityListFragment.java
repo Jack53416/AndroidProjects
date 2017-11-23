@@ -41,6 +41,7 @@ public class CityListFragment extends Fragment {
     private static final Integer REQUEST_CITY = 0;
     private RecyclerView mCityRecyclerView;
     private CityAdapter mCityAdapter = null;
+    private Toast mToast;
     CityListFragmentListener mListener;
 
 
@@ -71,6 +72,7 @@ public class CityListFragment extends Fragment {
 
         mCityRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        mToast = new Toast(getActivity());
         updateUI();
 
         return view;
@@ -89,15 +91,25 @@ public class CityListFragment extends Fragment {
             }
             if(newCity != null){
                 if(!Objects.equals(newCity.getCity().getName(), cityName))
-                    Toast.makeText(getActivity(), "Error, Invalid City Name !", Toast.LENGTH_SHORT).show();
+                    showError("Error, Invalid City Name !");
                 else{
                     WeatherData.getInstance(getActivity()).insertCondition(newCity);
                     updateUI();
                     mListener.onChangeCityList(0);
                 }
             }
+            else{
+                showError("Error, could not retrieve data!");
+            }
 
         }
+    }
+
+
+    private void showError(String error){
+        mToast.cancel();
+        mToast = Toast.makeText(getActivity() ,error, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 
     @Override
@@ -129,7 +141,7 @@ public class CityListFragment extends Fragment {
                     }
                 }
                 if(itemsDeleted == 0){
-                    Toast.makeText(getActivity(), "No items selected !", Toast.LENGTH_SHORT).show();
+                    showError("No items selected!");
                 }
                 else {
                     updateUI();
