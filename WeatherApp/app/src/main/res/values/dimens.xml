@@ -8,4 +8,9 @@
     <dimen name="textDetailSize">12sp</dimen>,
     <dimen name="textSubTitleSize">20sp</dimen>
     <dimen name="textStandardSize">14sp</dimen>
+
+    <!-- for astroweather -->
+
+    <dimen name = "titleTextSize">18sp</dimen>
+    <dimen name="defaultTextSize">14sp</dimen>
 </resources>

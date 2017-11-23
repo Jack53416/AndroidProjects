@@ -8,4 +8,10 @@
     <color name="colorBlack">#000000</color>
     <color name="secondaryAccent">#458B00</color>
     <color name="weatherPanelBackground">#66555555</color>
+
+    <color name="colorSunrise">#FCDC6A</color>
+    <color name="colorSunset">#D36D32</color>
+    <color name="moonSilver">#C0C0C0</color>
+    <color name="brightWhite">#EEEEEE</color>
+    <color name="moonDark">#665555</color>
 </resources>

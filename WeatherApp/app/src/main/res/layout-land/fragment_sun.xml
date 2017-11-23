@@ -1,0 +1,260 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.example.jacek.astroweather.WeatherFragment"
+             android:paddingLeft="5dp"
+             android:paddingRight="5dp"
+             android:stretchColumns="0">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView_sunTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/sunFragmentTitle"
+            android:textAlignment="gravity"
+            android:textColor="@color/moonDark"
+            android:textSize="@dimen/titleTextSize"
+            android:textStyle="bold"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/sunriseImage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/sunRise"
+            app:srcCompat="@drawable/sunrise"/>
+
+        <ImageView
+            android:id="@+id/sunsetImage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/sunSet"
+            app:srcCompat="@drawable/sunset"/>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/twilightM_caption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:padding="5dp"
+                android:text="@string/twilightM"
+                android:textAlignment="center"
+                android:textSize="@dimen/defaultTextSize"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/twilightM_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/defaultTextSize"
+                tools:text="18:50"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/sunset_caption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:padding="5dp"
+                android:text="@string/sunSet"
+                android:textAlignment="center"
+                android:textColor="@color/colorSunset"
+                android:textSize="@dimen/defaultTextSize"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/sunset_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/defaultTextSize"
+                tools:text="18:24 "/>
+
+        </LinearLayout>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/sunrise_caption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:padding="5dp"
+                android:text="@string/sunRise"
+                android:textAlignment="center"
+                android:textColor="@color/colorSunset"
+                android:textSize="@dimen/defaultTextSize"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/sunrise_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/defaultTextSize"
+                tools:text="18:24 "/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/azimuthSunset_caption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:padding="5dp"
+                android:text="@string/azimuthTitle"
+                android:textAlignment="center"
+                android:textSize="@dimen/defaultTextSize"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/azimuthSunset_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/defaultTextSize"
+                tools:text="64deg"/>
+        </LinearLayout>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/azimuthSunrise_caption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:padding="5dp"
+                android:text="@string/azimuthTitle"
+                android:textAlignment="center"
+                android:textSize="@dimen/defaultTextSize"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/azimuthSunrise_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/defaultTextSize"
+                tools:text="34deg"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/twilightE_caption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:padding="5dp"
+                android:text="@string/twilightE"
+                android:textAlignment="center"
+                android:textSize="@dimen/defaultTextSize"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/twilightE_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/defaultTextSize"
+                tools:text="18:50"/>
+        </LinearLayout>
+
+    </TableRow>
+
+</TableLayout>

@@ -28,4 +28,18 @@
     <string name="detailsPanelHumidity">Humidity:</string>
     <string name="detailsPanelVisibility">Visibility:</string>
     <string name="mainViewEmptyMessage">Add locations to see weather</string>
+
+    <string name="sunRise">Sunrise</string>
+    <string name="sunSet">Sunset</string>
+    <string name="twilightM">Twilight morning</string>
+    <string name="twilightE">Twilight evening</string>
+    <string name="sunFragmentTitle">Sun Information</string>
+    <string name="moonFragmentTitle">Moon Information</string>
+    <string name="moonriseTitle">Moonrise</string>
+    <string name="moonsetTitle">Moonset</string>
+    <string name="moonPhaseTitle">Illumination</string>
+    <string name="moonAgeTitle">Moon age</string>
+    <string name="fullmoonTitle">Full moon</string>
+    <string name="newMoonTitle">New moon</string>
+    <string name="azimuthTitle">Azimuth</string>
 </resources>
