@@ -29,6 +29,10 @@
 
             <include layout="@layout/panel_weather_wind"/>
 
+            <include layout="@layout/panel_astro_weather_sun"/>
+
+            <include layout="@layout/panel_astro_weather_moon"/>
+
             <FrameLayout
                 android:id="@+id/weather_fragment_forecast_container"
                 android:layout_width="match_parent"

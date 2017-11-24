@@ -123,6 +123,11 @@ public class CityListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.list_menu_item_add:
+                if(mCityAdapter.getCities().size() == WeatherData.CONDITION_LIMIT)
+                {
+                    showError("Erase one location before adding next one");
+                    return false;
+                }
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 AddCityDialog dialog = new AddCityDialog();
                 dialog.setTargetFragment(CityListFragment.this, REQUEST_CITY);

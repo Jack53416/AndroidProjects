@@ -18,7 +18,7 @@ class DataUpdater<T> extends HandlerThread {
 
     private static final int MESSAGE_DOWNLOAD = 0;
     private static final int MESSAGE_DOWNLOAD_MANUAL = 1;
-    private Handler mRequestHandler;
+    private static Handler mRequestHandler;
     private Handler mResponseHandler;
     private DataUpdaterListener<T> mDataUpdaterListener;
     private ConcurrentMap<T,List<City>> mRequestMap = new ConcurrentHashMap<>();
@@ -31,6 +31,7 @@ class DataUpdater<T> extends HandlerThread {
     interface DataUpdaterListener<T>{
         void onDataUpdate(T target , List<Condition> updatedItems);
         void onDataUpdateManual(T target, List<Condition> updatedItems);
+      //  void onBackgroundThreadStart();
     }
 
     void setDataUpdaterListener(DataUpdaterListener<T> dataUpdaterListener) {

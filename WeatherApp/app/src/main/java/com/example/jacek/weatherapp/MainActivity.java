@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         mDataUpdater.setDataUpdaterListener(new DataUpdater.DataUpdaterListener<MainActivity>() {
             @Override
             public void onDataUpdate(MainActivity target, List<Condition> updatedItems) {
+                if(updatedItems == null)
+                    return;
                 for(Condition condition : updatedItems)
                     mWeatherData.updateCondition(condition);
                 mPagerAdapter.updateFragmentsUI();
@@ -72,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDataUpdateManual(MainActivity target, List<Condition> updatedItems) {
+                if(updatedItems == null)
+                    return;
                 for(Condition condition : updatedItems)
                     mWeatherData.updateCondition(condition);
                 mPagerAdapter.updateFragmentsUI();
@@ -85,17 +89,19 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fm  = getSupportFragmentManager();
         mPagerAdapter = new WeatherPagerAdapter(fm);
         viewPager.setAdapter(mPagerAdapter);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
         List<City> cities = Condition.getCityList(mWeatherData.mConditionList);
         mDataUpdater.queueDataRefreshDelayed(this,
                 cities,
                 mWeatherData.getAppSettings().getRefreshDelay());
 
         mDataUpdater.queueDataRefresh(this, cities);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
 
     }
 
