@@ -4,8 +4,8 @@
     <dimen name="textDetailSize">20sp</dimen>,
     <dimen name="textSubTitleSize">32sp</dimen>
     <dimen name="textStandardSize">26sp</dimen>
-    <dimen name="sunImageSize">100dp</dimen>
-    <dimen name="moonImageSize">120dp</dimen>
+    <dimen name="sunImageSize">110dp</dimen>
+    <dimen name="moonImageSize">140dp</dimen>
     <dimen name="iconImageSize">60dp</dimen>
     <dimen name="weatherForecastIconSize">128dp</dimen>
     <dimen name="windArrowSize">80dp</dimen>

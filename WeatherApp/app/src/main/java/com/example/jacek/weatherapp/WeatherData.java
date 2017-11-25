@@ -7,6 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.astrocalculator.AstroCalculator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class WeatherData {
     public List<Condition> mConditionList;
     private Settings mAppSettings;
     private SQLiteDatabase mDatabase;
+    private AstroCalculator mAstroCalculator;
 
     public static WeatherData getInstance(Context context)
     {
@@ -38,11 +41,22 @@ public class WeatherData {
         mAppSettings = new Settings();
         Context appContext = context.getApplicationContext();
         mDatabase = new WeatherBaseHelper(appContext).getWritableDatabase();
+
+        mAstroCalculator = new AstroCalculator(AstroData.getCurrentAstroDateTime(), AstroData.defaultLocation);
     }
 
     public Settings getAppSettings() {
         return mAppSettings;
     }
+
+    AstroCalculator getAstroCalculator() {
+        return mAstroCalculator;
+    }
+
+    public void updateAstroCalculator(){
+        mAstroCalculator.setDateTime(AstroData.getCurrentAstroDateTime());
+    }
+
 
     public void insertCondition(Condition condition){
         if(mConditionList.size() >= CONDITION_LIMIT)

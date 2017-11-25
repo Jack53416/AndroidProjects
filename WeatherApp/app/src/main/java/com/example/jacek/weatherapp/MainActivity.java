@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 for(Condition condition : updatedItems)
                     mWeatherData.updateCondition(condition);
+                mWeatherData.updateAstroCalculator();
                 mPagerAdapter.updateFragmentsUI();
                 mDataUpdater.queueDataRefreshDelayed(MainActivity.this,
                         Condition.getCityList(mWeatherData.mConditionList),
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 for(Condition condition : updatedItems)
                     mWeatherData.updateCondition(condition);
+                mWeatherData.updateAstroCalculator();
                 mPagerAdapter.updateFragmentsUI();
             }
         });

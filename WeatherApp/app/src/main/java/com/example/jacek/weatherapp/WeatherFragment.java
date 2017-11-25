@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.astrocalculator.AstroCalculator;
+
 import java.text.DecimalFormat;
 import java.util.Locale;
 
@@ -29,6 +31,8 @@ public class WeatherFragment extends Fragment {
     private int mDetailsVisibility = View.INVISIBLE;
 
     private Condition mCondition;
+    private AstroData mAstroData;
+
     private FrameLayout mForecastListFragmentContainer;
     private ForecastListFragment mForecastListFragment;
     private ImageButton mMoreButton;
@@ -49,6 +53,20 @@ public class WeatherFragment extends Fragment {
     private TextView mHumidity;
     private TextView mVisibility;
 
+
+    private TextView mSunrise;
+    private TextView mSunset;
+    private TextView mSunriseAzimuth;
+    private TextView mSunsetAzimuth;
+    private TextView mTwilightEvening;
+    private TextView mTwilightMorning;
+
+    private TextView mMoonrise;
+    private TextView mMoonset;
+    private TextView mFullMoonDate;
+    private TextView mNewMoonDate;
+    private TextView mMoonIllumination;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -59,6 +77,7 @@ public class WeatherFragment extends Fragment {
             mDetailsVisibility = savedInstanceState.getInt(EXTRA_DETAILS_VISIBLE, View.INVISIBLE);
 
         mCondition = weatherData.findConditionByWoeid(conditionWoeid);
+        mAstroData = new AstroData();
 
         super.onCreate(savedInstanceState);
     }
@@ -116,24 +135,27 @@ public class WeatherFragment extends Fragment {
     }
 
     private void wireControls(View v){
+
+        wireCityControls(v);
+        wireWindControls(v);
+        wireDetailsControls(v);
+        wireSunControls(v);
+        wireMoonControls(v);
+
+        mDetailsScrollView = v.findViewById(R.id.weather_fragment_details_scroll_view);
+        mForecastListFragmentContainer = v.findViewById(R.id.weather_fragment_forecast_container);
+
+        if(mDetailsVisibility == View.VISIBLE)
+            mMoreButton.callOnClick();
+    }
+
+    private void wireCityControls(View v){
         mCityName = v.findViewById(R.id.weather_fragment_overview_city_name);
         mCityDescription = v.findViewById(R.id.weather_fragment_overview_city_description);
         mTemperature = v.findViewById(R.id.weather_fragment_overview_temperature);
         mWeatherDescription = v.findViewById(R.id.weather_fragment_overview_weather_description);
         mWeatherPicture = v.findViewById(R.id.weather_fragment_overview_weather_picture);
-
-        mWindDirection = v.findViewById(R.id.weather_fragment_wind_direction_value);
-        mWindDirectionArrow = v.findViewById(R.id.weather_fragment_wind_direction_arrow_image);
-        mWindChill = v.findViewById(R.id.weather_fagment_wind_chill_value);
-        mWindSpeed = v.findViewById(R.id.weather_fagment_wind_speed_value);
-
-        mPressure = v.findViewById(R.id.weather_fagment_pressure_value);
-        mHumidity = v.findViewById(R.id.weather_fagment_humidity_value);
-        mVisibility = v.findViewById(R.id.weather_fagment_visibility_value);
-
-        mDetailsScrollView = v.findViewById(R.id.weather_fragment_details_scroll_view);
         mMoreButton = v.findViewById(R.id.weather_fragment_more_button);
-        mForecastListFragmentContainer = v.findViewById(R.id.weather_fragment_forecast_container);
 
         mMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,27 +173,70 @@ public class WeatherFragment extends Fragment {
                 }
             }
         });
-
-        if(mDetailsVisibility == View.VISIBLE)
-            mMoreButton.callOnClick();
     }
+
+    private void wireWindControls(View v){
+        mWindDirection = v.findViewById(R.id.weather_fragment_wind_direction_value);
+        mWindDirectionArrow = v.findViewById(R.id.weather_fragment_wind_direction_arrow_image);
+        mWindChill = v.findViewById(R.id.weather_fagment_wind_chill_value);
+        mWindSpeed = v.findViewById(R.id.weather_fagment_wind_speed_value);
+    }
+
+    private void wireDetailsControls(View v){
+        mPressure = v.findViewById(R.id.weather_fagment_pressure_value);
+        mHumidity = v.findViewById(R.id.weather_fagment_humidity_value);
+        mVisibility = v.findViewById(R.id.weather_fagment_visibility_value);
+
+    }
+
+
+    private void wireSunControls(View v){
+        mSunrise = v.findViewById(R.id.weather_fragment_sun_panel_sunrise_value);
+        mSunset = v.findViewById(R.id.weather_fragment_sun_panel_sunset_value);
+        mTwilightEvening = v.findViewById(R.id.weather_fragment_sun_panel_twillightE_value);
+        mTwilightMorning = v.findViewById(R.id.weather_fragment_sun_panel_twilightM_value);
+        mSunriseAzimuth = v.findViewById(R.id.weather_fragment_sun_panel_azimuthE_value);
+        mSunsetAzimuth = v.findViewById(R.id.weather_fragment_sun_panel_azimuthM_value);
+    }
+
+    private void wireMoonControls(View v){
+        mMoonrise = v.findViewById(R.id.weather_fragment_moon_panel_moonrise_value);
+        mMoonset = v.findViewById(R.id.weather_fragment_moon_panel_moonset_value);
+        mNewMoonDate = v.findViewById(R.id.weather_fragment_moon_panel_new_moon_value);
+        mFullMoonDate = v.findViewById(R.id.weather_fragment_moon_panel_full_moon_value);
+        mMoonIllumination = v.findViewById(R.id.weather_fragment_moon_panel_ilumination_value);
+    }
+
+
 
     public void refreshUI(){
         WeatherData weatherData = WeatherData.getInstance(getActivity());
         Settings.Units unit = weatherData.getAppSettings().getMeasurementUnit();
-        if(mCondition == null)
-            return;
         mCondition = weatherData.findConditionByWoeid(mCondition.getCity().getWoeid());
-
         if(mCondition == null)
             return;
+
+        updateCityInformation(unit);
+        updateWindInformation(unit);
+        updateDetailsInformation(unit);
+        updateAstronomicInfo();
+
+        if(mForecastListFragment != null)
+            mForecastListFragment.updateUI(mCondition.getCity().getWoeid());
+    }
+
+
+    private void updateCityInformation(Settings.Units unit){
         mCityName.setText(mCondition.getCity().getName());
         mCityDescription.setText(mCondition.getCity().getLocationDescription());
         mTemperature.setText(String.format(Locale.US,
                 "%s %s", temperatureFormat.format(mCondition.getTemperature(unit)), unit.getUnitName()));
         mWeatherDescription.setText(mCondition.getText());
         mWeatherPicture.setImageResource(Condition.getWeatherResource(mCondition.getCode()));
+    }
 
+
+    private void updateWindInformation(Settings.Units unit){
         mWindDirection.setText(mCondition.getWindDirectionDescription());
         mWindSpeed.setText(String.format(Locale.US,
                 "%s %s", measurementFormat.format(mCondition.getWindSpeed(unit)) , unit.getSpeedUnit()));
@@ -180,6 +245,9 @@ public class WeatherFragment extends Fragment {
                 "%s %s", temperatureFormat.format(mCondition.getWindChill(unit)), unit.getUnitName()));
         mWindDirectionArrow.setRotation(mCondition.getWindDirection());
 
+    }
+
+    private void updateDetailsInformation(Settings.Units unit) {
         mPressure.setText(String.format(Locale.US,
                 "%s %s", measurementFormat.format(mCondition.getPressure(unit)), unit.getPressureUnit()));
 
@@ -188,7 +256,27 @@ public class WeatherFragment extends Fragment {
         mVisibility.setText(String.format(Locale.US,
                 "%s %s", measurementFormat.format(mCondition.getVisibility(unit)), unit.getDistanceUnit()));
 
-        if(mForecastListFragment != null)
-            mForecastListFragment.updateUI(mCondition.getCity().getWoeid());
+    }
+
+    private void updateAstronomicInfo(){
+        AstroCalculator astroCalculator = WeatherData.getInstance(getActivity()).getAstroCalculator();
+        AstroCalculator.Location location =
+                new AstroCalculator.Location(mCondition.getCity().getLatitude(), mCondition.getCity().getLongitude());
+        astroCalculator.setLocation(location);
+
+        mAstroData.updateAstronomicInformation(astroCalculator);
+
+        mSunrise.setText(mAstroData.getSunrise());
+        mSunriseAzimuth.setText(mAstroData.getSunriseAzimuth());
+        mSunset.setText(mAstroData.getSunset());
+        mSunsetAzimuth.setText(mAstroData.getSunsetAzimuth());
+        mTwilightMorning.setText(mAstroData.getTwilightMorning());
+        mTwilightEvening.setText(mAstroData.getTwilightEvening());
+        mMoonrise.setText(mAstroData.getMoonrise());
+        mMoonset.setText(mAstroData.getMoonset());
+        mMoonIllumination.setText(mAstroData.getMoonIllumination());
+        mNewMoonDate.setText(mAstroData.getNewMoonDate());
+        mFullMoonDate.setText(mAstroData.getFullMoonDate());
+
     }
 }

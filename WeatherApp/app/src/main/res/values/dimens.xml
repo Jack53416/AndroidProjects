@@ -9,7 +9,7 @@
     <dimen name="textSubTitleSize">20sp</dimen>
     <dimen name="textStandardSize">14sp</dimen>
 
-    <dimen name="sunImageSize">60dp</dimen>
+    <dimen name="sunImageSize">65dp</dimen>
     <dimen name="moonImageSize">60dp</dimen>
     <dimen name="iconImageSize">25dp</dimen>
     <dimen name="weatherForecastIconSize">60dp</dimen>

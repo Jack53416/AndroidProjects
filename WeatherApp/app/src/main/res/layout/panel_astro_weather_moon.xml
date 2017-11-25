@@ -49,7 +49,8 @@
         android:layout_alignStart="@id/image_moon_rise"
         android:layout_below="@id/image_moon_rise"
         android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/textStandardSize"
+        android:textColor="@color/colorWhite"
         tools:text="18:35"/>
 
     <TextView
@@ -60,7 +61,8 @@
         android:layout_alignStart="@id/image_moonset"
         android:layout_below="@id/image_moonset"
         android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/textStandardSize"
+        android:textColor="@color/colorWhite"
         tools:text="16:24"/>
 
     <ImageView
