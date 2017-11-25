@@ -5,6 +5,7 @@ import com.astrocalculator.AstroDateTime;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +17,9 @@ public class AstroData {
         DATE
     }
 
-    public static final AstroCalculator.Location defaultLocation = new AstroCalculator.Location(0, 0);
+    public static final AstroCalculator.Location DEFAULT_LOCATION = new AstroCalculator.Location(0, 0);
+    public static final String DEFAULT_TIME_ZONE = "Europe/Warsaw";
+
     private static final DecimalFormat mDecimalAngleFormat = new DecimalFormat("###.##°");
     private static final DecimalFormat mDecimalPercentageFormat = new DecimalFormat("###.##%");
 
@@ -37,6 +40,7 @@ public class AstroData {
     public void updateAstronomicInformation(AstroCalculator astroCalculator){
         if(astroCalculator == null)
             return;
+
         AstroCalculator.SunInfo sunInfo = astroCalculator.getSunInfo();
         AstroCalculator.MoonInfo moonInfo = astroCalculator.getMoonInfo();
 
@@ -55,10 +59,14 @@ public class AstroData {
     }
 
 
-    public static AstroDateTime getCurrentAstroDateTime(){
+    public static AstroDateTime getCurrentAstroDateTime(String timeZoneId){
         Calendar currentTime = Calendar.getInstance();
-        TimeZone timeZone = currentTime.getTimeZone();
-        int timeZoneOffset =  (int) TimeUnit.HOURS.convert(timeZone.getRawOffset() /*+ timeZone.getDSTSavings()*/, TimeUnit.MILLISECONDS);
+
+        TimeZone timeZone = TimeZone.getTimeZone(timeZoneId);
+
+        int timeZoneOffset =  (int) TimeUnit.HOURS
+                                        .convert(timeZone.getOffset(new Date().getTime()), TimeUnit.MILLISECONDS);
+
         return new AstroDateTime(currentTime.get(Calendar.YEAR),
                 currentTime.get(Calendar.MONTH) + 1,
                 currentTime.get(Calendar.DAY_OF_MONTH),

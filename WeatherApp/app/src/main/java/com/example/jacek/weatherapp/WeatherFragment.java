@@ -263,7 +263,7 @@ public class WeatherFragment extends Fragment {
         AstroCalculator.Location location =
                 new AstroCalculator.Location(mCondition.getCity().getLatitude(), mCondition.getCity().getLongitude());
         astroCalculator.setLocation(location);
-
+        astroCalculator.setDateTime(AstroData.getCurrentAstroDateTime(mCondition.getCity().getTimeZone()));
         mAstroData.updateAstronomicInformation(astroCalculator);
 
         mSunrise.setText(mAstroData.getSunrise());

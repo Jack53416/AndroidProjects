@@ -28,7 +28,7 @@ public class WeatherFetcher {
     private static final String WEATHER_QUERY_TEMPLATE = "select wind, atmosphere, item.lat, item.long, item.condition, item.forecast from " +
                                     "weather.forecast(" + String.valueOf(WeatherData.CONDITION_LIMIT) +
                                     ") where u=@unit";
-    private static final String CITY_QUERY_TEMPLATE = "select woeid,name,country,centroid from geo.places(1) where text=@cityName";
+    private static final String CITY_QUERY_TEMPLATE = "select woeid,name,country,centroid,timezone from geo.places(1) where text=@cityName";
 
 
     private byte[] getUrlBytes(String urlSpec) throws IOException{
@@ -106,16 +106,21 @@ public class WeatherFetcher {
             Log.i("FETCHER", jsonString);
             JSONObject jsonBody = new JSONObject(jsonString);
             JSONObject jsonQuery = jsonBody.getJSONObject("query");
+
             if(jsonQuery.getInt("count") == 0)
                 return null;
+
             JSONObject jsonResults = jsonQuery.getJSONObject("results");
             JSONObject jsonPlace = jsonResults.getJSONObject("place");
+
             City city = new City();
+
             city.setWoeid(jsonPlace.getInt("woeid"));
             city.setName(jsonPlace.getString("name"));
             city.setCountry(jsonPlace.getJSONObject("country").getString("content"));
             city.setLatitude(jsonPlace.getJSONObject("centroid").getDouble("latitude"));
             city.setLongitude(jsonPlace.getJSONObject("centroid").getDouble("longitude"));
+            city.setTimeZone(jsonPlace.getJSONObject("timezone").getString("content"));
             conditionItem = new Condition(city);
         }catch (IOException ioEx){
             Log.e("FETCHER", "Could not retrieve: ", ioEx);

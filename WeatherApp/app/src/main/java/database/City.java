@@ -9,6 +9,7 @@ public class City {
     private String mCountry;
     private double mLatitude;
     private double mLongitude;
+    private String mTimeZone;
     private boolean mIsSelected = false;
 
     public static String getWoeidList(List<City> cities, char delimiter){
@@ -81,5 +82,13 @@ public class City {
 
     public void setSelected(boolean selected) {
         mIsSelected = selected;
+    }
+
+    public String getTimeZone() {
+        return mTimeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        mTimeZone = timeZone;
     }
 }

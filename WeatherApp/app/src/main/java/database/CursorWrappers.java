@@ -23,6 +23,7 @@ public class CursorWrappers {
             city.setLatitude(getDouble(getColumnIndex(WeatherDbSchema.ConditionTable.Cols.CITY_LATITUDE)));
             city.setLongitude(getDouble(getColumnIndex(WeatherDbSchema.ConditionTable.Cols.CITY_LONGITUDE)));
             city.setCountry(getString(getColumnIndex(WeatherDbSchema.ConditionTable.Cols.CITY_COUNTRY)));
+            city.setTimeZone(getString(getColumnIndex(WeatherDbSchema.ConditionTable.Cols.CITY_TIME_ZONE)));
 
             Condition condition = new Condition(city);
             condition.setCode(getInt(getColumnIndex(WeatherDbSchema.ConditionTable.Cols.CONDITION_CODE)));

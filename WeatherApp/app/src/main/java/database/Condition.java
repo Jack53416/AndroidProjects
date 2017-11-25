@@ -51,6 +51,7 @@ public class Condition {
         values.put(ConditionTable.Cols.CITY_LATITUDE, mCity.getLatitude());
         values.put(ConditionTable.Cols.CITY_LONGITUDE, mCity.getLongitude());
         values.put(ConditionTable.Cols.CITY_COUNTRY, mCity.getCountry());
+        values.put(ConditionTable.Cols.CITY_TIME_ZONE, mCity.getTimeZone());
         values.put(ConditionTable.Cols.CONDITION_CODE, mCode);
         values.put(ConditionTable.Cols.CONDITION_DATE, mDate.getTime());
         values.put(ConditionTable.Cols.CONDITION_TEMP, mTemperature);

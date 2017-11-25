@@ -27,6 +27,7 @@ public class WeatherBaseHelper extends SQLiteOpenHelper {
                 ConditionTable.Cols.CITY_LATITUDE + ", " +
                 ConditionTable.Cols.CITY_LONGITUDE + ", " +
                 ConditionTable.Cols.CITY_COUNTRY + ", " +
+                ConditionTable.Cols.CITY_TIME_ZONE + ", " +
                 ConditionTable.Cols.WIND_CHILL + ", " +
                 ConditionTable.Cols.WIND_DIRECTION + ", " +
                 ConditionTable.Cols.WIND_SPEED + ", " +

@@ -42,7 +42,7 @@ public class WeatherData {
         Context appContext = context.getApplicationContext();
         mDatabase = new WeatherBaseHelper(appContext).getWritableDatabase();
 
-        mAstroCalculator = new AstroCalculator(AstroData.getCurrentAstroDateTime(), AstroData.defaultLocation);
+        mAstroCalculator = new AstroCalculator(AstroData.getCurrentAstroDateTime(AstroData.DEFAULT_TIME_ZONE), AstroData.DEFAULT_LOCATION);
     }
 
     public Settings getAppSettings() {
@@ -52,11 +52,6 @@ public class WeatherData {
     AstroCalculator getAstroCalculator() {
         return mAstroCalculator;
     }
-
-    public void updateAstroCalculator(){
-        mAstroCalculator.setDateTime(AstroData.getCurrentAstroDateTime());
-    }
-
 
     public void insertCondition(Condition condition){
         if(mConditionList.size() >= CONDITION_LIMIT)
