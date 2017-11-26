@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import database.City;
 import database.Condition;
 import settings.SettingsActivity;
 
@@ -59,50 +58,29 @@ public class MainActivity extends AppCompatActivity {
 
         Handler responseHandler = new Handler();
         mDataUpdater = new DataUpdater<>(responseHandler);
-        mDataUpdater.setDataUpdaterListener(new DataUpdater.DataUpdaterListener<MainActivity>() {
+
+        UpdateService.setmResponseHandler(responseHandler);
+        UpdateService.setUpdateListener(new UpdateService.UpdateListener() {
             @Override
-            public void onDataUpdate(MainActivity target, List<Condition> updatedItems) {
-                if(updatedItems == null)
-                    return;
+            public void onDataUpdate(List<Condition> updatedItems) {
                 for(Condition condition : updatedItems)
                     mWeatherData.updateCondition(condition);
                 mPagerAdapter.updateFragmentsUI();
-                mDataUpdater.queueDataRefreshDelayed(MainActivity.this,
-                        Condition.getCityList(mWeatherData.mConditionList),
-                        mWeatherData.getAppSettings().getRefreshDelay());
             }
 
             @Override
-            public void onDataUpdateManual(MainActivity target, List<Condition> updatedItems) {
-                if(updatedItems == null)
-                    return;
-                for(Condition condition : updatedItems)
-                    mWeatherData.updateCondition(condition);
-                mPagerAdapter.updateFragmentsUI();
+            public void onNoConnection() {
+
             }
         });
-        mDataUpdater.start();
-        mDataUpdater.getLooper();
-        Log.i(TAG, "Start of the background rhread");
+
+        UpdateService.setServiceAlarm(this, mWeatherData.getAppSettings().getRefreshDelay().getOptionLength_s() * 1000, true);
+
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.weather_pager_view_pager);
         FragmentManager fm  = getSupportFragmentManager();
         mPagerAdapter = new WeatherPagerAdapter(fm);
         viewPager.setAdapter(mPagerAdapter);
-
-        List<City> cities = Condition.getCityList(mWeatherData.mConditionList);
-        mDataUpdater.queueDataRefreshDelayed(this,
-                cities,
-                mWeatherData.getAppSettings().getRefreshDelay());
-
-        mDataUpdater.queueDataRefresh(this, cities);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-
     }
 
     @Override
@@ -115,10 +93,7 @@ public class MainActivity extends AppCompatActivity {
             mPagerAdapter.notifyDataSetChanged();
         }
         if(refreshDelayChanged){
-            mDataUpdater.clearQueue();
-            mDataUpdater.queueDataRefreshDelayed(this,
-                    Condition.getCityList(mWeatherData.mConditionList),
-                    mWeatherData.getAppSettings().getRefreshDelay());
+            UpdateService.setServiceAlarm(this, mWeatherData.getAppSettings().getRefreshDelay().getOptionLength_s() * 1000, true);
         }
 
     }
@@ -131,13 +106,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent;
         switch (item.getItemId()){
             case R.id.menu_item_settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
+                intent = new Intent(this, SettingsActivity.class);
                 startActivityForResult(intent, REQ_DATA_SET_CHANGED);
                 return true;
             case R.id.menu_item_refresh:
-                mDataUpdater.queueDataRefresh(this, Condition.getCityList(mWeatherData.mConditionList));
+                intent = UpdateService.newIntent(this);
+                startService(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -149,8 +126,6 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
     }
-
-
 
     @Override
     protected void onDestroy() {
