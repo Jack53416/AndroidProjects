@@ -14,7 +14,6 @@ import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -26,11 +25,9 @@ import settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
 
     private static final int REQ_DATA_SET_CHANGED = 0;
     private WeatherData mWeatherData;
-    private DataUpdater<MainActivity> mDataUpdater;
 
     private WeatherPagerAdapter mPagerAdapter;
 
@@ -57,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Handler responseHandler = new Handler();
-        mDataUpdater = new DataUpdater<>(responseHandler);
 
         UpdateService.setmResponseHandler(responseHandler);
         UpdateService.setUpdateListener(new UpdateService.UpdateListener() {
@@ -130,9 +126,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        mDataUpdater.quit();
-        Log.i(TAG, "Background thread destroyed");
     }
 
 
