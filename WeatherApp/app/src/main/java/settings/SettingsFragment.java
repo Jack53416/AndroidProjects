@@ -1,5 +1,6 @@
 package settings;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -26,11 +27,28 @@ public class SettingsFragment extends Fragment {
     private TextView mUnitValue;
     private TextView mRefreshDelayValue;
     private Settings mAppSettings;
+    private SettingsFragmentListener mListener;
+
+    interface SettingsFragmentListener{
+        void onRefreshDelayChanged();
+    }
+
     public SettingsFragment() {
     }
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (SettingsFragmentListener) context;
+        }catch (ClassCastException e){
+            throw new ClassCastException(context.toString() + " must implement SettingsFragmentListener");
+        }
     }
 
     @Override
@@ -54,6 +72,7 @@ public class SettingsFragment extends Fragment {
                 break;
             case REQUEST_DELAY:
                 mAppSettings.setRefreshDelay(Settings.RefreshDelayOptions.getRefreshDelay(dialogResult));
+                mListener.onRefreshDelayChanged();
                 break;
         }
         refreshUI();

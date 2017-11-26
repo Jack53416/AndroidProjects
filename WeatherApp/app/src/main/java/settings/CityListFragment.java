@@ -24,7 +24,6 @@ import com.example.jacek.weatherapp.WeatherData;
 import com.example.jacek.weatherapp.WeatherFetcher;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -34,7 +33,7 @@ import database.Condition;
 
 public class CityListFragment extends Fragment {
 
-    interface OnChangeCityList{
+    interface CityListFragmentListener {
         void onChangeCityList(int itemsDeleted);
     }
 
@@ -42,7 +41,8 @@ public class CityListFragment extends Fragment {
     private static final Integer REQUEST_CITY = 0;
     private RecyclerView mCityRecyclerView;
     private CityAdapter mCityAdapter = null;
-    OnChangeCityList mListener;
+    private Toast mToast;
+    CityListFragmentListener mListener;
 
 
 
@@ -56,7 +56,7 @@ public class CityListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mListener = (OnChangeCityList) context;
+            mListener = (CityListFragmentListener) context;
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString() + " must implement OnChangeCityListener");
         }
@@ -72,6 +72,7 @@ public class CityListFragment extends Fragment {
 
         mCityRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        mToast = new Toast(getActivity());
         updateUI();
 
         return view;
@@ -90,15 +91,25 @@ public class CityListFragment extends Fragment {
             }
             if(newCity != null){
                 if(!Objects.equals(newCity.getCity().getName(), cityName))
-                    Toast.makeText(getActivity(), "Error, Invalid City Name !", Toast.LENGTH_SHORT).show();
+                    showError("Error, Invalid City Name !");
                 else{
                     WeatherData.getInstance(getActivity()).insertCondition(newCity);
                     updateUI();
                     mListener.onChangeCityList(0);
                 }
             }
+            else{
+                showError("Error, could not retrieve data!");
+            }
 
         }
+    }
+
+
+    private void showError(String error){
+        mToast.cancel();
+        mToast = Toast.makeText(getActivity() ,error, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 
     @Override
@@ -112,6 +123,11 @@ public class CityListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.list_menu_item_add:
+                if(mCityAdapter.getCities().size() == WeatherData.CONDITION_LIMIT)
+                {
+                    showError("Erase one location before adding next one");
+                    return false;
+                }
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 AddCityDialog dialog = new AddCityDialog();
                 dialog.setTargetFragment(CityListFragment.this, REQUEST_CITY);
@@ -122,10 +138,7 @@ public class CityListFragment extends Fragment {
                 List<City> cityList = mCityAdapter.getCities();
                 WeatherData weatherData = WeatherData.getInstance(getActivity());
                 int itemsDeleted = 0;
-                if(cityList.size() == 1){
-                    Toast.makeText(getActivity(), "Can't delete last item !", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
+
                 for(City city : cityList){
                     if(city.isSelected()){
                         weatherData.deleteCondition(city.getWoeid());
@@ -133,7 +146,7 @@ public class CityListFragment extends Fragment {
                     }
                 }
                 if(itemsDeleted == 0){
-                    Toast.makeText(getActivity(), "No items selected !", Toast.LENGTH_SHORT).show();
+                    showError("No items selected!");
                 }
                 else {
                     updateUI();
@@ -184,8 +197,7 @@ public class CityListFragment extends Fragment {
         void bindCity(City city){
             mCity = city;
             mCityNameTextView.setText(mCity.getName());
-            mCityDescription.setText(String.format(Locale.US,"%s (%.3f %.3f)", mCity.getCountry(),
-                    mCity.getLongitude(), mCity.getLatitude()));
+            mCityDescription.setText(city.getLocationDescription());
             mCityCheckBox.setChecked(mCity.isSelected());
         }
     }

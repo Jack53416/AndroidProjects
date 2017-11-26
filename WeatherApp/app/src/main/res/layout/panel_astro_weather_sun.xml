@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:background="@color/weatherPanelBackground"
+                android:padding="10dp">
+
+
+    <TextView
+        android:id="@+id/weather_fragment_sun_panel_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/textTitleSize"
+        android:text="@string/sunPanelTitle"
+        android:textStyle="bold"
+        tools:text="Sun"/>
+
+    <View
+        style="@style/Divider"
+        android:layout_below="@id/weather_fragment_sun_panel_title"
+        android:background="@color/colorAccent"/>
+
+
+    <ImageView
+        android:id="@+id/sunriseImage"
+        android:layout_width="@dimen/sunImageSize"
+        android:layout_height="@dimen/sunImageSize"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/weather_fragment_sun_panel_title"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/sunRise"
+        app:srcCompat="@drawable/sunrise"/>
+
+    <ImageView
+        android:id="@+id/sunsetImage"
+        android:layout_width="@dimen/sunImageSize"
+        android:layout_height="@dimen/sunImageSize"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/weather_fragment_sun_panel_title"
+        android:layout_marginEnd="35dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/sunSet"
+        app:srcCompat="@drawable/sunset"/>
+
+    <TextView
+        android:id="@+id/weather_fragment_sun_panel_sunrise_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/sunriseImage"
+        android:layout_alignStart="@id/sunriseImage"
+        android:layout_below="@id/sunriseImage"
+        android:padding="5dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorSunrise"
+        android:textSize="@dimen/textStandardSize"
+        tools:text="18:24 "/>
+
+
+    <TextView
+        android:id="@+id/weather_fragment_sun_panel_sunset_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/sunsetImage"
+        android:layout_alignStart="@id/sunsetImage"
+        android:layout_below="@id/sunsetImage"
+        android:padding="5dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorSunset"
+        android:textSize="@dimen/textStandardSize"
+        tools:text="18:24 "/>
+
+    <TextView
+        android:id="@+id/weather_fragment_sun_panel_twilightM_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_fragment_sun_panel_sunrise_value"
+        android:layout_marginTop="5dp"
+        android:text="@string/twilightM"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/textStandardSize"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/weather_fragment_sun_panel_twilightM_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_fragment_sun_panel_sunrise_value"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/weather_fragment_sun_panel_twilightM_caption"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/textStandardSize"
+        android:visibility="visible"
+        tools:text="18:50"/>
+
+    <TextView
+        android:id="@+id/weather_fragment_sun_panel_twillightE_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/weather_fragment_sun_panel_sunset_value"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/textStandardSize"
+        tools:text="15:24"/>
+
+    <TextView
+        android:id="@+id/weather_fragment_sun_panel_twillightE_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_fragment_sun_panel_sunset_value"
+        android:layout_marginTop="5dp"
+        android:layout_toStartOf="@id/weather_fragment_sun_panel_twillightE_value"
+        android:text="@string/twilightE"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/textStandardSize"/>
+
+    <TextView
+        android:id="@+id/weather_fragment_sun_panel_AzimuthM_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_fragment_sun_panel_twillightE_caption"
+        android:layout_marginTop="5dp"
+        android:text="@string/azimuthTitle"
+        android:textSize="@dimen/textStandardSize"
+        android:textColor="@color/colorWhite"/>
+
+    <TextView
+        android:id="@+id/weather_fragment_sun_panel_azimuthM_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_fragment_sun_panel_twillightE_caption"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/textStandardSize"
+        android:layout_toEndOf="@id/weather_fragment_sun_panel_AzimuthM_caption"
+        android:textColor="@color/colorWhite"/>
+
+
+    <TextView
+        android:id="@+id/weather_fragment_sun_panel_AzimuthE_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/weather_fragment_sun_panel_twillightE_caption"
+        android:layout_below="@id/weather_fragment_sun_panel_twillightE_caption"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/textStandardSize"
+        android:text="@string/azimuthTitle"
+        android:textColor="@color/colorWhite"/>
+
+    <TextView
+        android:id="@+id/weather_fragment_sun_panel_azimuthE_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_fragment_sun_panel_twillightE_caption"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/textStandardSize"
+        android:layout_toEndOf="@id/weather_fragment_sun_panel_AzimuthE_caption"
+        android:textColor="@color/colorWhite"/>
+
+
+
+
+
+</RelativeLayout>

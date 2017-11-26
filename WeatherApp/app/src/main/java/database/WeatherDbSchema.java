@@ -12,6 +12,7 @@ public class WeatherDbSchema {
             public static final String CITY_LATITUDE = "CITY_LATITUDE";
             public static final String CITY_LONGITUDE = "CITY_LONGITUDE";
             public static final String CITY_COUNTRY = "CITY_COUNTRY";
+            public static final String CITY_TIME_ZONE = "CITY_TIME_ZONE";
             public static final String CONDITION_CODE = "CONDITION_CODE";
             public static final String CONDITION_DATE = "CONDITION_DATE";
             public static final String CONDITION_TEMP = "CONDITION_TEMP";

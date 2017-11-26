@@ -8,4 +8,7 @@
     <color name="colorBlack">#000000</color>
     <color name="secondaryAccent">#458B00</color>
     <color name="weatherPanelBackground">#66555555</color>
+
+    <color name="colorSunrise">#FCDC6A</color>
+    <color name="colorSunset">#D36D32</color>
 </resources>

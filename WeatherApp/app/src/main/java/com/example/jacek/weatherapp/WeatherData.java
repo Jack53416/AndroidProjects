@@ -7,6 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.astrocalculator.AstroCalculator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +23,11 @@ import static database.WeatherDbSchema.*;
 public class WeatherData {
 
     private static WeatherData mWeatherData;
-    public static final int CONDITION_LIMIT = 30;
+    public static final int CONDITION_LIMIT = 10;
     public List<Condition> mConditionList;
     private Settings mAppSettings;
     private SQLiteDatabase mDatabase;
+    private AstroCalculator mAstroCalculator;
 
     public static WeatherData getInstance(Context context)
     {
@@ -38,10 +41,16 @@ public class WeatherData {
         mAppSettings = new Settings();
         Context appContext = context.getApplicationContext();
         mDatabase = new WeatherBaseHelper(appContext).getWritableDatabase();
+
+        mAstroCalculator = new AstroCalculator(AstroData.getCurrentAstroDateTime(AstroData.DEFAULT_TIME_ZONE), AstroData.DEFAULT_LOCATION);
     }
 
     public Settings getAppSettings() {
         return mAppSettings;
+    }
+
+    AstroCalculator getAstroCalculator() {
+        return mAstroCalculator;
     }
 
     public void insertCondition(Condition condition){
@@ -65,8 +74,13 @@ public class WeatherData {
         mDatabase.insert(ForecastTable.NAME, null, values);
     }
 
-    public void updateCondition(Condition condition){
+    void updateCondition(Condition condition){
         ContentValues values = condition.getContentValues();
+
+        int idx = mConditionList.indexOf(findConditionByWoeid(condition.getCity().getWoeid()));
+
+        mConditionList.set(idx, condition);
+
         mDatabase.update(ConditionTable.NAME, values,
                          ConditionTable.Cols.CITY_WOEID + " = ?", new String[]{String.valueOf(condition.getCity().getWoeid())});
 
@@ -88,7 +102,7 @@ public class WeatherData {
             mConditionList.remove(condtionToRemove);
     }
 
-    public Condition findConditionByWoeid(final int cityWoeid){
+    Condition findConditionByWoeid(final int cityWoeid){
         for(Condition condition : mConditionList){
             if(condition.getCity().getWoeid() == cityWoeid)
                 return condition;
@@ -126,7 +140,7 @@ public class WeatherData {
         return new ForecastCursorWrapper(cursor);
     }
 
-    public List<Forecast> loadForecastsFromDatabase(int woeid){
+    private List<Forecast> loadForecastsFromDatabase(int woeid){
         List<Forecast> forecasts = new ArrayList<>();
 
         try(ForecastCursorWrapper cursor = queryForecasts(ForecastTable.Cols.WOEID + " = ?", new String[]{String.valueOf(woeid)})) {
@@ -139,7 +153,7 @@ public class WeatherData {
         return forecasts;
     }
 
-    public List<Condition> loadConditionsFromDatabase(){
+    List<Condition> loadConditionsFromDatabase(){
         List<Condition> conditions = new ArrayList<>();
         Condition currentCondition;
 
@@ -156,7 +170,7 @@ public class WeatherData {
         return conditions;
     }
 
-    public void loadSettingsFromDatabase(){
+     void loadSettingsFromDatabase(){
         Cursor cursorTemplate = mDatabase.query(
                 SettingsTable.NAME,
                 null,
@@ -176,7 +190,7 @@ public class WeatherData {
     }
 
     public void updateSettings(){
-        int settingsCount = 0;
+        int settingsCount;
         try(Cursor cursor = mDatabase.rawQuery("SELECT COUNT(*) FROM " + SettingsTable.NAME, null)){
             cursor.moveToFirst();
             settingsCount = cursor.getInt(0);
@@ -185,7 +199,7 @@ public class WeatherData {
             mDatabase.update(SettingsTable.NAME,
                     mAppSettings.getContentValues(),
                     SettingsTable.Cols.ID + "= ?",
-                    new String[]{String.valueOf(mAppSettings.ID)}
+                    new String[]{String.valueOf(Settings.ID)}
                     );
         }
         else{

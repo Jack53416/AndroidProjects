@@ -11,49 +11,50 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 
-import com.example.jacek.weatherapp.MainActivity;
 import com.example.jacek.weatherapp.R;
 
-public class SettingsActivity extends AppCompatActivity implements CityListFragment.OnChangeCityList {
+public class SettingsActivity extends AppCompatActivity
+        implements CityListFragment.CityListFragmentListener,
+        SettingsFragment.SettingsFragmentListener{
 
     public final static String EXTRA_DELETED_ITEMS = "extra_deleted_items";
     public final static String EXTRA_ITEM_LIST_CHANGED = "extra_item_list_changed";
+    public final static String EXTRA_REFRESH_DELAY_CHANGED = "extra_refresh_delay_changed";
     private int mDeletedItemsCount = 0;
     private boolean mCityListChanged = false;
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
+    private boolean mRefreshDelayChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        if(savedInstanceState != null){
+            mDeletedItemsCount = savedInstanceState.getInt(EXTRA_DELETED_ITEMS, 0);
+            mCityListChanged = savedInstanceState.getBoolean(EXTRA_ITEM_LIST_CHANGED, false);
+            mRefreshDelayChanged = savedInstanceState.getBoolean(EXTRA_REFRESH_DELAY_CHANGED, false);
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager.setAdapter(sectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setupWithViewPager(viewPager);
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(EXTRA_REFRESH_DELAY_CHANGED, mRefreshDelayChanged);
+        outState.putInt(EXTRA_DELETED_ITEMS, mDeletedItemsCount);
+        outState.putBoolean(EXTRA_ITEM_LIST_CHANGED, mCityListChanged);
     }
 
     @Override
@@ -68,17 +69,19 @@ public class SettingsActivity extends AppCompatActivity implements CityListFragm
         Intent intent = new Intent();
         intent.putExtra(EXTRA_DELETED_ITEMS, mDeletedItemsCount);
         intent.putExtra(EXTRA_ITEM_LIST_CHANGED, mCityListChanged);
+        intent.putExtra(EXTRA_REFRESH_DELAY_CHANGED, mRefreshDelayChanged);
         setResult(RESULT_OK, intent);
         finish();
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    @Override
+    public void onRefreshDelayChanged() {
+        mRefreshDelayChanged = true;
+    }
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

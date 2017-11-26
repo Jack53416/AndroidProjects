@@ -8,6 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name ="PanelLayout">
+        <item name = "android:layout_width">wrap_content</item>
+        <item name ="android:layout_height">wrap_content</item>
+        <item name ="android:layout_marginBottom">5dp</item>
+        <item name = "android:background">@color/weatherPanelBackground</item>
+        <item name = "android:padding">10dp</item>
+    </style>
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">2dp</item>

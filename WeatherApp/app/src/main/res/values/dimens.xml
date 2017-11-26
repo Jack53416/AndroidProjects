@@ -4,8 +4,18 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
-    <dimen name="textTitleSize">24sp</dimen>
+    <dimen name="textTitleSize">20sp</dimen>
     <dimen name="textDetailSize">12sp</dimen>,
-    <dimen name="textSubTitleSize">20sp</dimen>
+    <dimen name="textSubTitleSize">18sp</dimen>
     <dimen name="textStandardSize">14sp</dimen>
+
+    <dimen name="sunImageSize">65dp</dimen>
+    <dimen name="moonImageSize">60dp</dimen>
+    <dimen name="iconImageSize">25dp</dimen>
+    <dimen name="weatherForecastIconSize">60dp</dimen>
+
+    <dimen name="windArrowSize">40dp</dimen>
+    <dimen name="windDirectionWidgetSize">80dp</dimen>
+    <dimen name="mainWeatherIconSize">75dp</dimen>
+    <dimen name="mainWeatherIconPadding">10dp</dimen>
 </resources>

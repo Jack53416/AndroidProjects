@@ -17,10 +17,10 @@
 
     <ImageView
         android:id="@+id/weather_fragment_overview_weather_picture"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="@dimen/mainWeatherIconSize"
+        android:layout_height="@dimen/mainWeatherIconSize"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
+        android:layout_alignParentTop="true"
         android:contentDescription="@string/weatherPictureDescription"
         app:srcCompat="@drawable/clear_night"/>
 
@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@id/weather_fragment_overview_weather_picture"
+        android:textAlignment="viewStart"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/textTitleSize"
         android:textStyle="bold"
@@ -39,9 +40,12 @@
         android:id="@+id/weather_fragment_overview_city_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/weather_fragment_overview_city_name"
+        android:layout_alignStart="@id/weather_fragment_overview_city_name"
+        android:layout_below="@+id/weather_fragment_overview_city_name"
+        android:layout_toStartOf="@+id/weather_fragment_overview_weather_picture"
         android:paddingEnd="6dp"
         android:paddingStart="6dp"
+        android:textAlignment="viewStart"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/textDetailSize"
         android:textStyle="italic"
@@ -52,19 +56,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignStart="@id/weather_fragment_overview_weather_picture"
         android:layout_below="@id/weather_fragment_overview_weather_picture"
-        android:layout_marginEnd="25dp"
+        android:textAlignment="center"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/textTitleSize"
         android:textStyle="bold"
-        tools:text="15°C"/>
+        tools:text="-99.9°C"/>
 
     <TextView
         android:id="@+id/weather_fragment_overview_weather_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/weather_fragment_overview_city_description"
-        android:layout_marginTop="20dp"
+        android:layout_below="@id/weather_fragment_overview_weather_picture"
+        android:layout_alignStart="@id/weather_fragment_overview_city_name"
+        android:layout_toStartOf="@id/weather_fragment_overview_temperature"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/textSubTitleSize"
         tools:text="Sunny"/>
@@ -74,9 +80,10 @@
         style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_below="@id/weather_fragment_overview_temperature"
-        android:layout_marginTop="5dp"
+        android:layout_below="@id/weather_fragment_overview_weather_description"
+        android:layout_marginTop="10dp"
         android:background="@drawable/panel_button_selector"
-        app:srcCompat="@drawable/ic_button_drop_down"/>
+        app:srcCompat="@drawable/ic_button_drop_down"
+        android:contentDescription="@string/moreButtonContentDescription"/>
 
 </RelativeLayout>

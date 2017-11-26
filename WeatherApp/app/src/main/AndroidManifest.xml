@@ -3,6 +3,7 @@
           package="com.example.jacek.weatherapp">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -23,6 +24,8 @@
             android:label="@string/title_activity_setting"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <service android:name=".UpdateService"/>
     </application>
 
 </manifest>
