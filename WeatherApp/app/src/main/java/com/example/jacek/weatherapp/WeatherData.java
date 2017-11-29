@@ -79,6 +79,9 @@ public class WeatherData {
 
         int idx = mConditionList.indexOf(findConditionByWoeid(condition.getCity().getWoeid()));
 
+        if(idx < 0)
+            return;
+
         mConditionList.set(idx, condition);
 
         mDatabase.update(ConditionTable.NAME, values,

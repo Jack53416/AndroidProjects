@@ -46,7 +46,7 @@ public class UpdateService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        android.os.Debug.waitForDebugger();
+      //  android.os.Debug.waitForDebugger();
         if(!isNetworkAvaliable()){
             mResponseHandler.post(new Runnable() {
                 @Override
@@ -81,7 +81,7 @@ public class UpdateService extends IntentService {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
 
         if(isActive){
-            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,0, interval_ms, pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, interval_ms, pendingIntent);
         }
         else {
             alarmManager.cancel(pendingIntent);

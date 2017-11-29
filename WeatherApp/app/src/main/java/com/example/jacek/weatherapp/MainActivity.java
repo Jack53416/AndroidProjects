@@ -27,7 +27,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final int REQ_DATA_SET_CHANGED = 0;
+    private static final String EXTRA_UPDATE_SERVICE_RUNNING = "Extra_update_service_running";
+
     private WeatherData mWeatherData;
+    private boolean isUpdateServiceRunning = false;
 
     private WeatherPagerAdapter mPagerAdapter;
 
@@ -35,24 +38,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(savedInstanceState != null)
+            isUpdateServiceRunning = savedInstanceState.getBoolean(EXTRA_UPDATE_SERVICE_RUNNING, false);
+
         setContentView(R.layout.activity_main);
         mWeatherData = WeatherData.getInstance(getBaseContext());
         mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
         mWeatherData.loadSettingsFromDatabase();
-        if(!isNetworkAvailable()){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle("Warning")
-                    .setMessage("No internet connection available, presented data may be outdated")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                        }
-                    });
+        if(!isUpdateServiceRunning)
+            startUpdateService();
 
-            builder.create().show();
-        }
+        ViewPager viewPager = (ViewPager) findViewById(R.id.weather_pager_view_pager);
+        FragmentManager fm  = getSupportFragmentManager();
+        mPagerAdapter = new WeatherPagerAdapter(fm);
+        viewPager.setAdapter(mPagerAdapter);
+    }
 
+    private void startUpdateService(){
         Handler responseHandler = new Handler();
 
         UpdateService.setmResponseHandler(responseHandler);
@@ -66,19 +69,23 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNoConnection() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Warning")
+                        .setMessage("No internet connection available, presented data may be outdated")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
 
+                            }
+                        });
+
+                builder.create().show();
             }
         });
-
-        UpdateService.setServiceAlarm(this, mWeatherData.getAppSettings().getRefreshDelay().getOptionLength_s() * 1000, true);
-
-
-        ViewPager viewPager = (ViewPager) findViewById(R.id.weather_pager_view_pager);
-        FragmentManager fm  = getSupportFragmentManager();
-        mPagerAdapter = new WeatherPagerAdapter(fm);
-        viewPager.setAdapter(mPagerAdapter);
+        int refreshDelay_s = mWeatherData.getAppSettings().getRefreshDelay().getOptionLength_s();
+        UpdateService.setServiceAlarm(this, refreshDelay_s * 1000, true);
+        isUpdateServiceRunning = true;
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -120,12 +127,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        outState.putBoolean(EXTRA_UPDATE_SERVICE_RUNNING, isUpdateServiceRunning);
     }
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
+        UpdateService.setServiceAlarm(this,
+                mWeatherData.getAppSettings().getRefreshDelay().getOptionLength_s() * 1000,
+                false);
     }
 
 

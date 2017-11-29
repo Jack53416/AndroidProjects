@@ -3,13 +3,11 @@ package database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.util.Log;
 
 import java.util.Date;
 
 public class CursorWrappers {
-    /*
-    * Condition Cursor Wrapper class
-    * */
 
     public static class ConditionCursorWrapper extends CursorWrapper {
         public ConditionCursorWrapper(Cursor cursor) {
@@ -72,17 +70,28 @@ public class CursorWrappers {
         public SettingsCursorWrapper(Cursor cursor) {
             super(cursor);
         }
-
+        private static final String TAG = "SETTINGS_CURSOR";
         public Settings getSettings(){
             Settings settings = new Settings();
-            Settings.Units unit = Settings.Units.
-                    getUnit(getString(getColumnIndex(WeatherDbSchema.SettingsTable.Cols.MES_UNIT)));
-            settings.setMeasurementUnit(unit);
 
-            Settings.RefreshDelayOptions delay = Settings.RefreshDelayOptions
-                    .getRefreshDelay(getString(getColumnIndex(WeatherDbSchema.SettingsTable.Cols.REFRESH_DELAY)));
+            String unitName = getString(getColumnIndex(WeatherDbSchema.SettingsTable.Cols.MES_UNIT));
 
-            settings.setRefreshDelay(delay);
+            try {
+                Settings.Units unit = Settings.Units.getUnit(unitName);
+                settings.setMeasurementUnit(unit);
+            }catch (IllegalArgumentException ex){
+                Log.e(TAG, "Could not parse unit: " + ex.getMessage());
+            }
+
+            String refreshDelayName = getString(getColumnIndex(WeatherDbSchema.SettingsTable.Cols.REFRESH_DELAY));
+
+            try {
+                Settings.RefreshDelayOptions delay = Settings.RefreshDelayOptions
+                        .getRefreshDelay(refreshDelayName);
+                settings.setRefreshDelay(delay);
+            }catch (IllegalArgumentException ex){
+                Log.e(TAG, "Could not parse refresh delay: " + ex.getMessage());
+            }
 
             return settings;
         }

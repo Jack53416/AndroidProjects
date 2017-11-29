@@ -144,10 +144,6 @@ public class WeatherFetcher {
 
         if(jsonChannelObject instanceof JSONArray) {
             jsonConditions = (JSONArray) jsonChannelObject;
-            if (cities.size() != jsonConditions.length()) {
-                Log.e(TAG, "Could not update, received less conditions data than requested");
-                return null;
-            }
             for(int i = 0, size = jsonConditions.length(); i < size; i++){
                 conditionItem = parseCondition(jsonConditions.getJSONObject(i),
                                                          cities.get(i));
