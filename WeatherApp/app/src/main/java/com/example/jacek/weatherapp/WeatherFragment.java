@@ -1,5 +1,6 @@
 package com.example.jacek.weatherapp;
 
+import android.app.PendingIntent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,7 +30,7 @@ public class WeatherFragment extends Fragment {
     private static final DecimalFormat temperatureFormat = new DecimalFormat("##.#");
 
     private int mDetailsVisibility = View.INVISIBLE;
-
+    private int mConditionWoeid;
     private Condition mCondition;
     private AstroData mAstroData;
 
@@ -70,13 +71,14 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
-        int conditionWoeid = getArguments().getInt(ARG_CONDITION_WOEID);
+        mConditionWoeid = getArguments().getInt(ARG_CONDITION_WOEID);
+
         WeatherData weatherData = WeatherData.getInstance(getActivity());
 
         if(savedInstanceState != null)
             mDetailsVisibility = savedInstanceState.getInt(EXTRA_DETAILS_VISIBLE, View.INVISIBLE);
 
-        mCondition = weatherData.findConditionByWoeid(conditionWoeid);
+        mCondition = weatherData.findConditionByWoeid(mConditionWoeid);
         mAstroData = new AstroData();
 
         super.onCreate(savedInstanceState);
@@ -212,7 +214,7 @@ public class WeatherFragment extends Fragment {
     public void refreshUI(){
         WeatherData weatherData = WeatherData.getInstance(getActivity());
         Settings.Units unit = weatherData.getAppSettings().getMeasurementUnit();
-        mCondition = weatherData.findConditionByWoeid(mCondition.getCity().getWoeid());
+        mCondition = weatherData.findConditionByWoeid(mConditionWoeid);
         if(mCondition == null)
             return;
 

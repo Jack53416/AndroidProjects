@@ -1,8 +1,6 @@
 package com.example.jacek.weatherapp;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,6 +15,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -28,15 +27,18 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQ_DATA_SET_CHANGED = 0;
     private static final String EXTRA_UPDATE_SERVICE_RUNNING = "Extra_update_service_running";
+    private static final String WARNING_DIALOG_TAG = "WARNING_DIALOG";
 
     private WeatherData mWeatherData;
     private boolean isUpdateServiceRunning = false;
+    private Toast mToast;
 
     private WeatherPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mToast = new Toast(this);
 
         if(savedInstanceState != null)
             isUpdateServiceRunning = savedInstanceState.getBoolean(EXTRA_UPDATE_SERVICE_RUNNING, false);
@@ -46,13 +48,24 @@ public class MainActivity extends AppCompatActivity {
         mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
         mWeatherData.loadSettingsFromDatabase();
 
-        if(!isUpdateServiceRunning)
+        if(!isUpdateServiceRunning) {
             startUpdateService();
-
+            if(!isNetworkAvailable()) {
+                String message = "No internet connection available, presented data may be outdated";
+                String title = "Connection Problem";
+                WarningDialog.newInstance(title, message).show(getSupportFragmentManager(), WARNING_DIALOG_TAG);
+            }
+        }
         ViewPager viewPager = (ViewPager) findViewById(R.id.weather_pager_view_pager);
         FragmentManager fm  = getSupportFragmentManager();
         mPagerAdapter = new WeatherPagerAdapter(fm);
         viewPager.setAdapter(mPagerAdapter);
+    }
+
+    private void showToastMessage(String error){
+        mToast.cancel();
+        mToast = Toast.makeText(this ,error, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 
     private void startUpdateService(){
@@ -65,21 +78,12 @@ public class MainActivity extends AppCompatActivity {
                 for(Condition condition : updatedItems)
                     mWeatherData.updateCondition(condition);
                 mPagerAdapter.updateFragmentsUI();
+                showToastMessage("Refreshed!");
             }
 
             @Override
             public void onNoConnection() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Warning")
-                        .setMessage("No internet connection available, presented data may be outdated")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        });
-
-                builder.create().show();
+                showToastMessage("Update Failed!");
             }
         });
         int refreshDelay_s = mWeatherData.getAppSettings().getRefreshDelay().getOptionLength_s();
@@ -117,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_item_refresh:
                 intent = UpdateService.newIntent(this);
+                showToastMessage("Refreshing ...");
                 startService(intent);
                 return true;
             default:
@@ -132,11 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
-        UpdateService.setServiceAlarm(this,
-                mWeatherData.getAppSettings().getRefreshDelay().getOptionLength_s() * 1000,
-                false);
     }
 
 

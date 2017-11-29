@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/warning_dialog_warning_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:padding="10dp"
+        android:background="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/ic_warning_sign"/>
+
+    <TextView
+        android:id="@+id/warning_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/warning_dialog_warning_icon"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/warning_dialog_warning_icon"
+        android:background="@color/colorPrimaryDark"
+        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/textTitleSize"
+        android:textStyle="bold"
+        tools:text="Warning"/>
+
+    <TextView
+        android:id="@+id/warning_dialog_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/warning_dialog_title"
+        android:padding="25dp"
+        android:textAllCaps="false"
+        android:textSize="@dimen/textStandardSize"
+        tools:text="Some Message Explaining why the warning occured and so on and so forth"/>
+</RelativeLayout>
