@@ -1,6 +1,5 @@
 package com.example.jacek.weatherapp;
 
-import android.app.PendingIntent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,8 +18,9 @@ import com.astrocalculator.AstroCalculator;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
-import database.Condition;
-import database.Settings;
+import com.example.jacek.weatherapp.database.Condition;
+import com.example.jacek.weatherapp.database.Settings;
+import com.example.jacek.weatherapp.services.WeatherData;
 
 public class WeatherFragment extends Fragment {
 

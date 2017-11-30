@@ -1,4 +1,4 @@
-package settings;
+package com.example.jacek.weatherapp.settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import database.Settings;
+import com.example.jacek.weatherapp.database.Settings;
 
 
 public class ListDialog extends DialogFragment {

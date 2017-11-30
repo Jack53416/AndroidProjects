@@ -1,17 +1,16 @@
-package database;
+package com.example.jacek.weatherapp.database;
 
 import android.content.ContentValues;
 
 import com.example.jacek.weatherapp.R;
-import com.example.jacek.weatherapp.WeatherData;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import database.Settings.Units;
+import com.example.jacek.weatherapp.database.Settings.Units;
 
-import static database.WeatherDbSchema.*;
+import static com.example.jacek.weatherapp.database.WeatherDbSchema.*;
 
 public class Condition {
     private final City mCity;

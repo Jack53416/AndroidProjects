@@ -1,7 +1,7 @@
-package database;
+package com.example.jacek.weatherapp.database;
 
 import android.content.ContentValues;
-import static database.WeatherDbSchema.*;
+import static com.example.jacek.weatherapp.database.WeatherDbSchema.*;
 
 public class Settings {
 

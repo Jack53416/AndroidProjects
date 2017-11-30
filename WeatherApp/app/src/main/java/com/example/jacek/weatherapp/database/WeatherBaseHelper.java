@@ -1,10 +1,10 @@
-package database;
+package com.example.jacek.weatherapp.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static database.WeatherDbSchema.*;
+import static com.example.jacek.weatherapp.database.WeatherDbSchema.*;
 
 public class WeatherBaseHelper extends SQLiteOpenHelper {
     private static int VERSION = 1;

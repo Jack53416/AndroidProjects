@@ -1,10 +1,10 @@
-package database;
+package com.example.jacek.weatherapp.database;
 
 import android.content.ContentValues;
 
 import java.util.Date;
 
-import database.Settings.Units;
+import com.example.jacek.weatherapp.database.Settings.Units;
 
 public class Forecast {
     private Date mDate = new Date();

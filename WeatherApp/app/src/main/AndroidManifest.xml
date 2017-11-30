@@ -20,12 +20,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="settings.SettingsActivity"
+            android:name="com.example.jacek.weatherapp.settings.SettingsActivity"
             android:label="@string/title_activity_setting"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <service android:name=".UpdateService"/>
+        <service android:name=".services.UpdateService"/>
     </application>
 
 </manifest>

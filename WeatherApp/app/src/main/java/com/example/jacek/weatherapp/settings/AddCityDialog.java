@@ -1,4 +1,4 @@
-package settings;
+package com.example.jacek.weatherapp.settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;

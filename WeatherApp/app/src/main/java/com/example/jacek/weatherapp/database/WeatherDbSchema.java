@@ -1,6 +1,4 @@
-package database;
-
-import android.database.Cursor;
+package com.example.jacek.weatherapp.database;
 
 public class WeatherDbSchema {
     public static final class ConditionTable{

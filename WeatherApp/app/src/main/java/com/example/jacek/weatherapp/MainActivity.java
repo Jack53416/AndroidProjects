@@ -17,8 +17,10 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import database.Condition;
-import settings.SettingsActivity;
+import com.example.jacek.weatherapp.database.Condition;
+import com.example.jacek.weatherapp.services.UpdateService;
+import com.example.jacek.weatherapp.services.WeatherData;
+import com.example.jacek.weatherapp.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         mWeatherData = WeatherData.getInstance(getBaseContext());
-        mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
-        mWeatherData.loadSettingsFromDatabase();
 
         Handler responseHandler = new Handler();
 
@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
         if(refreshDelayChanged){
             UpdateService.setServiceAlarm(this, mWeatherData.getAppSettings().getRefreshDelay().getOptionLength_s() * 1000, true);
         }
-
     }
 
     @Override
@@ -135,12 +134,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-
-    @Override
     protected void onPostResume() {
         super.onPostResume();
         mPagerAdapter.notifyDataSetChanged();
@@ -162,12 +155,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            Condition condition = mWeatherData.mConditionList.get(position);
+            Condition condition = mWeatherData.getConditionList().get(position);
             return WeatherFragment.newInstance(condition.getCity().getWoeid());
         }
         @Override
         public int getCount() {
-            return mWeatherData.mConditionList.size();
+            return mWeatherData.getConditionList().size();
         }
 
         @Override
@@ -177,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             Condition condition = mWeatherData.findConditionByWoeid(woeid);
             if(condition != null){
                 fragment.refreshUI();
-                return mWeatherData.mConditionList.indexOf(condition);
+                return mWeatherData.getConditionList().indexOf(condition);
             }
             return POSITION_NONE;
         }

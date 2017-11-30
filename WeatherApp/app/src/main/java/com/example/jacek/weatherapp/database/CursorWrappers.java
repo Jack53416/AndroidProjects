@@ -1,4 +1,4 @@
-package database;
+package com.example.jacek.weatherapp.database;
 
 
 import android.database.Cursor;

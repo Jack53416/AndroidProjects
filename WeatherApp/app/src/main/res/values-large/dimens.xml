@@ -11,6 +11,6 @@
 
     <dimen name="windArrowSize">60dp</dimen>
     <dimen name="windDirectionWidgetSize">120dp</dimen>
-    <dimen name="mainWeatherIconSize">150dp</dimen>
+    <dimen name="mainWeatherIconSize">110dp</dimen>
     <dimen name="mainWeatherIconPadding">30dp</dimen>
 </resources>

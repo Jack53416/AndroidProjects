@@ -1,4 +1,4 @@
-package com.example.jacek.weatherapp;
+package com.example.jacek.weatherapp.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import database.City;
-import database.Condition;
-import database.Forecast;
+import com.example.jacek.weatherapp.database.City;
+import com.example.jacek.weatherapp.database.Condition;
+import com.example.jacek.weatherapp.database.Forecast;
 
 public class WeatherFetcher {
     private static final String TAG = "WEATHER_FETCHER";

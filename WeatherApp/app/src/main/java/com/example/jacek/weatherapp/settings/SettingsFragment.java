@@ -1,4 +1,4 @@
-package settings;
+package com.example.jacek.weatherapp.settings;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,9 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.jacek.weatherapp.R;
-import com.example.jacek.weatherapp.WeatherData;
+import com.example.jacek.weatherapp.services.WeatherData;
 
-import database.Settings;
+import com.example.jacek.weatherapp.database.Settings;
 
 public class SettingsFragment extends Fragment {
 

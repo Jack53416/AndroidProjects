@@ -1,4 +1,4 @@
-package settings;
+package com.example.jacek.weatherapp.settings;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,15 +20,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jacek.weatherapp.R;
-import com.example.jacek.weatherapp.WeatherData;
-import com.example.jacek.weatherapp.WeatherFetcher;
+import com.example.jacek.weatherapp.services.WeatherData;
+import com.example.jacek.weatherapp.services.WeatherFetcher;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-import database.City;
-import database.Condition;
+import com.example.jacek.weatherapp.database.City;
+import com.example.jacek.weatherapp.database.Condition;
 
 
 public class CityListFragment extends Fragment {
@@ -162,11 +162,11 @@ public class CityListFragment extends Fragment {
         WeatherData weatherData = WeatherData.getInstance(getContext());
 
         if(mCityAdapter == null) {
-            mCityAdapter = new CityAdapter(Condition.getCityList(weatherData.mConditionList));
+            mCityAdapter = new CityAdapter(Condition.getCityList(weatherData.getConditionList()));
             mCityRecyclerView.setAdapter(mCityAdapter);
         }
         else{
-            mCityAdapter.setCities(Condition.getCityList(weatherData.mConditionList));
+            mCityAdapter.setCities(Condition.getCityList(weatherData.getConditionList()));
             mCityAdapter.notifyDataSetChanged();
         }
     }

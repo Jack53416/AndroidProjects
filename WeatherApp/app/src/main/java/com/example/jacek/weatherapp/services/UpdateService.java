@@ -1,4 +1,4 @@
-package com.example.jacek.weatherapp;
+package com.example.jacek.weatherapp.services;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -8,14 +8,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.List;
 
-import database.City;
-import database.Condition;
+import com.example.jacek.weatherapp.database.City;
+import com.example.jacek.weatherapp.database.Condition;
 
 public class UpdateService extends IntentService {
 
@@ -23,7 +22,7 @@ public class UpdateService extends IntentService {
     private static Handler mResponseHandler;
     private static UpdateListener mUpdateListener;
 
-    interface UpdateListener{
+    public interface UpdateListener{
         void onDataUpdate(List<Condition> updatedItems);
         void onNoConnection();
     }
@@ -47,7 +46,7 @@ public class UpdateService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
       //  android.os.Debug.waitForDebugger();
-        if(!isNetworkAvaliable()){
+        if(!isNetworkAvailable()){
             mResponseHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -59,9 +58,9 @@ public class UpdateService extends IntentService {
         Log.i(TAG, "Received an intent! " + intent);
 
         final List<Condition> updatedData;
-        List<City> citiesToupdate = Condition.getCityList(WeatherData.getInstance(getApplicationContext()).mConditionList);
+        List<City> citiesToUpdate = Condition.getCityList(WeatherData.getInstance(getApplicationContext()).getConditionList());
 
-        updatedData = new WeatherFetcher().fetchWeather(citiesToupdate);
+        updatedData = new WeatherFetcher().fetchWeather(citiesToUpdate);
 
         if(updatedData == null)
             return;
@@ -90,7 +89,7 @@ public class UpdateService extends IntentService {
 
     }
 
-    private boolean isNetworkAvaliable(){
+    private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 

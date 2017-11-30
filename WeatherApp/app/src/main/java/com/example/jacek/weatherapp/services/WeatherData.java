@@ -1,4 +1,4 @@
-package com.example.jacek.weatherapp;
+package com.example.jacek.weatherapp.services;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,19 +12,20 @@ import com.astrocalculator.AstroCalculator;
 import java.util.ArrayList;
 import java.util.List;
 
-import database.Condition;
-import database.CursorWrappers.*;
-import database.Forecast;
-import database.Settings;
-import database.WeatherBaseHelper;
+import com.example.jacek.weatherapp.AstroData;
+import com.example.jacek.weatherapp.database.Condition;
+import com.example.jacek.weatherapp.database.CursorWrappers.*;
+import com.example.jacek.weatherapp.database.Forecast;
+import com.example.jacek.weatherapp.database.Settings;
+import com.example.jacek.weatherapp.database.WeatherBaseHelper;
 
-import static database.WeatherDbSchema.*;
+import static com.example.jacek.weatherapp.database.WeatherDbSchema.*;
 
 public class WeatherData {
 
     private static WeatherData mWeatherData;
     public static final int CONDITION_LIMIT = 10;
-    public List<Condition> mConditionList;
+    private List<Condition> mConditionList;
     private Settings mAppSettings;
     private SQLiteDatabase mDatabase;
     private AstroCalculator mAstroCalculator;
@@ -41,6 +42,8 @@ public class WeatherData {
         mAppSettings = new Settings();
         Context appContext = context.getApplicationContext();
         mDatabase = new WeatherBaseHelper(appContext).getWritableDatabase();
+        loadSettingsFromDatabase();
+        loadConditionsFromDatabase();
 
         mAstroCalculator = new AstroCalculator(AstroData.getCurrentAstroDateTime(AstroData.DEFAULT_TIME_ZONE), AstroData.DEFAULT_LOCATION);
     }
@@ -49,8 +52,12 @@ public class WeatherData {
         return mAppSettings;
     }
 
-    AstroCalculator getAstroCalculator() {
+    public AstroCalculator getAstroCalculator() {
         return mAstroCalculator;
+    }
+
+    public List<Condition> getConditionList() {
+        return mConditionList;
     }
 
     public void insertCondition(Condition condition){
@@ -74,7 +81,7 @@ public class WeatherData {
         mDatabase.insert(ForecastTable.NAME, null, values);
     }
 
-    void updateCondition(Condition condition){
+    public void updateCondition(Condition condition){
         ContentValues values = condition.getContentValues();
 
         int idx = mConditionList.indexOf(findConditionByWoeid(condition.getCity().getWoeid()));
@@ -105,7 +112,7 @@ public class WeatherData {
             mConditionList.remove(condtionToRemove);
     }
 
-    Condition findConditionByWoeid(final int cityWoeid){
+    public Condition findConditionByWoeid(final int cityWoeid){
         for(Condition condition : mConditionList){
             if(condition.getCity().getWoeid() == cityWoeid)
                 return condition;
@@ -156,7 +163,7 @@ public class WeatherData {
         return forecasts;
     }
 
-    List<Condition> loadConditionsFromDatabase(){
+    private void loadConditionsFromDatabase(){
         List<Condition> conditions = new ArrayList<>();
         Condition currentCondition;
 
@@ -170,10 +177,10 @@ public class WeatherData {
             }
 
         }
-        return conditions;
+        mConditionList = conditions;
     }
 
-     void loadSettingsFromDatabase(){
+    private void loadSettingsFromDatabase(){
         Cursor cursorTemplate = mDatabase.query(
                 SettingsTable.NAME,
                 null,

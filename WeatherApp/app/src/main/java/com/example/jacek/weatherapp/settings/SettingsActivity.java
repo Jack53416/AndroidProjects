@@ -1,4 +1,4 @@
-package settings;
+package com.example.jacek.weatherapp.settings;
 
 import android.content.Intent;
 import android.support.design.widget.TabLayout;

@@ -15,9 +15,10 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import database.Condition;
-import database.Forecast;
-import database.Settings;
+import com.example.jacek.weatherapp.database.Condition;
+import com.example.jacek.weatherapp.database.Forecast;
+import com.example.jacek.weatherapp.database.Settings;
+import com.example.jacek.weatherapp.services.WeatherData;
 
 public class ForecastListFragment extends Fragment {
 
