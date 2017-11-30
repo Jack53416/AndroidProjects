@@ -97,7 +97,7 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.fragment_weather_overview, container, false);
         wireControls(rootView);
-
+        refreshUI();
         return rootView;
     }
 
@@ -109,7 +109,7 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        refreshUI();
+        //refreshUI();
     }
 
     private void createForecastListFragment(){

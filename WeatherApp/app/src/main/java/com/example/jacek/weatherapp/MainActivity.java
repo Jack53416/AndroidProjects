@@ -78,9 +78,9 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(mPagerAdapter);
     }
 
-    private void showToastMessage(String error){
+    private void showToastMessage(String message){
         mToast.cancel();
-        mToast = Toast.makeText(this ,error, Toast.LENGTH_SHORT);
+        mToast = Toast.makeText(this ,message, Toast.LENGTH_SHORT);
         mToast.show();
     }
 
@@ -172,6 +172,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemPosition(Object object) {
+            WeatherFragment fragment = (WeatherFragment) object;
+            int woeid = fragment.getArguments().getInt(WeatherFragment.ARG_CONDITION_WOEID);
+            Condition condition = mWeatherData.findConditionByWoeid(woeid);
+            if(condition != null){
+                fragment.refreshUI();
+                return mWeatherData.mConditionList.indexOf(condition);
+            }
             return POSITION_NONE;
         }
 
