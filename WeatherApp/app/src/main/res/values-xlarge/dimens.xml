@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="textTitleSize">36sp</dimen>
+    <dimen name="textTitleSize">30sp</dimen>
     <dimen name="textDetailSize">20sp</dimen>,
-    <dimen name="textSubTitleSize">32sp</dimen>
-    <dimen name="textStandardSize">26sp</dimen>
+    <dimen name="textSubTitleSize">26sp</dimen>
+    <dimen name="textStandardSize">22sp</dimen>
     <dimen name="sunImageSize">110dp</dimen>
     <dimen name="moonImageSize">140dp</dimen>
     <dimen name="iconImageSize">60dp</dimen>

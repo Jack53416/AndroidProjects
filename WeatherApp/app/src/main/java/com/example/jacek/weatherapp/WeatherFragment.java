@@ -109,7 +109,7 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //refreshUI();
+        refreshUI();
     }
 
     private void createForecastListFragment(){

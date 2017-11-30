@@ -165,13 +165,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemPosition(Object object) {
-            WeatherFragment fragment = (WeatherFragment) object;
-            int woeid = fragment.getArguments().getInt(WeatherFragment.ARG_CONDITION_WOEID);
-            Condition condition = mWeatherData.findConditionByWoeid(woeid);
-            if(condition != null){
-                fragment.refreshUI();
-                return mWeatherData.getConditionList().indexOf(condition);
-            }
             return POSITION_NONE;
         }
 
