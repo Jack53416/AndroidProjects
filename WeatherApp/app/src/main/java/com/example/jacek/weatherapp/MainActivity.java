@@ -8,13 +8,11 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.List;
@@ -48,6 +46,24 @@ public class MainActivity extends AppCompatActivity {
         mWeatherData.mConditionList = mWeatherData.loadConditionsFromDatabase();
         mWeatherData.loadSettingsFromDatabase();
 
+        Handler responseHandler = new Handler();
+
+        UpdateService.setmResponseHandler(responseHandler);
+        UpdateService.setUpdateListener(new UpdateService.UpdateListener() {
+            @Override
+            public void onDataUpdate(List<Condition> updatedItems) {
+                for(Condition condition : updatedItems)
+                    mWeatherData.updateCondition(condition);
+                mPagerAdapter.notifyDataSetChanged();
+                showToastMessage("Refreshed!");
+            }
+
+            @Override
+            public void onNoConnection() {
+                showToastMessage("Update Failed!");
+            }
+        });
+
         if(!isUpdateServiceRunning) {
             startUpdateService();
             if(!isNetworkAvailable()) {
@@ -69,23 +85,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startUpdateService(){
-        Handler responseHandler = new Handler();
-
-        UpdateService.setmResponseHandler(responseHandler);
-        UpdateService.setUpdateListener(new UpdateService.UpdateListener() {
-            @Override
-            public void onDataUpdate(List<Condition> updatedItems) {
-                for(Condition condition : updatedItems)
-                    mWeatherData.updateCondition(condition);
-                mPagerAdapter.updateFragmentsUI();
-                showToastMessage("Refreshed!");
-            }
-
-            @Override
-            public void onNoConnection() {
-                showToastMessage("Update Failed!");
-            }
-        });
         int refreshDelay_s = mWeatherData.getAppSettings().getRefreshDelay().getOptionLength_s();
         UpdateService.setServiceAlarm(this, refreshDelay_s * 1000, true);
         isUpdateServiceRunning = true;
@@ -141,6 +140,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mPagerAdapter.notifyDataSetChanged();
+    }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -150,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private class WeatherPagerAdapter extends FragmentStatePagerAdapter{
-        SparseArrayCompat<Fragment> mWeatherFragments = new SparseArrayCompat<>();
 
         WeatherPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -167,33 +171,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            Fragment fragment = (Fragment) super.instantiateItem(container, position);
-            mWeatherFragments.put(position, fragment);
-            return fragment;
-        }
-
-        @Override
         public int getItemPosition(Object object) {
             return POSITION_NONE;
         }
 
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-                mWeatherFragments.remove(position);
-                //getSupportFragmentManager().beginTransaction().remove((Fragment) object).commitAllowingStateLoss();
-                super.destroyItem(container, position, object);
-        }
-
-    void updateFragmentsUI(){
-            for(int i = 0, size = mWeatherFragments.size(); i < size; i++){
-                int key = mWeatherFragments.keyAt(i);
-
-                WeatherFragment fragment = (WeatherFragment) mWeatherFragments.get(key);
-                if(fragment != null)
-                    fragment.refreshUI();
-            }
-        }
 
     }
 
